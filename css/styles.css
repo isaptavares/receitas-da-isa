@@ -952,6 +952,17 @@ ul { list-style: none; }
       "nut"
       "steps";
   }
+  
+  /* Mobile visibility improvements for steps */
+  .step-item {
+    border: 1.2px solid rgba(232, 168, 56, 0.2); /* "Moldura fininha" mais visível */
+    background: var(--clr-surface-2); /* Fundo sutilmente mais claro para destacar */
+  }
+  
+  .step-number {
+    background: var(--clr-gold) !important; /* Forçar o "amarelinho" ouro */
+    color: #000 !important;
+  }
 }
 
 .desktop-spacer {
