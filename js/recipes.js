@@ -83,11 +83,12 @@ function filterRecipes(recipes, filters) {
       if (!haystack.includes(q)) return false;
     }
 
-    // Ingredients (comma-separated ingredient search)
-    if (filters.ingredient) {
-      const qi = filters.ingredient.toLowerCase();
-      const haystack = [r.title, r.subtitle, ...(r.tags || [])].join(' ').toLowerCase();
-      if (!haystack.includes(qi)) return false;
+    // Ingredients Filter (exact active ingredients matching)
+    if (filters.ingredients && filters.ingredients.length > 0) {
+      // The recipe must contain ALL selected active ingredients
+      const rIngs = (r.ingredients || []).map(i => i.toLowerCase());
+      const hasAll = filters.ingredients.every(i => rIngs.includes(i.toLowerCase()));
+      if (!hasAll) return false;
     }
 
     return true;
@@ -114,6 +115,9 @@ function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html'
     `<span class="card-tag">${t}</span>`
   ).join('');
 
+  const ingsTitle = recipe.ingredients && recipe.ingredients.length > 0 ? "Ingredientes:" : "";
+  const ingsHtml = (recipe.ingredients || []).map(ing => `<li>${ing}</li>`).join('');
+
   return `
     <article class="recipe-card ${featured ? 'featured' : ''}" 
              data-id="${recipe.id}"
@@ -139,9 +143,14 @@ function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html'
         </button>
       </div>
 
-      <div class="card-body">
+      <div class="card-body" style="position: relative;">
         <h3 class="card-title">${recipe.title}</h3>
         <p class="card-subtitle">${recipe.subtitle}</p>
+
+        <div class="card-ingredients-mini">
+          <strong>${ingsTitle}</strong>
+          <ul>${ingsHtml}</ul>
+        </div>
 
         <div class="card-meta">
           <span class="card-meta-item">

@@ -121,6 +121,18 @@
           <div class="tags-filter" id="tags-filter" role="group" aria-label="Filtro por tags"></div>
         </div>
       </div>
+
+      <!-- Row 3: Ingredientes -->
+      <div class="filter-row">
+        <div class="filter-group" style="flex:1;">
+          <label class="filter-label" for="filter-ingredient-input">🛒 Ingredientes da Geladeira</label>
+          <div class="combobox-wrapper" style="margin-bottom: 0.5rem;">
+            <input class="filter-search" type="text" id="filter-ingredient-input" list="ingredients-datalist" placeholder="Busque ingredientes (ex: limão, frango)..." aria-label="Adicionar ingrediente filtrado">
+            <datalist id="ingredients-datalist"></datalist>
+          </div>
+          <div class="tags-filter" id="ingredients-filter-chips" role="group" aria-label="Ingredientes selecionados"></div>
+        </div>
+      </div>
     </div>
 
     <p class="results-count" id="results-count" aria-live="polite"></p>
@@ -148,8 +160,10 @@
     let allRecipes = [];
     let allCuisines = [];
     let allTags = [];
+    let globalIngredients = [];
     let activeCuisine = 'todas';
     let activeTags = [];
+    let activeIngredients = [];
     let maxCalories = 1200;
 
     async function init() {
@@ -159,11 +173,14 @@
         allRecipes = index.recipes;
         allCuisines = index.cuisines;
         allTags = index.allTags;
+        globalIngredients = index.allIngredients || [];
 
         updateHeroStats(index);
         renderCuisineStrip();
         populateCuisineSelect();
         renderTagChips();
+        populateIngredientDatalist();
+        renderIngredientChips();
         applyFilters();
       } catch (e) {
         document.getElementById('recipe-grid').innerHTML = `
@@ -234,6 +251,36 @@
       applyFilters();
     }
 
+    function populateIngredientDatalist() {
+      const datalist = document.getElementById('ingredients-datalist');
+      datalist.innerHTML = globalIngredients.map(ing => `<option value="${ing}">`).join('');
+    }
+
+    function renderIngredientChips() {
+      const container = document.getElementById('ingredients-filter-chips');
+      container.innerHTML = activeIngredients.map(ing => `
+        <button class="tag-chip active" onclick="removeIngredient('${ing}')" aria-label="Remover ingrediente: ${ing}">
+          ${ing} <span style="font-size: 0.8em; margin-left: 4px;">✕</span>
+        </button>`).join('');
+    }
+
+    function addIngredient(ing) {
+      if (!activeIngredients.includes(ing)) {
+        activeIngredients.push(ing);
+        renderIngredientChips();
+        applyFilters();
+      }
+    }
+
+    function removeIngredient(ing) {
+      const idx = activeIngredients.indexOf(ing);
+      if (idx !== -1) {
+        activeIngredients.splice(idx, 1);
+        renderIngredientChips();
+        applyFilters();
+      }
+    }
+
     function applyFilters() {
       const filters = {
         cuisine: document.getElementById('filter-cuisine').value,
@@ -241,6 +288,7 @@
         search: document.getElementById('filter-search').value.trim(),
         maxCalories: maxCalories < 1200 ? maxCalories : null,
         tags: activeTags,
+        ingredients: activeIngredients,
       };
 
       const filtered = filterRecipes(allRecipes, filters);
@@ -280,6 +328,17 @@
       });
       document.getElementById('filter-difficulty').addEventListener('change', () => applyFilters());
 
+      const ingInput = document.getElementById('filter-ingredient-input');
+      ingInput.addEventListener('input', (e) => {
+        const val = e.target.value;
+        // Se o valor digitado existir EXATAMENTE na lista de todos ingredientes, adiciona e limpa.
+        // Assim, funciona como autocomplete e restringe a itens conhecidos.
+        if (globalIngredients.includes(val)) {
+          addIngredient(val);
+          e.target.value = '';
+        }
+      });
+
       const calSlider = document.getElementById('filter-calories');
       const calDisplay = document.getElementById('calorie-display');
       calSlider.addEventListener('input', (e) => {
@@ -294,11 +353,14 @@
         document.getElementById('filter-difficulty').value = 'todas';
         document.getElementById('filter-calories').value = 1200;
         document.getElementById('calorie-display').textContent = 'Todas';
+        document.getElementById('filter-ingredient-input').value = '';
         maxCalories = 1200;
         activeCuisine = 'todas';
         activeTags = [];
+        activeIngredients = [];
         renderCuisineStrip();
         renderTagChips();
+        renderIngredientChips();
         applyFilters();
         showToast('Filtros limpos ✓');
       });
