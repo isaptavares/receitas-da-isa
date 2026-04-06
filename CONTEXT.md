@@ -229,6 +229,16 @@ Full recipe with all fields:
 
 ---
 
+## Deployment & Workflow Rules
+
+- **CRITICAL RULE FOR AI:** Every time a change is successfully made to the website (a new recipe, CSS update, new file, etc.), the AI **MUST** automatically commit and push those changes to GitHub using `git`. Run:
+  `git add .`
+  `git commit -m "Your descriptive message"`
+  `git push`
+  This ensures the live GitHub Pages website perfectly matches the local files at all times.
+
+---
+
 ## Conversation History Reference
 - **Conversation ID:** `70f2794e-9956-4375-9160-52a08db981f6`
 - **Date started:** 2026-04-02
