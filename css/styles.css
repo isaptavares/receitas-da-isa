@@ -654,8 +654,8 @@ ul { list-style: none; }
   top: 1.4rem;
   right: 1.4rem;
   width: 30%;
-  font-size: 0.65rem;
-  color: var(--clr-text-dim);
+  font-size: 0.70rem;
+  color: var(--clr-text-muted);
   text-align: right;
   line-height: 1.3;
 }
