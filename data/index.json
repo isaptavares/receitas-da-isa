@@ -1,0 +1,85 @@
+{
+  "siteName": "Receitas da Isa",
+  "description": "Receitas de todo o mundo com amor e carinho",
+  "totalRecipes": 5,
+  "cuisines": ["Italiana", "Japonesa", "Mexicana", "Francesa", "Tailandesa"],
+  "allTags": [
+    "massa", "cremoso", "clássico", "jantar", "rápido",
+    "sushi", "peixe", "sem glúten", "leve", "especial",
+    "carne", "picante", "street food", "festivo", "sem laticínios",
+    "frango", "vinho", "comfort food", "jantar especial", "inverno",
+    "macarrão", "frutos do mar", "agridoce", "wok"
+  ],
+  "recipes": [
+    {
+      "id": "carbonara",
+      "title": "Pasta Carbonara",
+      "subtitle": "A clássica receita italiana cremosa com pancetta crocante",
+      "cuisine": "Italiana",
+      "image": "images/carbonara.png",
+      "calories": 620,
+      "servings": 2,
+      "totalTime": 30,
+      "difficulty": "Médio",
+      "favorite": true,
+      "tags": ["massa", "cremoso", "clássico", "jantar", "rápido"],
+      "file": "data/recipes/carbonara.json"
+    },
+    {
+      "id": "sushi",
+      "title": "Dragon Roll de Salmão",
+      "subtitle": "Um elegante rolinho japonês coberto com abacate e ovas",
+      "cuisine": "Japonesa",
+      "image": "images/sushi.png",
+      "calories": 320,
+      "servings": 2,
+      "totalTime": 60,
+      "difficulty": "Difícil",
+      "favorite": false,
+      "tags": ["sushi", "peixe", "sem glúten", "leve", "especial"],
+      "file": "data/recipes/sushi.json"
+    },
+    {
+      "id": "tacos",
+      "title": "Tacos Al Pastor",
+      "subtitle": "Porco marinado com abacaxi e especiarias mexicanas irresistíveis",
+      "cuisine": "Mexicana",
+      "image": "images/tacos.png",
+      "calories": 480,
+      "servings": 4,
+      "totalTime": 55,
+      "difficulty": "Fácil",
+      "favorite": true,
+      "tags": ["carne", "picante", "street food", "festivo", "sem laticínios"],
+      "file": "data/recipes/tacos.json"
+    },
+    {
+      "id": "coq_au_vin",
+      "title": "Coq au Vin",
+      "subtitle": "Frango braseado em vinho tinto com cogumelos e cebolas pérola",
+      "cuisine": "Francesa",
+      "image": "images/coq_au_vin.png",
+      "calories": 540,
+      "servings": 4,
+      "totalTime": 110,
+      "difficulty": "Médio",
+      "favorite": true,
+      "tags": ["frango", "vinho", "comfort food", "jantar especial", "inverno"],
+      "file": "data/recipes/coq_au_vin.json"
+    },
+    {
+      "id": "padthai",
+      "title": "Pad Thai de Camarão",
+      "subtitle": "Os clássicos macarrões fritos tailandeses com camarão e molho de tamarindo",
+      "cuisine": "Tailandesa",
+      "image": "images/padthai.png",
+      "calories": 520,
+      "servings": 2,
+      "totalTime": 35,
+      "difficulty": "Médio",
+      "favorite": false,
+      "tags": ["macarrão", "frutos do mar", "agridoce", "sem glúten", "wok"],
+      "file": "data/recipes/padthai.json"
+    }
+  ]
+}

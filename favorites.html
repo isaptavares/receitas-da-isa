@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Receitas da Isa — suas receitas favoritas em um só lugar. Volte sempre para cozinhar com amor.">
+  <title>Favoritas — Receitas da Isa</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .fav-empty-heart {
+      font-size: 5rem;
+      display: block;
+      margin-bottom: 1.2rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.4; }
+      50%       { transform: scale(1.1); opacity: 0.7; }
+    }
+    .fav-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 2rem;
+      padding: 0.8rem 1.4rem;
+      background: rgba(232,168,56,0.08);
+      border: 1px solid rgba(232,168,56,0.2);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: var(--clr-text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar" aria-label="Navegação principal">
+    <a class="nav-logo" href="index.html" aria-label="Receitas da Isa - Início">
+      <span class="nav-logo-icon">🍴</span>
+      <span class="nav-logo-text">
+        Receitas da Isa
+        <em class="nav-logo-sub">sabores do mundo</em>
+      </span>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
+      <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== BANNER ===== -->
+  <header class="fav-banner" id="fav-banner">
+    <div class="fav-banner-eyebrow">♥ Receitas salvas</div>
+    <h1 class="fav-banner-title">Minhas <em>Favoritas</em></h1>
+    <p class="fav-banner-desc" id="fav-banner-desc">As receitas que você mais ama, sempre à mão.</p>
+  </header>
+
+  <!-- ===== FILTER BAR ===== -->
+  <section class="section" id="favoritas-section" aria-labelledby="favs-heading">
+    <h2 class="visually-hidden" id="favs-heading">Lista de receitas favoritas</h2>
+
+    <div class="filter-bar" id="filter-bar" role="search" aria-label="Filtros">
+      <div class="filter-row">
+        <div class="filter-group" style="flex:2; min-width:200px;">
+          <label class="filter-label" for="filter-search">🔍 Busca</label>
+          <input class="filter-search" type="search" id="filter-search"
+                 placeholder="Buscar nas favoritas..."
+                 aria-label="Buscar receitas favoritas">
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" for="filter-cuisine">🌍 Culinária</label>
+          <select class="filter-select" id="filter-cuisine" aria-label="Filtrar por culinária">
+            <option value="todas">Todas</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" for="filter-difficulty">⚡ Dificuldade</label>
+          <select class="filter-select" id="filter-difficulty" aria-label="Filtrar por dificuldade">
+            <option value="todas">Qualquer</option>
+            <option value="Fácil">Fácil</option>
+            <option value="Médio">Médio</option>
+            <option value="Difícil">Difícil</option>
+          </select>
+        </div>
+        <button class="filter-reset" id="filter-reset-btn" aria-label="Limpar filtros">✕ Limpar</button>
+      </div>
+      <div class="filter-row">
+        <div class="filter-group" style="min-width:220px;">
+          <label class="filter-label" for="filter-calories">🔥 Calorias máximas</label>
+          <div class="calorie-range">
+            <input type="range" id="filter-calories" min="100" max="1200" value="1200" step="50">
+            <span class="calorie-display" id="calorie-display">Todas</span>
+          </div>
+        </div>
+        <div class="filter-group" style="flex:2;">
+          <span class="filter-label">🏷️ Tags</span>
+          <div class="tags-filter" id="tags-filter" role="group" aria-label="Filtro por tags"></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="results-count" id="results-count" aria-live="polite"></p>
+    <div class="recipe-grid" id="recipe-grid" role="list" aria-label="Receitas favoritas">
+      <div class="loading-spinner" aria-label="Carregando receitas..."></div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <span class="footer-logo">🍴 Receitas da Isa</span>
+    <span class="footer-copy">Feito com <span>♥</span> e muito sabor • 2026</span>
+  </footer>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="js/recipes.js"></script>
+  <script>
+    // =============================================
+    // FAVORITES PAGE CONTROLLER
+    // =============================================
+
+    let allRecipes = [];
+    let favRecipes = [];
+    let favTags = [];
+    let activeTags = [];
+    let maxCalories = 1200;
+
+    async function init() {
+      initNavbar();
+      try {
+        const index = await loadIndex();
+        allRecipes = index.recipes;
+
+        const favIds = getFavorites();
+        favRecipes = allRecipes.filter(r => favIds.includes(r.id));
+
+        // Collect tags only from favorites
+        const tagSet = new Set();
+        favRecipes.forEach(r => (r.tags || []).forEach(t => tagSet.add(t)));
+        favTags = [...tagSet];
+
+        // Update banner description
+        const desc = document.getElementById('fav-banner-desc');
+        if (favRecipes.length === 0) {
+          desc.textContent = 'Você ainda não tem favoritas. Explore e salve as que você mais gostar!';
+        } else {
+          desc.textContent = `${favRecipes.length} receita${favRecipes.length > 1 ? 's' : ''} salva${favRecipes.length > 1 ? 's' : ''} com carinho ♥`;
+        }
+
+        // Populate cuisine select for favorites only
+        const cuisines = [...new Set(favRecipes.map(r => r.cuisine))];
+        const sel = document.getElementById('filter-cuisine');
+        cuisines.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c; opt.textContent = c;
+          sel.appendChild(opt);
+        });
+
+        renderTagChips();
+        applyFilters();
+      } catch (e) {
+        document.getElementById('recipe-grid').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">😕</div>
+            <h3 class="empty-state-title">Erro ao carregar</h3>
+            <p class="empty-state-text">${e.message}</p>
+          </div>`;
+      }
+    }
+
+    function renderTagChips() {
+      const container = document.getElementById('tags-filter');
+      if (favTags.length === 0) { container.innerHTML = '<span style="font-size:0.8rem;color:var(--clr-text-dim)">Nenhuma tag disponível</span>'; return; }
+      container.innerHTML = favTags.map(t => `
+        <button class="tag-chip ${activeTags.includes(t) ? 'active' : ''}"
+                onclick="toggleTag('${t}')" id="tag-chip-${t.replace(/\s/g,'-')}"
+                aria-pressed="${activeTags.includes(t)}">
+          ${t}
+        </button>`).join('');
+    }
+
+    function toggleTag(tag) {
+      const idx = activeTags.indexOf(tag);
+      if (idx === -1) activeTags.push(tag); else activeTags.splice(idx, 1);
+      renderTagChips();
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const filters = {
+        cuisine: document.getElementById('filter-cuisine').value,
+        difficulty: document.getElementById('filter-difficulty').value,
+        search: document.getElementById('filter-search').value.trim(),
+        maxCalories: maxCalories < 1200 ? maxCalories : null,
+        tags: activeTags,
+      };
+
+      const filtered = filterRecipes(favRecipes, filters);
+      renderGrid(filtered);
+
+      const count = document.getElementById('results-count');
+      if (favRecipes.length === 0) { count.innerHTML = ''; return; }
+      count.innerHTML = filtered.length === favRecipes.length
+        ? `Exibindo <span>${filtered.length}</span> favorita${filtered.length !== 1 ? 's' : ''}`
+        : `<span>${filtered.length}</span> de ${favRecipes.length} favorita${favRecipes.length !== 1 ? 's' : ''}`;
+    }
+
+    function renderGrid(recipes) {
+      const grid = document.getElementById('recipe-grid');
+      if (favRecipes.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <span class="fav-empty-heart">🤍</span>
+            <h3 class="empty-state-title">Nenhuma favorita ainda</h3>
+            <p class="empty-state-text">Explore as receitas e clique no coração para salvar as que você mais amar!</p>
+            <a href="index.html" class="fav-tip" id="go-explore-link">
+              <span>🍽️</span> Explorar receitas
+            </a>
+          </div>`;
+        return;
+      }
+      if (recipes.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🔍</div>
+            <h3 class="empty-state-title">Nenhuma favorita encontrada</h3>
+            <p class="empty-state-text">Tente ajustar os filtros.</p>
+          </div>`;
+        return;
+      }
+      grid.innerHTML = recipes.map((r, i) =>
+        renderRecipeCard(r, { featured: i === 0 && recipes.length > 2 })
+      ).join('');
+    }
+
+    // ---- Event Listeners ----
+    document.addEventListener('DOMContentLoaded', () => {
+      init();
+
+      document.getElementById('filter-search').addEventListener('input', () => applyFilters());
+      document.getElementById('filter-cuisine').addEventListener('change', () => applyFilters());
+      document.getElementById('filter-difficulty').addEventListener('change', () => applyFilters());
+
+      const calSlider = document.getElementById('filter-calories');
+      const calDisplay = document.getElementById('calorie-display');
+      calSlider.addEventListener('input', (e) => {
+        maxCalories = parseInt(e.target.value);
+        calDisplay.textContent = maxCalories >= 1200 ? 'Todas' : `até ${maxCalories} kcal`;
+        applyFilters();
+      });
+
+      document.getElementById('filter-reset-btn').addEventListener('click', () => {
+        document.getElementById('filter-search').value = '';
+        document.getElementById('filter-cuisine').value = 'todas';
+        document.getElementById('filter-difficulty').value = 'todas';
+        document.getElementById('filter-calories').value = 1200;
+        document.getElementById('calorie-display').textContent = 'Todas';
+        maxCalories = 1200;
+        activeTags = [];
+        renderTagChips();
+        applyFilters();
+        showToast('Filtros limpos ✓');
+      });
+    });
+  </script>
+</body>
+</html>

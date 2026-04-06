@@ -1,0 +1,54 @@
+{
+  "id": "sushi",
+  "title": "Dragon Roll de Salmão",
+  "subtitle": "Um elegante rolinho japonês coberto com abacate e ovas",
+  "cuisine": "Japonesa",
+  "image": "images/sushi.png",
+  "calories": 320,
+  "servings": 2,
+  "prepTime": 40,
+  "cookTime": 20,
+  "totalTime": 60,
+  "difficulty": "Difícil",
+  "favorite": false,
+  "tags": ["sushi", "peixe", "sem glúten", "leve", "especial"],
+  "ingredients": [
+    { "item": "Arroz para sushi", "amount": "2 xícaras" },
+    { "item": "Vinagre de arroz", "amount": "4 colheres de sopa" },
+    { "item": "Açúcar", "amount": "2 colheres de sopa" },
+    { "item": "Sal", "amount": "1 colher de chá" },
+    { "item": "Salmão fresco", "amount": "200g" },
+    { "item": "Camarão tempurá", "amount": "8 unidades" },
+    { "item": "Abacate maduro", "amount": "1 unidade" },
+    { "item": "Folhas de nori", "amount": "4 folhas" },
+    { "item": "Cream cheese", "amount": "100g" },
+    { "item": "Ovas de peixe (tobiko)", "amount": "50g" },
+    { "item": "Gergelim", "amount": "a gosto" },
+    { "item": "Molho shoyu", "amount": "para servir" },
+    { "item": "Wasabi", "amount": "para servir" },
+    { "item": "Gengibre em conserva", "amount": "para servir" }
+  ],
+  "steps": [
+    "Cozinhe o arroz de sushi conforme as instruções. Misture o vinagre de arroz com açúcar e sal aquecido, e incorpore ao arroz ainda quente. Reserve.",
+    "Prepare o camarão tempurá: empane e frite até dourar. Reserve.",
+    "Sobre uma esteira de bambu coberta com plástico filme, coloque uma folha de nori com o lado brilhante para baixo.",
+    "Espalhe uma camada uniforme de arroz sobre o nori, cobrindo toda a superfície. Vire ao contrário deixando o arroz para baixo.",
+    "Disponha o cream cheese, o camarão tempurá e tiras de salmão no centro do nori.",
+    "Enrole cuidadosamente com a esteira, pressionando para firmar o formato.",
+    "Cubra o rolo com fatias finas de abacate sobrepostas. Cubra com plástico e pressione suavemente com a esteira.",
+    "Corte em 8 pedaços com faca molhada. Decore com tobiko, gergelim e molho sriracha."
+  ],
+  "tips": [
+    "Use arroz específico para sushi — a consistência é essencial.",
+    "Umedeça a faca antes de cada corte para não amassar o rolo.",
+    "O salmão deve ser de qualidade 'sashimi grade' se for consumido cru."
+  ],
+  "nutrition": {
+    "calories": 320,
+    "protein": "18g",
+    "carbs": "45g",
+    "fat": "9g",
+    "fiber": "4g"
+  },
+  "createdAt": "2026-04-01"
+}

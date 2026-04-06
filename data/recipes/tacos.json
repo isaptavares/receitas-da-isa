@@ -1,0 +1,53 @@
+{
+  "id": "tacos",
+  "title": "Tacos Al Pastor",
+  "subtitle": "Porco marinado com abacaxi e especiarias mexicanas irresistíveis",
+  "cuisine": "Mexicana",
+  "image": "images/tacos.png",
+  "calories": 480,
+  "servings": 4,
+  "prepTime": 30,
+  "cookTime": 25,
+  "totalTime": 55,
+  "difficulty": "Fácil",
+  "favorite": true,
+  "tags": ["carne", "picante", "street food", "festivo", "sem laticínios"],
+  "ingredients": [
+    { "item": "Lombo de porco", "amount": "600g" },
+    { "item": "Abacaxi", "amount": "1/2 unidade" },
+    { "item": "Pimenta chipotle em adobo", "amount": "3 unidades" },
+    { "item": "Páprica defumada", "amount": "2 colheres de chá" },
+    { "item": "Cominho", "amount": "1 colher de chá" },
+    { "item": "Orégano", "amount": "1 colher de chá" },
+    { "item": "Alho", "amount": "4 dentes" },
+    { "item": "Suco de laranja", "amount": "100ml" },
+    { "item": "Vinagre de maçã", "amount": "2 colheres de sopa" },
+    { "item": "Tortilhas de milho", "amount": "12 unidades" },
+    { "item": "Cebola roxa", "amount": "1 unidade" },
+    { "item": "Coentro fresco", "amount": "1 maço" },
+    { "item": "Limão", "amount": "3 unidades" },
+    { "item": "Sal e pimenta", "amount": "a gosto" }
+  ],
+  "steps": [
+    "Misture no liquidificador as pimentas chipotle, páprica, cominho, orégano, alho, suco de laranja e vinagre para fazer a marinada.",
+    "Fatie o lombo em fatias finas e marine na mistura por pelo menos 2 horas (idealmente overnight).",
+    "Aqueça uma frigideira ou chapa em fogo alto. Grelhe a carne em lotes por 3-4 minutos de cada lado até caramelizar.",
+    "Grelhe também rodelas de abacaxi até dourar.",
+    "Aqueça as tortilhas diretamente na chama ou frigideira seca.",
+    "Monte os tacos: tortilha, carne, abacaxi, cebola picada, coentro e bastante suco de limão.",
+    "Sirva com molho de pimenta e limões extras."
+  ],
+  "tips": [
+    "Marine de um dia para o outro para um sabor muito mais intenso.",
+    "Corte a carne bem fininha para grelhar mais rápido e ficar crocante.",
+    "Duplique as tortilhas para tacos mais resistentes."
+  ],
+  "nutrition": {
+    "calories": 480,
+    "protein": "32g",
+    "carbs": "48g",
+    "fat": "16g",
+    "fiber": "5g"
+  },
+  "createdAt": "2026-04-01"
+}

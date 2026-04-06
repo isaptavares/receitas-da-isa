@@ -1,0 +1,53 @@
+{
+  "id": "coq_au_vin",
+  "title": "Coq au Vin",
+  "subtitle": "Frango braseado em vinho tinto com cogumelos e cebolas pérola",
+  "cuisine": "Francesa",
+  "image": "images/coq_au_vin.png",
+  "calories": 540,
+  "servings": 4,
+  "prepTime": 20,
+  "cookTime": 90,
+  "totalTime": 110,
+  "difficulty": "Médio",
+  "favorite": true,
+  "tags": ["frango", "vinho", "comfort food", "jantar especial", "inverno"],
+  "ingredients": [
+    { "item": "Frango inteiro cortado em pedaços", "amount": "1,5kg" },
+    { "item": "Vinho tinto seco (Burgundy ou Pinot Noir)", "amount": "750ml" },
+    { "item": "Caldo de frango", "amount": "300ml" },
+    { "item": "Bacon em cubos", "amount": "150g" },
+    { "item": "Cogumelos Paris ou crimini", "amount": "300g" },
+    { "item": "Cebolas pérola", "amount": "200g" },
+    { "item": "Cenoura", "amount": "2 unidades" },
+    { "item": "Alho", "amount": "4 dentes" },
+    { "item": "Extrato de tomate", "amount": "1 colher de sopa" },
+    { "item": "Tomilho fresco", "amount": "4 ramos" },
+    { "item": "Louro", "amount": "2 folhas" },
+    { "item": "Manteiga", "amount": "3 colheres de sopa" },
+    { "item": "Farinha de trigo", "amount": "2 colheres de sopa" },
+    { "item": "Sal e pimenta", "amount": "a gosto" }
+  ],
+  "steps": [
+    "Tempere os pedaços de frango com sal e pimenta. Em uma panela de fundo grosso, doure o bacon em manteiga e reserve.",
+    "Na mesma panela, sele o frango em lotes até dourar bem de todos os lados. Reserve.",
+    "Refogue a cenoura, as cebolas e o alho por 5 minutos. Adicione o extrato de tomate e a farinha, mexendo bem.",
+    "Deglaceie com o vinho tinto, raspando o fundo da panela. Adicione o caldo, tomilho e louro.",
+    "Volte o frango e o bacon para a panela. Cubra e cozinhe em fogo baixo por 45-60 minutos.",
+    "Na metade do cozimento, salteie os cogumelos em manteiga separadamente até dourar. Adicione à panela.",
+    "Quando o frango estiver macio, retire-o e reduza o molho até encorpar. Volte o frango, ajuste temperos e sirva."
+  ],
+  "tips": [
+    "Use um vinho de qualidade — você vai bebê-lo também!",
+    "Marine o frango no vinho tinto de um dia para o outro para um sabor ainda mais profundo.",
+    "Sirva com purê de batatas ou pão rústico para aproveitar o molho."
+  ],
+  "nutrition": {
+    "calories": 540,
+    "protein": "42g",
+    "carbs": "18g",
+    "fat": "28g",
+    "fiber": "3g"
+  },
+  "createdAt": "2026-04-01"
+}

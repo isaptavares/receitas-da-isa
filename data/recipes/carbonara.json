@@ -1,0 +1,46 @@
+{
+  "id": "carbonara",
+  "title": "Pasta Carbonara",
+  "subtitle": "A clássica receita italiana cremosa com pancetta crocante",
+  "cuisine": "Italiana",
+  "image": "images/carbonara.png",
+  "calories": 620,
+  "servings": 2,
+  "prepTime": 10,
+  "cookTime": 20,
+  "totalTime": 30,
+  "difficulty": "Médio",
+  "favorite": true,
+  "tags": ["massa", "cremoso", "clássico", "jantar", "rápido"],
+  "ingredients": [
+    { "item": "Espaguete", "amount": "200g" },
+    { "item": "Pancetta ou guanciale", "amount": "150g" },
+    { "item": "Ovos inteiros", "amount": "2 unidades" },
+    { "item": "Gemas de ovo", "amount": "2 unidades" },
+    { "item": "Queijo Pecorino Romano ralado", "amount": "80g" },
+    { "item": "Queijo Parmesão ralado", "amount": "40g" },
+    { "item": "Pimenta-do-reino preta moída na hora", "amount": "a gosto" },
+    { "item": "Sal", "amount": "a gosto" }
+  ],
+  "steps": [
+    "Cozinhe o espaguete em água abundante com sal até ficar al dente. Reserve 1 xícara da água do cozimento.",
+    "Enquanto a massa cozinha, corte a pancetta em cubinhos e frite em frigideira quente sem óleo até ficar crocante. Reserve.",
+    "Em uma tigela, misture os ovos, as gemas, o Pecorino e o Parmesão. Tempere com pimenta generosamente.",
+    "Escorra a massa e adicione à frigideira com a pancetta (fora do fogo). Misture bem.",
+    "Adicione gradualmente o creme de ovos e queijo, mexendo vigorosamente. Acrescente a água do macarrão aos poucos para deixar cremoso.",
+    "Sirva imediatamente com mais queijo e pimenta-do-reino a gosto."
+  ],
+  "tips": [
+    "Nunca adicione creme de leite — a cremosidade vem dos ovos e da água do cozimento!",
+    "Mexa rápido fora do fogo para os ovos não cozinharem demais.",
+    "Guanciale é tradicional, mas pancetta funciona muito bem."
+  ],
+  "nutrition": {
+    "calories": 620,
+    "protein": "28g",
+    "carbs": "72g",
+    "fat": "24g",
+    "fiber": "3g"
+  },
+  "createdAt": "2026-04-01"
+}

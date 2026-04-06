@@ -1,0 +1,54 @@
+{
+  "id": "padthai",
+  "title": "Pad Thai de Camarão",
+  "subtitle": "Os clássicos macarrões fritos tailandeses com camarão e molho de tamarindo",
+  "cuisine": "Tailandesa",
+  "image": "images/padthai.png",
+  "calories": 520,
+  "servings": 2,
+  "prepTime": 20,
+  "cookTime": 15,
+  "totalTime": 35,
+  "difficulty": "Médio",
+  "favorite": false,
+  "tags": ["macarrão", "frutos do mar", "agridoce", "sem glúten", "wok"],
+  "ingredients": [
+    { "item": "Macarrão de arroz largo", "amount": "200g" },
+    { "item": "Camarão médio limpo", "amount": "300g" },
+    { "item": "Ovos", "amount": "2 unidades" },
+    { "item": "Brotos de feijão (bean sprouts)", "amount": "100g" },
+    { "item": "Cebolinha verde", "amount": "4 talos" },
+    { "item": "Amendoim torrado sem sal", "amount": "60g" },
+    { "item": "Pasta de tamarindo", "amount": "3 colheres de sopa" },
+    { "item": "Molho de peixe", "amount": "2 colheres de sopa" },
+    { "item": "Açúcar mascavo", "amount": "1 colher de sopa" },
+    { "item": "Óleo de amendoim", "amount": "3 colheres de sopa" },
+    { "item": "Alho picado", "amount": "3 dentes" },
+    { "item": "Pimenta vermelha", "amount": "a gosto" },
+    { "item": "Limão tahiti", "amount": "2 unidades" },
+    { "item": "Coentro", "amount": "para decorar" }
+  ],
+  "steps": [
+    "Deixe o macarrão de arroz de molho em água morna por 30 minutos, depois escorra.",
+    "Misture a pasta de tamarindo com o molho de peixe e o açúcar mascavo para fazer o molho. Reserve.",
+    "Aqueça o wok em fogo máximo com óleo. Salteie o alho por 30 segundos.",
+    "Adicione os camarões e cozinhe até ficarem rosados (2-3 min). Empurre para o lado.",
+    "Quebre os ovos na outra metade do wok e mexendo rápido para scrambled. Misture com os camarões.",
+    "Adicione o macarrão escorrido e o molho de tamarindo. Mexa por 2-3 minutos até o macarrão absorver.",
+    "Acrescente metade dos brotos de feijão e da cebolinha. Misture por 1 minuto.",
+    "Sirva com amendoim grosseiramente picado, brotos frescos, cebolinha, pimenta e meio limão."
+  ],
+  "tips": [
+    "O segredo está no fogo altíssimo — o wok precisa estar bem quente!",
+    "Não coloque ingredientes a mais de uma vez para não refogar e sim fritar.",
+    "A pasta de tamarindo pode ser substituída por 2 col. de sopa de suco de limão + 1 de molho Worcestershire."
+  ],
+  "nutrition": {
+    "calories": 520,
+    "protein": "30g",
+    "carbs": "63g",
+    "fat": "15g",
+    "fiber": "4g"
+  },
+  "createdAt": "2026-04-01"
+}

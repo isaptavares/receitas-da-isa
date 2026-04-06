@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" id="meta-desc" content="Receita detalhada — Receitas da Isa">
+  <title id="page-title">Receita — Receitas da Isa</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Recipe detail extra styles */
+    .recipe-detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .recipe-detail-tag {
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: rgba(232,168,56,0.12);
+      border: 1px solid rgba(232,168,56,0.25);
+      color: var(--clr-gold-light);
+    }
+    .recipe-detail-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .recipe-section-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .tips-panel {
+      margin-top: 2rem;
+    }
+    .print-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      padding: 0.6rem 1.2rem;
+    }
+    /* Print styles handled by css/styles.css @media print block */
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar" aria-label="Navegação principal">
+    <a class="nav-logo" href="index.html" aria-label="Receitas da Isa - Início">
+      <span class="nav-logo-icon">🍴</span>
+      <span class="nav-logo-text">
+        Receitas da Isa
+        <em class="nav-logo-sub">sabores do mundo</em>
+      </span>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
+      <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- Main content injected below by JS -->
+  <main id="recipe-main">
+    <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;">
+      <div class="loading-spinner" aria-label="Carregando receita..."></div>
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <span class="footer-logo">🍴 Receitas da Isa</span>
+    <span class="footer-copy">Feito com <span>♥</span> e muito sabor • 2026</span>
+  </footer>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="js/recipes.js"></script>
+  <script>
+    // =============================================
+    // RECIPE DETAIL PAGE CONTROLLER
+    // =============================================
+
+    function getRecipeIdFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+
+    function renderRecipePage(recipe) {
+      const fav = isFavorite(recipe.id);
+      const meta = getCuisineMeta(recipe.cuisine);
+      const diffClass = getDifficultyClass(recipe.difficulty);
+
+      // Update meta
+      document.title = `${recipe.title} — Receitas da Isa`;
+      document.getElementById('meta-desc').setAttribute('content', recipe.subtitle);
+
+      const tagsHtml = (recipe.tags || []).map(t =>
+        `<span class="recipe-detail-tag">${t}</span>`
+      ).join('');
+
+      const ingredientsHtml = recipe.ingredients.map(ing => `
+        <li class="ingredient-item">
+          <span class="ingredient-name">${ing.item}</span>
+          <span class="ingredient-amount">${ing.amount}</span>
+        </li>`).join('');
+
+      const stepsHtml = recipe.steps.map((step, i) => `
+        <li class="step-item">
+          <span class="step-number">${i + 1}</span>
+          <p class="step-text">${step}</p>
+        </li>`).join('');
+
+      const tipsHtml = (recipe.tips || []).map(tip => `
+        <li class="tip-item">
+          <span class="tip-icon">💡</span>
+          <span>${tip}</span>
+        </li>`).join('');
+
+      const n = recipe.nutrition;
+      const nutritionHtml = `
+        <div class="nutrition-item"><div class="nutrition-value">${n.calories}</div><div class="nutrition-label">Calorias</div></div>
+        <div class="nutrition-item"><div class="nutrition-value">${n.protein}</div><div class="nutrition-label">Proteína</div></div>
+        <div class="nutrition-item"><div class="nutrition-value">${n.carbs}</div><div class="nutrition-label">Carboidratos</div></div>
+        <div class="nutrition-item"><div class="nutrition-value">${n.fat}</div><div class="nutrition-label">Gorduras</div></div>
+      `;
+
+      const refPage = document.referrer && document.referrer.includes('favorites') ? 'favorites.html' : 'index.html';
+      const backLabel = document.referrer && document.referrer.includes('favorites') ? '← Voltar às favoritas' : '← Voltar às receitas';
+
+      document.getElementById('recipe-main').innerHTML = `
+        <article class="recipe-page" aria-label="${recipe.title}">
+
+          <!-- HERO -->
+          <div class="recipe-hero">
+            <img class="recipe-hero-img" src="${recipe.image}" alt="${recipe.title}">
+            <div class="recipe-hero-overlay" aria-hidden="true"></div>
+            <div class="recipe-hero-content">
+              <div class="recipe-detail-cuisine">
+                <span>${meta.flag}</span> ${recipe.cuisine}
+              </div>
+              <h1 class="recipe-detail-title">${recipe.title}</h1>
+              <p class="recipe-detail-subtitle">${recipe.subtitle}</p>
+
+              <div class="recipe-detail-meta">
+                <span class="recipe-meta-pill">⏱ <strong>${recipe.prepTime} min</strong> preparo</span>
+                <span class="recipe-meta-pill">🔥 <strong>${recipe.cookTime} min</strong> cozimento</span>
+                <span class="recipe-meta-pill">⏳ <strong>${recipe.totalTime} min</strong> total</span>
+                <span class="recipe-meta-pill">👤 <strong>${recipe.servings}</strong> porções</span>
+                <span class="recipe-meta-pill card-difficulty ${diffClass}" style="padding:0.3rem 0.8rem;">${recipe.difficulty}</span>
+              </div>
+
+              <div class="recipe-detail-tags">${tagsHtml}</div>
+
+              <div class="recipe-detail-actions">
+                <button class="btn btn-primary" id="detail-fav-btn"
+                        onclick="handleDetailFav('${recipe.id}')"
+                        aria-label="${fav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
+                  ${fav ? '♥ Nas suas favoritas' : '♡ Adicionar aos favoritos'}
+                </button>
+                <button class="btn btn-outline print-btn" onclick="window.print()" id="print-btn">
+                  🖨️ Imprimir receita
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- BODY GRID -->
+          <div class="recipe-body">
+
+            <!-- LEFT COLUMN: Ingredients + Nutrition -->
+            <div class="recipe-col-left">
+              <button class="back-btn" onclick="window.location='${refPage}'" id="back-btn">
+                ← Voltar
+              </button>
+
+              <!-- Ingredients -->
+              <div class="recipe-panel" style="margin-bottom:1.5rem;">
+                <div class="recipe-panel-title">🥄 Ingredientes</div>
+                <ul class="ingredient-list">${ingredientsHtml}</ul>
+              </div>
+
+              <!-- Nutrition -->
+              <div class="recipe-panel" style="margin-bottom:1.5rem;">
+                <div class="recipe-panel-title">📊 Informação Nutricional</div>
+                <div class="nutrition-grid">${nutritionHtml}</div>
+                <p style="font-size:0.7rem;color:var(--clr-text-dim);margin-top:0.8rem;">
+                  * Valores aproximados por porção
+                </p>
+              </div>
+
+              <!-- Fiber info -->
+              ${n.fiber ? `
+              <div class="recipe-panel">
+                <div class="recipe-panel-title">🌿 Fibras</div>
+                <div style="font-size:1.1rem;font-weight:600;color:var(--clr-sage);">${n.fiber}</div>
+                <div style="font-size:0.75rem;color:var(--clr-text-dim);margin-top:0.2rem;">por porção</div>
+              </div>` : ''}
+            </div>
+
+            <!-- RIGHT COLUMN: Steps + Tips -->
+            <div class="recipe-col-right">
+              <!-- Steps -->
+              <h2 class="recipe-section-title">👨‍🍳 Modo de Preparo</h2>
+              <ol class="steps-list">${stepsHtml}</ol>
+
+              <!-- Tips -->
+              ${tipsHtml ? `
+              <div class="tips-panel">
+                <h2 class="recipe-section-title" style="margin-top:2.5rem;">💡 Dicas da Isa</h2>
+                <div class="recipe-panel">
+                  <ul class="tips-list">${tipsHtml}</ul>
+                </div>
+              </div>` : ''}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function handleDetailFav(id) {
+      const nowFav = toggleFavorite(id);
+      const btn = document.getElementById('detail-fav-btn');
+      if (btn) {
+        btn.innerHTML = nowFav ? '♥ Nas suas favoritas' : '♡ Adicionar aos favoritos';
+        btn.setAttribute('aria-label', nowFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos');
+      }
+    }
+
+    async function init() {
+      initNavbar();
+      const id = getRecipeIdFromURL();
+      if (!id) {
+        document.getElementById('recipe-main').innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:1rem;">
+            <div style="font-size:4rem;">🍽️</div>
+            <h1 style="font-family:var(--font-display);">Receita não encontrada</h1>
+            <a href="index.html" class="btn btn-primary">← Voltar ao início</a>
+          </div>`;
+        return;
+      }
+      try {
+        const recipe = await loadRecipe(id);
+        renderRecipePage(recipe);
+      } catch (e) {
+        document.getElementById('recipe-main').innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:1rem;text-align:center;padding:2rem;">
+            <div style="font-size:4rem;">😕</div>
+            <h1 style="font-family:var(--font-display);">Receita não encontrada</h1>
+            <p style="color:var(--clr-text-muted);">${e.message}</p>
+            <a href="index.html" class="btn btn-primary" id="back-home-link">← Voltar ao início</a>
+          </div>`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
