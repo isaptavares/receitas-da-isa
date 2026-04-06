@@ -83,7 +83,7 @@
 
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
-  <script src="js/recipes.js?v=4"></script>
+  <script src="js/recipes.js?v=6"></script>
   <script>
     // =============================================
     // RECIPE DETAIL PAGE CONTROLLER
@@ -126,14 +126,41 @@
         </li>`).join('');
 
       const n = recipe.nutrition;
+      
+      const calcVD = (val, max) => {
+        const num = parseFloat(String(val).replace(/[^0-9.]/g, '')) || 0;
+        return Math.round((num / max) * 100);
+      };
+
       let nutritionHtml = `
-        <div class="nutrition-item"><div class="nutrition-value">${n.calories}</div><div class="nutrition-label">Calorias</div></div>
-        <div class="nutrition-item"><div class="nutrition-value">${n.protein}</div><div class="nutrition-label">Proteína</div></div>
-        <div class="nutrition-item"><div class="nutrition-value">${n.carbs}</div><div class="nutrition-label">Carboidratos</div></div>
-        <div class="nutrition-item"><div class="nutrition-value">${n.fat}</div><div class="nutrition-label">Gorduras</div></div>
+        <div class="nutrition-item">
+          <div class="nutrition-value">${n.calories}</div>
+          <div class="nutrition-label">Calorias</div>
+          <div class="nutrition-vd">${calcVD(n.calories, 2000)}% VD</div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-value">${n.protein}</div>
+          <div class="nutrition-label">Proteína</div>
+          <div class="nutrition-vd">${calcVD(n.protein, 50)}% VD</div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-value">${n.carbs}</div>
+          <div class="nutrition-label">Carboidratos</div>
+          <div class="nutrition-vd">${calcVD(n.carbs, 275)}% VD</div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-value">${n.fat}</div>
+          <div class="nutrition-label">Gorduras</div>
+          <div class="nutrition-vd">${calcVD(n.fat, 78)}% VD</div>
+        </div>
       `;
       if (n.fiber) {
-        nutritionHtml += `<div class="nutrition-item" style="grid-column: span 2;"><div class="nutrition-value">${n.fiber}</div><div class="nutrition-label">Fibras</div></div>`;
+        nutritionHtml += `
+        <div class="nutrition-item" style="grid-column: span 2;">
+          <div class="nutrition-value">${n.fiber}</div>
+          <div class="nutrition-label">Fibras</div>
+          <div class="nutrition-vd">${calcVD(n.fiber, 28)}% VD</div>
+        </div>`;
       }
 
       const refPage = document.referrer && document.referrer.includes('favorites') ? 'favorites.html' : 'index.html';

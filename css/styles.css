@@ -1029,6 +1029,12 @@ ul { list-style: none; }
   color: var(--clr-text-muted);
   margin-top: 0.2rem;
 }
+.nutrition-vd {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--clr-text-dim);
+  margin-top: 0.15rem;
+}
 
 /* ----------------------
    Favorites page banner
