@@ -1564,3 +1564,13 @@ footer {
     filter: none !important;
   }
 }
+
+.step-item { cursor: pointer; transition: all var(--transition); }
+.step-item.completed {
+  border-color: #2ecc71 !important;
+  background: rgba(46, 204, 113, 0.05) !important;
+}
+.step-item.completed .step-number {
+  background: #2ecc71 !important;
+  color: #fff !important;
+}

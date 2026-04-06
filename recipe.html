@@ -166,7 +166,7 @@
 
       // Steps
       const stepsHtml = recipe.steps.map((step, i) => `
-        <li class="step-item">
+        <li class="step-item" onclick="this.classList.toggle('completed')" style="cursor:pointer;">
           <span class="step-number">${i + 1}</span>
           <p class="step-text">${step}</p>
         </li>`).join('');
