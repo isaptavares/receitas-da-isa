@@ -94,7 +94,53 @@
       return params.get('id');
     }
 
+    let globalRecipe = null;
+    let currentServings = 1;
+
+    function renderIngredientsList() {
+      if (!globalRecipe) return '';
+      
+      return globalRecipe.ingredients.map(ing => {
+        let scaledAmount = ing.amount;
+        
+        // Extract numbers at the beginning (ex: "200g", "2", "1.5 xícaras")
+        const match = ing.amount.match(/^([\d.,]+)\s*(.*)$/);
+        if (match) {
+           let numText = match[1].replace(',', '.');
+           let num = parseFloat(numText);
+           if (!isNaN(num)) {
+             let scaledNum = num * (currentServings / globalRecipe.servings);
+             // Round to max 1 decimal place to avoid long fractions
+             scaledNum = Math.round(scaledNum * 10) / 10;
+             let scaledStr = scaledNum.toString().replace('.', ',');
+             scaledAmount = `${scaledStr} ${match[2]}`.trim();
+           }
+        }
+
+        return `
+        <li class="ingredient-item">
+          <span class="ingredient-name">${ing.item}</span>
+          <span class="ingredient-amount">${scaledAmount}</span>
+        </li>`;
+      }).join('');
+    }
+
+    function updateServings(delta) {
+      if (!globalRecipe) return;
+      const newServings = currentServings + delta;
+      if (newServings < 1) return; // Minimum 1 serving
+      
+      currentServings = newServings;
+      
+      // Update DOM
+      document.getElementById('serving-count-display').textContent = currentServings;
+      document.getElementById('sig-ingredient-list').innerHTML = renderIngredientsList();
+    }
+
     function renderRecipePage(recipe) {
+      globalRecipe = recipe;
+      currentServings = recipe.servings;
+
       const fav = isFavorite(recipe.id);
       const meta = getCuisineMeta(recipe.cuisine);
       const diffClass = getDifficultyClass(recipe.difficulty);
@@ -107,22 +153,11 @@
         `<span class="recipe-detail-tag">${t}</span>`
       ).join('');
 
-      const ingredientsHtml = recipe.ingredients.map(ing => `
-        <li class="ingredient-item">
-          <span class="ingredient-name">${ing.item}</span>
-          <span class="ingredient-amount">${ing.amount}</span>
-        </li>`).join('');
-
+      // Steps
       const stepsHtml = recipe.steps.map((step, i) => `
         <li class="step-item">
           <span class="step-number">${i + 1}</span>
           <p class="step-text">${step}</p>
-        </li>`).join('');
-
-      const tipsHtml = (recipe.tips || []).map(tip => `
-        <li class="tip-item">
-          <span class="tip-icon">💡</span>
-          <span>${tip}</span>
         </li>`).join('');
 
       const n = recipe.nutrition;
@@ -184,7 +219,7 @@
                 <span class="recipe-meta-pill">⏱ <strong>${recipe.prepTime} min</strong> preparo</span>
                 <span class="recipe-meta-pill">🔥 <strong>${recipe.cookTime} min</strong> cozimento</span>
                 <span class="recipe-meta-pill">⏳ <strong>${recipe.totalTime} min</strong> total</span>
-                <span class="recipe-meta-pill">👤 <strong>${recipe.servings}</strong> porções</span>
+                <span class="recipe-meta-pill">👤 <strong>${recipe.servings}</strong> porções base</span>
                 <span class="recipe-meta-pill card-difficulty ${diffClass}" style="padding:0.3rem 0.8rem;">${recipe.difficulty}</span>
               </div>
 
@@ -213,8 +248,15 @@
               </button>
 
               <div class="recipe-panel">
-                <div class="recipe-panel-title">🥄 Ingredientes</div>
-                <ul class="ingredient-list">${ingredientsHtml}</ul>
+                <div class="recipe-panel-title" style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>🥄 Ingredientes</div>
+                  <div class="serving-controls" style="display:flex; align-items:center; gap:0.8rem; background: var(--clr-surface-2); padding: 0.2rem 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--clr-border);">
+                    <button onclick="updateServings(-1)" style="color:var(--clr-gold); font-size:1.2rem; cursor:pointer;" aria-label="Diminuir porções">−</button>
+                    <span id="serving-count-display" style="font-weight:700; color:var(--clr-text); min-width: 14px; text-align:center; font-family: var(--font-body); font-size: 0.9rem;">${currentServings}</span>
+                    <button onclick="updateServings(1)" style="color:var(--clr-gold); font-size:1.2rem; cursor:pointer;" aria-label="Aumentar porções">+</button>
+                  </div>
+                </div>
+                <ul class="ingredient-list" id="sig-ingredient-list">${renderIngredientsList()}</ul>
               </div>
             </div>
 
@@ -231,7 +273,7 @@
                 <div class="recipe-panel-title">📊 Informação Nutricional</div>
                 <div class="nutrition-grid">${nutritionHtml}</div>
                 <p style="font-size:0.7rem;color:var(--clr-text-dim);margin-top:0.8rem;text-align:center;">
-                  * Valores aproximados por porção
+                  * Nutrição por porção original (${recipe.servings})
                 </p>
               </div>
             </div>
