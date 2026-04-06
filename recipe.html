@@ -140,7 +140,11 @@
       const yieldText = document.getElementById('yield-display');
       if (yieldText) {
         const totalYield = currentServings * globalRecipe.servings;
-        yieldText.textContent = `${currentServings} receita(s) rende(m) ${totalYield} porções`;
+        if (currentServings === 1) {
+          yieldText.textContent = `1 receita rende ${totalYield} porções`;
+        } else {
+          yieldText.textContent = `${currentServings} receitas rendem ${totalYield} porções`;
+        }
       }
     }
 
@@ -264,7 +268,7 @@
                   </div>
                 </div>
                 <div id="yield-display" style="font-size: 0.8rem; color: var(--clr-text-dim); margin-top: 0.2rem; margin-bottom: 1rem; font-style: italic;">
-                  ${currentServings} receita(s) rende(m) ${recipe.servings * currentServings} porções
+                  1 receita rende ${recipe.servings} porções
                 </div>
                 <ul class="ingredient-list" id="sig-ingredient-list">${renderIngredientsList()}</ul>
               </div>
