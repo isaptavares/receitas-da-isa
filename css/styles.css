@@ -877,6 +877,41 @@ ul { list-style: none; }
   gap: 1.5rem;
 }
 
+@media (max-width: 768px) {
+  .recipe-hero {
+    height: auto;
+    min-height: 550px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .recipe-hero-img {
+    position: absolute;
+    inset: 0;
+  }
+  .recipe-hero-overlay {
+    background: linear-gradient(to bottom, 
+      rgba(15,13,10,0.5) 0%, 
+      rgba(15,13,10,0.85) 40%, 
+      rgba(15,13,10,0.98) 100%
+    );
+  }
+  .recipe-hero-content {
+    position: relative;
+    padding: calc(var(--nav-height) + 2rem) 1.5rem 3rem;
+  }
+  .recipe-detail-title {
+    font-size: 2.2rem;
+  }
+  .recipe-detail-subtitle {
+     font-size: 0.95rem;
+     line-height: 1.4;
+  }
+  .recipe-detail-meta {
+    gap: 1rem 1.5rem;
+  }
+}
+
 .recipe-meta-pill {
   display: flex;
   align-items: center;
