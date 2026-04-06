@@ -109,7 +109,7 @@
            let numText = match[1].replace(',', '.');
            let num = parseFloat(numText);
            if (!isNaN(num)) {
-             let scaledNum = num * (currentServings / globalRecipe.servings);
+             let scaledNum = num * currentServings;
              // Round to max 1 decimal place to avoid long fractions
              scaledNum = Math.round(scaledNum * 10) / 10;
              let scaledStr = scaledNum.toString().replace('.', ',');
@@ -135,11 +135,18 @@
       // Update DOM
       document.getElementById('serving-count-display').textContent = currentServings;
       document.getElementById('sig-ingredient-list').innerHTML = renderIngredientsList();
+      
+      // Dynamically update yield text if it exists
+      const yieldText = document.getElementById('yield-display');
+      if (yieldText) {
+        const totalYield = currentServings * globalRecipe.servings;
+        yieldText.textContent = `${currentServings} receita(s) rende(m) ${totalYield} porções`;
+      }
     }
 
     function renderRecipePage(recipe) {
       globalRecipe = recipe;
-      currentServings = 1; // Default to 1 serving
+      currentServings = 1; // Default to 1 recipe
 
       const fav = isFavorite(recipe.id);
       const meta = getCuisineMeta(recipe.cuisine);
@@ -219,7 +226,7 @@
                 <span class="recipe-meta-pill">⏱ <strong>${recipe.prepTime} min</strong> preparo</span>
                 <span class="recipe-meta-pill">🔥 <strong>${recipe.cookTime} min</strong> cozimento</span>
                 <span class="recipe-meta-pill">⏳ <strong>${recipe.totalTime} min</strong> total</span>
-                <span class="recipe-meta-pill">👤 <strong>${recipe.servings}</strong> porções base</span>
+                <span class="recipe-meta-pill">👤 <strong>${recipe.servings}</strong> porções</span>
                 <span class="recipe-meta-pill card-difficulty ${diffClass}" style="padding:0.3rem 0.8rem;">${recipe.difficulty}</span>
               </div>
 
@@ -256,6 +263,9 @@
                     <button onclick="updateServings(1)" style="color:var(--clr-gold); font-size:1.2rem; cursor:pointer;" aria-label="Aumentar porções">+</button>
                   </div>
                 </div>
+                <div id="yield-display" style="font-size: 0.8rem; color: var(--clr-text-dim); margin-top: 0.2rem; margin-bottom: 1rem; font-style: italic;">
+                  ${currentServings} receita(s) rende(m) ${recipe.servings * currentServings} porções
+                </div>
                 <ul class="ingredient-list" id="sig-ingredient-list">${renderIngredientsList()}</ul>
               </div>
             </div>
@@ -273,7 +283,7 @@
                 <div class="recipe-panel-title">📊 Informação Nutricional</div>
                 <div class="nutrition-grid">${nutritionHtml}</div>
                 <p style="font-size:0.7rem;color:var(--clr-text-dim);margin-top:0.8rem;text-align:center;">
-                  * Nutrição por porção original (${recipe.servings})
+                  * Nutrição por 1 porção
                 </p>
               </div>
             </div>
