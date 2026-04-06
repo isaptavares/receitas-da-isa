@@ -1545,7 +1545,7 @@ footer {
 }
 
 /* =============================================
-   MOBILE OVERRIDES (FINAL FIX)
+   MOBILE OVERRIDES (MATCHING DESKTOP)
    ============================================= */
 @media (max-width: 800px) {
   .step-item {
@@ -1553,12 +1553,10 @@ footer {
     background: var(--clr-surface-2) !important;
   }
   .step-number {
-    background: #FFD700 !important; /* Gold Puro - Amarelo Vivo */
-    background-image: none !important;
-    color: #000 !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.6) !important;
-    font-weight: 800 !important;
+    background: var(--gradient-gold) !important; 
+    color: #1a0f00 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
     filter: none !important;
-    -webkit-print-color-adjust: exact !important;
   }
 }
