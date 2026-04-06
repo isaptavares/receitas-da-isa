@@ -139,7 +139,7 @@
 
     function renderRecipePage(recipe) {
       globalRecipe = recipe;
-      currentServings = recipe.servings;
+      currentServings = 1; // Default to 1 serving
 
       const fav = isFavorite(recipe.id);
       const meta = getCuisineMeta(recipe.cuisine);
