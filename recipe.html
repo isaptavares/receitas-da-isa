@@ -83,7 +83,7 @@
 
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
-  <script src="js/recipes.js?v=3"></script>
+  <script src="js/recipes.js?v=4"></script>
   <script>
     // =============================================
     // RECIPE DETAIL PAGE CONTROLLER
@@ -126,12 +126,15 @@
         </li>`).join('');
 
       const n = recipe.nutrition;
-      const nutritionHtml = `
+      let nutritionHtml = `
         <div class="nutrition-item"><div class="nutrition-value">${n.calories}</div><div class="nutrition-label">Calorias</div></div>
         <div class="nutrition-item"><div class="nutrition-value">${n.protein}</div><div class="nutrition-label">Proteína</div></div>
         <div class="nutrition-item"><div class="nutrition-value">${n.carbs}</div><div class="nutrition-label">Carboidratos</div></div>
         <div class="nutrition-item"><div class="nutrition-value">${n.fat}</div><div class="nutrition-label">Gorduras</div></div>
       `;
+      if (n.fiber) {
+        nutritionHtml += `<div class="nutrition-item" style="grid-column: span 2;"><div class="nutrition-value">${n.fiber}</div><div class="nutrition-label">Fibras</div></div>`;
+      }
 
       const refPage = document.referrer && document.referrer.includes('favorites') ? 'favorites.html' : 'index.html';
       const backLabel = document.referrer && document.referrer.includes('favorites') ? '← Voltar às favoritas' : '← Voltar às receitas';
@@ -176,51 +179,35 @@
           <!-- BODY GRID -->
           <div class="recipe-body">
 
-            <!-- LEFT COLUMN: Steps + Tips -->
-            <div class="recipe-col-left">
-              <!-- Steps -->
-              <h2 class="recipe-section-title">👨‍🍳 Modo de Preparo</h2>
-              <ol class="steps-list">${stepsHtml}</ol>
-
-              <!-- Tips -->
-              ${tipsHtml ? `
-              <div class="tips-panel">
-                <h2 class="recipe-section-title" style="margin-top:2.5rem;">💡 Dicas da Isa</h2>
-                <div class="recipe-panel">
-                  <ul class="tips-list">${tipsHtml}</ul>
-                </div>
-              </div>` : ''}
-            </div>
-
-            <!-- RIGHT COLUMN: Ingredients + Nutrition -->
-            <div class="recipe-col-right">
+            <!-- COLUMN 1: Ingredients -->
+            <div class="recipe-col-ingredients">
               <button class="back-btn" onclick="window.location='${refPage}'" id="back-btn">
                 ← Voltar
               </button>
 
-              <!-- Ingredients -->
-              <div class="recipe-panel" style="margin-bottom:1.5rem;">
+              <div class="recipe-panel">
                 <div class="recipe-panel-title">🥄 Ingredientes</div>
                 <ul class="ingredient-list">${ingredientsHtml}</ul>
               </div>
+            </div>
 
-              <!-- Nutrition -->
-              <div class="recipe-panel" style="margin-bottom:1.5rem;">
+            <!-- COLUMN 2: Steps -->
+            <div class="recipe-col-steps">
+              <h2 class="recipe-section-title">👨‍🍳 Modo de Preparo</h2>
+              <ol class="steps-list">${stepsHtml}</ol>
+            </div>
+
+            <!-- COLUMN 3: Nutrition -->
+            <div class="recipe-col-nutrition">
+              <div class="recipe-panel">
                 <div class="recipe-panel-title">📊 Informação Nutricional</div>
                 <div class="nutrition-grid">${nutritionHtml}</div>
-                <p style="font-size:0.7rem;color:var(--clr-text-dim);margin-top:0.8rem;">
+                <p style="font-size:0.7rem;color:var(--clr-text-dim);margin-top:0.8rem;text-align:center;">
                   * Valores aproximados por porção
                 </p>
               </div>
-
-              <!-- Fiber info -->
-              ${n.fiber ? `
-              <div class="recipe-panel">
-                <div class="recipe-panel-title">🌿 Fibras</div>
-                <div style="font-size:1.1rem;font-weight:600;color:var(--clr-sage);">${n.fiber}</div>
-                <div style="font-size:0.75rem;color:var(--clr-text-dim);margin-top:0.2rem;">por porção</div>
-              </div>` : ''}
             </div>
+
           </div>
         </article>
       `;

@@ -887,15 +887,36 @@ ul { list-style: none; }
 .recipe-meta-pill strong { color: var(--clr-gold-light); font-weight: 600; }
 
 .recipe-body {
-  padding: 3rem clamp(1.5rem, 6vw, 5rem) 5rem;
+  padding: 3rem clamp(1.5rem, 6vw, 5rem);
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 3rem;
-  max-width: 1200px;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-areas: "ing steps nut";
+  gap: 2.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.recipe-col-ingredients { grid-area: ing; }
+.recipe-col-steps { grid-area: steps; }
+.recipe-col-nutrition { grid-area: nut; }
+
+@media (max-width: 1024px) {
+  .recipe-body {
+    grid-template-columns: 1fr 2fr;
+    grid-template-areas:
+      "ing steps"
+      "nut steps";
+  }
 }
 
 @media (max-width: 800px) {
-  .recipe-body { grid-template-columns: 1fr; }
+  .recipe-body { 
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "ing"
+      "nut"
+      "steps";
+  }
 }
 
 .recipe-panel {
