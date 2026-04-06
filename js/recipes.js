@@ -46,13 +46,13 @@ function toggleFavorite(id) {
 // ---- Data Loading ----
 
 async function loadIndex() {
-  const res = await fetch('data/index.json');
+  const res = await fetch('data/index.json?v=' + Date.now());
   if (!res.ok) throw new Error('Não foi possível carregar o índice de receitas.');
   return res.json();
 }
 
 async function loadRecipe(id) {
-  const res = await fetch(`data/recipes/${id}.json`);
+  const res = await fetch(`data/recipes/${id}.json?v=` + Date.now());
   if (!res.ok) throw new Error(`Receita "${id}" não encontrada.`);
   return res.json();
 }
