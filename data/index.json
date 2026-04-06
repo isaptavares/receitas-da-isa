@@ -10,30 +10,15 @@
     "Tailandesa"
   ],
   "allTags": [
-    "massa",
-    "cremoso",
-    "clássico",
-    "jantar",
-    "rápido",
-    "sushi",
-    "peixe",
-    "sem glúten",
-    "leve",
-    "especial",
-    "carne",
-    "picante",
-    "street food",
-    "festivo",
-    "sem laticínios",
-    "frango",
-    "vinho",
-    "comfort food",
-    "jantar especial",
-    "inverno",
-    "macarrão",
-    "frutos do mar",
-    "agridoce",
-    "wok"
+    "Fácil de fazer",
+    "1 panela",
+    "Falta checar",
+    "Dia a dia",
+    "Gostosão",
+    "Fritura",
+    "Proteico",
+    "Pouco calórico",
+    "Saudável"
   ],
   "recipes": [
     {
@@ -48,11 +33,8 @@
       "difficulty": "Médio",
       "favorite": true,
       "tags": [
-        "massa",
-        "cremoso",
-        "clássico",
-        "jantar",
-        "rápido"
+        "Dia a dia",
+        "Gostosão"
       ],
       "file": "data/recipes/carbonara.json",
       "ingredients": [
@@ -78,11 +60,8 @@
       "difficulty": "Difícil",
       "favorite": false,
       "tags": [
-        "sushi",
-        "peixe",
-        "sem glúten",
-        "leve",
-        "especial"
+        "Saudável",
+        "Pouco calórico"
       ],
       "file": "data/recipes/sushi.json",
       "ingredients": [
@@ -114,11 +93,8 @@
       "difficulty": "Fácil",
       "favorite": true,
       "tags": [
-        "carne",
-        "picante",
-        "street food",
-        "festivo",
-        "sem laticínios"
+        "Fritura",
+        "Gostosão"
       ],
       "file": "data/recipes/tacos.json",
       "ingredients": [
@@ -150,11 +126,8 @@
       "difficulty": "Médio",
       "favorite": true,
       "tags": [
-        "frango",
-        "vinho",
-        "comfort food",
-        "jantar especial",
-        "inverno"
+        "Gostosão",
+        "Falta checar"
       ],
       "file": "data/recipes/coq_au_vin.json",
       "ingredients": [
@@ -186,11 +159,8 @@
       "difficulty": "Médio",
       "favorite": false,
       "tags": [
-        "macarrão",
-        "frutos do mar",
-        "agridoce",
-        "sem glúten",
-        "wok"
+        "Gostosão",
+        "Proteico"
       ],
       "file": "data/recipes/padthai.json",
       "ingredients": [

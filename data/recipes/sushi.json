@@ -11,7 +11,7 @@
   "totalTime": 60,
   "difficulty": "Difícil",
   "favorite": false,
-  "tags": ["sushi", "peixe", "sem glúten", "leve", "especial"],
+  "tags": ["Saudável", "Pouco calórico"],
   "ingredients": [
     { "item": "Arroz para sushi", "amount": "2 xícaras" },
     { "item": "Vinagre de arroz", "amount": "4 colheres de sopa" },
