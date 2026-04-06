@@ -1556,18 +1556,28 @@ footer {
     background: var(--clr-surface-2) !important;
   }
   .step-number {
-    background: #f5c76a !important; /* Solid Light Gold - visual match for desktop */
+    background: #f5c76a !important; 
     background-image: none !important;
     color: #1a0f00 !important;
     box-shadow: none !important;
-    text-shadow: none !important;
     filter: none !important;
+  }
+  
+  /* Critical: Specific mobile override for completed state */
+  .step-item.completed {
+    border: 1.5px solid #2ecc71 !important;
+    background: rgba(46, 204, 113, 0.12) !important;
+  }
+  .step-item.completed .step-number {
+    background: #2ecc71 !important;
+    color: #fff !important;
   }
 }
 
+/* General styles */
 .step-item { cursor: pointer; transition: all var(--transition); }
 .step-item.completed {
-  border-color: #2ecc71 !important;
+  border: 1.5px solid #2ecc71 !important;
   background: rgba(46, 204, 113, 0.05) !important;
 }
 .step-item.completed .step-number {
