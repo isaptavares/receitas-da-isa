@@ -889,7 +889,7 @@ ul { list-style: none; }
 .recipe-body {
   padding: 3rem clamp(1.5rem, 6vw, 5rem) 5rem;
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 2fr 1fr;
   gap: 3rem;
   max-width: 1200px;
 }

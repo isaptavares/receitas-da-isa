@@ -83,7 +83,7 @@
 
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
-  <script src="js/recipes.js"></script>
+  <script src="js/recipes.js?v=3"></script>
   <script>
     // =============================================
     // RECIPE DETAIL PAGE CONTROLLER
@@ -176,8 +176,24 @@
           <!-- BODY GRID -->
           <div class="recipe-body">
 
-            <!-- LEFT COLUMN: Ingredients + Nutrition -->
+            <!-- LEFT COLUMN: Steps + Tips -->
             <div class="recipe-col-left">
+              <!-- Steps -->
+              <h2 class="recipe-section-title">👨‍🍳 Modo de Preparo</h2>
+              <ol class="steps-list">${stepsHtml}</ol>
+
+              <!-- Tips -->
+              ${tipsHtml ? `
+              <div class="tips-panel">
+                <h2 class="recipe-section-title" style="margin-top:2.5rem;">💡 Dicas da Isa</h2>
+                <div class="recipe-panel">
+                  <ul class="tips-list">${tipsHtml}</ul>
+                </div>
+              </div>` : ''}
+            </div>
+
+            <!-- RIGHT COLUMN: Ingredients + Nutrition -->
+            <div class="recipe-col-right">
               <button class="back-btn" onclick="window.location='${refPage}'" id="back-btn">
                 ← Voltar
               </button>
@@ -203,22 +219,6 @@
                 <div class="recipe-panel-title">🌿 Fibras</div>
                 <div style="font-size:1.1rem;font-weight:600;color:var(--clr-sage);">${n.fiber}</div>
                 <div style="font-size:0.75rem;color:var(--clr-text-dim);margin-top:0.2rem;">por porção</div>
-              </div>` : ''}
-            </div>
-
-            <!-- RIGHT COLUMN: Steps + Tips -->
-            <div class="recipe-col-right">
-              <!-- Steps -->
-              <h2 class="recipe-section-title">👨‍🍳 Modo de Preparo</h2>
-              <ol class="steps-list">${stepsHtml}</ol>
-
-              <!-- Tips -->
-              ${tipsHtml ? `
-              <div class="tips-panel">
-                <h2 class="recipe-section-title" style="margin-top:2.5rem;">💡 Dicas da Isa</h2>
-                <div class="recipe-panel">
-                  <ul class="tips-list">${tipsHtml}</ul>
-                </div>
               </div>` : ''}
             </div>
           </div>

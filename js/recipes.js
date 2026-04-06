@@ -115,9 +115,6 @@ function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html'
     `<span class="card-tag">${t}</span>`
   ).join('');
 
-  const ingsTitle = recipe.ingredients && recipe.ingredients.length > 0 ? "Ingredientes:" : "";
-  const ingsHtml = (recipe.ingredients || []).map(ing => `<li>${ing}</li>`).join('');
-
   return `
     <article class="recipe-card ${featured ? 'featured' : ''}" 
              data-id="${recipe.id}"
@@ -143,14 +140,9 @@ function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html'
         </button>
       </div>
 
-      <div class="card-body" style="position: relative;">
+      <div class="card-body">
         <h3 class="card-title">${recipe.title}</h3>
         <p class="card-subtitle">${recipe.subtitle}</p>
-
-        <div class="card-ingredients-mini">
-          <strong>${ingsTitle}</strong>
-          <ul>${ingsHtml}</ul>
-        </div>
 
         <div class="card-meta">
           <span class="card-meta-item">
