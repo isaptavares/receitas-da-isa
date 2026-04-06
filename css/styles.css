@@ -919,6 +919,14 @@ ul { list-style: none; }
   }
 }
 
+.desktop-spacer {
+  visibility: hidden;
+  user-select: none;
+}
+@media (max-width: 1024px) {
+  .desktop-spacer { display: none; }
+}
+
 .recipe-panel {
   background: var(--clr-surface);
   border: 1px solid var(--clr-border);
