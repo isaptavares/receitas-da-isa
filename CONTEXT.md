@@ -21,6 +21,7 @@
 - Data stored as **JSON files** (one per recipe + one master index)
 - Favorites saved in **localStorage** (key: `receitas_isa_favorites`)
 - Master Stylesheet: `css/main.css` (Renamed from `styles.css` to force cache bypass)
+- **Cache-Busting Logic:** All JSON `fetch` calls in `js/recipes.js` include a timestamp (`?v=TIMESTAMP`) to prevent stale data/tags from appearing after updates.
 
 ---
 
@@ -45,8 +46,8 @@
 ### Key Design Decisions
 - **Dark mode only** (intentional)
 - **Interactive Steps**: `step-item` elements are clickable. Clicking toggles the `.completed` class.
-- **Specific Mobile Overrides**: Mobile uses solid colors (like `#f5c76a`) for small elements (numbers) to prevent "muddy" rendering of gradients. Use `!important` inside media queries to override base styles if necessary.
-- **Cache Management**: Always prefer updating/creating a new CSS filename if mobile changes are not appearing.
+- **Specific Mobile Overrides**: Mobile uses solid colors (like `#f5c76a`) for small elements (numbers) to prevent "muddy" rendering of gradients. 
+- **CRITICAL Mobile Specificity**: For the `.completed` state on mobile, rules must be defined **inside** the media query and use `!important` to override the base mobile `.step-item` styles.
 
 ---
 
@@ -61,10 +62,10 @@ c:\Users\isapt\imagens\Backup drive isa 2\Livro de receitas\
 ├── css/
 │   └── main.css            ← Master design system (Bypasses old styles.css cache)
 ├── js/
-│   └── recipes.js          ← Core logic: data loading, filtering, card rendering, favorites, toasts
+│   └── recipes.js          ← Core logic: data loading (with cache-bust), filtering, favorites
 ├── images/                 ← Assets for recipes and UI
 └── data/
-    ├── index.json          ← Master recipe index
+    ├── index.json          ← Master recipe index (New tags implemented here)
     └── recipes/            ← Individual recipe JSONs
 ```
 
@@ -80,21 +81,21 @@ c:\Users\isapt\imagens\Backup drive isa 2\Livro de receitas\
 ### 2. Interactive Steps (Modo de Preparo)
 - **Click to Mark:** Each step in the `recipe.html` is an `<li>` with `onclick="this.classList.toggle('completed')"`.
 - **Visual State:** `.completed` adds a green border (`#2ecc71`) and green background.
-- **Reversibility:** Clicking again removes the state.
+
+### 3. Tag System
+- **Taxonomy:** Only a specific set of tags from the user's reference image is supported: `Fácil de fazer`, `1 panela`, `Falta checar`, `Dia a dia`, `Gostosão`, `Fritura`, `Proteico`, `Pouco calórico`, `Saudável`.
 
 ---
 
 ## Deployment & Workflow Rules
 
 - **CRITICAL RULE FOR AI:** Every change must be committed and pushed to GitHub immediately.
-- **Mobile Troubleshooting:** If mobile styles don't match desktop:
-  1. Check for specificity (media query overrides).
-  2. Use solid hex instead of gradients for small circles.
-  3. Force cache bypass by incrementing versioning strings or renaming CSS files.
+- **Cache Troubleshooting:** 
+  1. Renamed CSS to `main.css`.
+  2. Added `?v=` timestamp to JSON `fetch` calls.
 
 ---
 
 ## Conversation History Reference
-- **Conversation ID:** `b8fde2ca-7ac3-4a99-8ce7-dc9a60ce9ebd` (Current)
-- **Last Clean Update:** 2026-04-06
-- This session focused on mobile responsiveness, serving logic, and interactive step tracking.
+- **Conversation ID:** `b8fde2ca-7ac3-4a99-8ce7-dc9a60ce9ebd` (Last Update: 2026-04-06)
+- This session finalized the mobile responsiveness, interactive checklist feature, serving logic, and tag overhaul.
