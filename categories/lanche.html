@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Receitas da Isa — Lanches rápidos e saborosos para o seu dia.">
+  <title>Lanche — Receitas da Isa</title>
+  <link rel="stylesheet" href="../css/main.css?v=1.2">
+</head>
+<body data-category="Lanche">
+
+  <nav class="navbar" id="navbar">
+    <a class="nav-logo" href="../index.html">
+      <span class="nav-logo-icon">🍴</span>
+      <span class="nav-logo-text">Receitas da Isa <em class="nav-logo-sub">sabores do mundo</em></span>
+    </a>
+    <ul class="nav-links">
+      <li><a class="nav-link" href="../index.html">🏠 Início</a></li>
+      <li><a class="nav-link" href="../favorites.html">♥ Favoritas</a></li>
+    </ul>
+  </nav>
+
+  <header class="cat-page-header">
+    <h1 class="cat-page-title"><em>Lanche</em></h1>
+    <p class="cat-page-count" id="category-count">(Carregando...)</p>
+  </header>
+
+  <div class="cat-page-controls">
+    <label for="sort-select">Organizar por</label>
+    <select class="cat-page-select" id="sort-select">
+      <option value="padrao">Padrão</option>
+      <option value="recentes">Mais recentes</option>
+      <option value="tempo">Menor tempo</option>
+      <option value="calorias">Menos calorias</option>
+    </select>
+  </div>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="recipe-grid" id="recipe-grid"></div>
+    <button class="btn-load-more" id="load-more-btn" style="display: none;">Carregar mais</button>
+  </section>
+
+  <footer>
+    <span class="footer-logo">🍴 Receitas da Isa</span>
+    <span class="footer-copy">Feito com <span>♥</span> e muito sabor • 2026</span>
+  </footer>
+
+  <script src="../js/recipes.js"></script>
+  <script src="../js/category-manager.js"></script>
+</body>
+</html>

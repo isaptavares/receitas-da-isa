@@ -1,0 +1,22 @@
+{
+  "id": "picanha_grelhada",
+  "title": "Picanha Grelhada",
+  "subtitle": "O clássico brasileiro no ponto perfeito.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Brasileira",
+  "totalTime": 30,
+  "calories": 550,
+  "servings": 2,
+  "difficulty": "Médio",
+  "tags": ["Almoço", "Churrasco", "Carnes", "Premium"],
+  "ingredients": ["500g de picanha maturada", "Sal grosso ou sal de parrilla", "Pimenta-do-reino moída na hora", "1 dente de alho", "Alecrim fresco"],
+  "steps": [
+    "Corte a picanha em bifes de tira (2 a 3 dedos de largura).",
+    "Tempere com sal e pimenta apenas no momento de levar ao fogo.",
+    "Grelhe com a gordura virada para cima primeiro para selar.",
+    "Vire e deixe dourar a gordura.",
+    "Controle o ponto desejado (selada por fora e rosada por dentro).",
+    "Finalize pincelando manteiga com alho e alecrim."
+  ],
+  "createdAt": "2026-04-07T16:58:00Z"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "sanduiche_natural",
+  "title": "Sanduíche Natural",
+  "subtitle": "Leveza e praticidade para o seu lanche.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Americana",
+  "totalTime": 10,
+  "calories": 320,
+  "servings": 1,
+  "difficulty": "Fácil",
+  "tags": ["Lanche", "Saudável", "Frango", "Rápido"],
+  "ingredients": ["Pão de forma integral", "Frango desfiado", "Maionese light ou iogurte grego", "Cenoura ralada", "Alface picada"],
+  "steps": [
+    "Misture o frango desfiado com a maionese e a cenoura até formar um patê.",
+    "Tempere com sal e ervas finas.",
+    "Espalhe generosamente sobre uma fatia de pão.",
+    "Adicione a alface fresca.",
+    "Feche o sanduíche e embale ou sirva imediatamente."
+  ],
+  "createdAt": "2026-04-07T17:01:00Z"
+}

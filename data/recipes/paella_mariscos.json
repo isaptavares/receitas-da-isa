@@ -1,0 +1,22 @@
+{
+  "id": "paella_mariscos",
+  "title": "Paella de Mariscos",
+  "subtitle": "Um festival de sabores do mar espanhol.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Espanhola",
+  "totalTime": 50,
+  "calories": 650,
+  "servings": 4,
+  "difficulty": "Difícil",
+  "tags": ["Jantar", "Frutos do Mar", "Espanhola", "Especial"],
+  "ingredients": ["Arroz bomba ou arroz para paella", "Camarões grandes", "Lulas fatiadas", "Mexilhões", "Açafrão legítimo", "Caldo de Peixe"],
+  "steps": [
+    "Grelhe os camarões primeiro e reserve.",
+    "Refogue o arroz com os pimentões e açafrão.",
+    "Adicione o caldo quente aos poucos e não mexa mais o arroz.",
+    "Distribua os frutos do mar por cima conforme o cozimento avança.",
+    "Deixe formar a 'socarrat' (casquinha no fundo).",
+    "Finalize com limão siciliano por cima."
+  ],
+  "createdAt": "2026-04-07T17:05:00Z"
+}

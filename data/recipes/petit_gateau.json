@@ -1,0 +1,22 @@
+{
+  "id": "petit_gateau",
+  "title": "Petit Gateau",
+  "subtitle": "Bolo pequeno com coração derretido.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Francesa",
+  "totalTime": 15,
+  "calories": 450,
+  "servings": 2,
+  "difficulty": "Médio",
+  "tags": ["Sobremesa", "Chocolate", "Francesa", "Especial"],
+  "ingredients": ["Chocolate meio amargo", "Manteiga", "Gemas e ovos inteiros", "Farinha de trigo", "Açúcar"],
+  "steps": [
+    "Derreta o chocolate e a manteiga juntos.",
+    "Bata os ovos e as gemas com o açúcar.",
+    "Incorpore o chocolate e adicione a farinha peneirada.",
+    "Leve para as forminhas untadas e enfarinhadas.",
+    "Asse por exatamente 7 a 9 minutos em forno alto (200°C+).",
+    "Desenforme com cuidado e sirva com sorvete de baunilha."
+  ],
+  "createdAt": "2026-04-07T17:07:00Z"
+}

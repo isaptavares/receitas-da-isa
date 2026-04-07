@@ -1,0 +1,22 @@
+{
+  "id": "salmao_teriyaki",
+  "title": "Salmão Teriyaki",
+  "subtitle": "Equilíbrio perfeito entre o doce e o salgado.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Japonesa",
+  "totalTime": 20,
+  "calories": 450,
+  "servings": 2,
+  "difficulty": "Fácil",
+  "tags": ["Almoço", "Peixes", "Oriental", "Saudável"],
+  "ingredients": ["300g de filé de salmão", "1/2 xícara de molho shoyu", "2 colheres de sopa de mel", "Gengibre ralado", "Gergelim preto e branco"],
+  "steps": [
+    "Misture o shoyu, mel e gengibre em uma pequena panela e reduza até engrossar levemente.",
+    "Tempere o salmão com sal e pimenta (cuidado com o sal pois o shoyu já salgado).",
+    "Grelhe o salmão em uma frigideira bem quente, começando com a pele para baixo.",
+    "Vire e grelhe por 2 minutos.",
+    "Pincele o molho teriyaki generosamente e deixe caramelizar por 30 segundos.",
+    "Sirva com gergelim por cima."
+  ],
+  "createdAt": "2026-04-07T16:59:00Z"
+}

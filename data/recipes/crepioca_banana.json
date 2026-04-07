@@ -1,0 +1,22 @@
+{
+  "id": "crepioca_banana",
+  "title": "Crepioca de Banana",
+  "subtitle": "Uma opção saudável e energética para o seu dia.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Brasileira",
+  "totalTime": 10,
+  "calories": 250,
+  "servings": 1,
+  "difficulty": "Fácil",
+  "tags": ["Café da Manhã", "Proteica", "Sem Glúten", "Rápido"],
+  "ingredients": ["1 ovo grande", "2 colheres de sopa de goma de tapioca", "1 banana prata amassada", "Pitada de canela", "Mel a gosto"],
+  "steps": [
+    "Em um recipiente, bata bem o ovo com a tapioca.",
+    "Adicione a banana amassada e a canela, misturando até ficar homogêneo.",
+    "Aqueça uma frigideira antiaderente (não precisa untar se for boa).",
+    "Despeje a massa e cozinhe em fogo baixo até firmar a base.",
+    "Vire e doure do outro lado por cerca de 1 minuto.",
+    "Sirva com um fio de mel por cima."
+  ],
+  "createdAt": "2026-04-07T16:55:00Z"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "brownie_chocolate",
+  "title": "Brownie de Chocolate",
+  "subtitle": "O equilíbrio perfeito entre o fudge e o bolo.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Americana",
+  "totalTime": 45,
+  "calories": 400,
+  "servings": 8,
+  "difficulty": "Fácil",
+  "tags": ["Sobremesa", "Chocolate", "Americana", "Assados"],
+  "ingredients": ["Chocolate meio amargo (70%)", "Manteiga sem sal", "Açúcar mascavo e branco", "Ovos extras", "Cacau em pó"],
+  "steps": [
+    "Derreta o chocolate com a manteiga em banho-maria.",
+    "Bata os ovos com o açúcar até ficar um creme claro.",
+    "Incorpore a mistura de chocolate fria.",
+    "Adicione o cacau e a farinha peneirada por último.",
+    "Asse em forno pré-aquecido (180°C) por 25-30 minutos.",
+    "O centro deve estar ligeiramente úmido ao retirar."
+  ],
+  "createdAt": "2026-04-07T17:06:00Z"
+}

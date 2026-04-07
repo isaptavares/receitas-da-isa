@@ -1,0 +1,21 @@
+{
+  "id": "wrap_frango",
+  "title": "Wrap de Frango e Avocado",
+  "subtitle": "Refeição compacta com sabores vibrantes.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Mexicana",
+  "totalTime": 15,
+  "calories": 400,
+  "servings": 1,
+  "difficulty": "Fácil",
+  "tags": ["Lanche", "Proteico", "Saudável", "Rapido"],
+  "ingredients": ["1 tortilha de trigo", "Filé de frango em tiras grelhado", "1/2 avocado fatiado", "Tomates cereja cortado", "Molho de hortelã"],
+  "steps": [
+    "Aqueça levemente a tortilha em uma frigideira.",
+    "Distribua o frango quente e o avocado no centro.",
+    "Adicione os tomates e um fio de molho de hortelã.",
+    "Dobre as laterais e enrole firmemente.",
+    "Corte na diagonal e sirva."
+  ],
+  "createdAt": "2026-04-07T17:02:00Z"
+}

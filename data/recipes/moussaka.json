@@ -1,0 +1,22 @@
+{
+  "id": "moussaka",
+  "title": "Moussaka Tradicional",
+  "subtitle": "Berinjela, carne temperada e um toque mediterrâneo.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Grega",
+  "totalTime": 60,
+  "calories": 700,
+  "servings": 4,
+  "difficulty": "Difícil",
+  "tags": ["Jantar", "Assados", "Tradicional", "Premium"],
+  "ingredients": ["3 berinjelas grandes fatiadas", "500g de carne moída de cordeiro ou boi", "Molho de tomate caseiro", "Canela em pó", "Molho Béchamel"],
+  "steps": [
+    "Grelhe as fatias de berinjela até murcharem ligeiramente.",
+    "Prepare a carne com o sal, pimenta e uma pitada de canela.",
+    "Em um refratário, faça camadas de berinjela e carne.",
+    "Cubra tudo com o molho Béchamel cremoso.",
+    "Leve ao forno para gratinar até a cobertura ficar dourada.",
+    "Deixe repousar por 10 minutos antes de cortar."
+  ],
+  "createdAt": "2026-04-07T17:03:00Z"
+}

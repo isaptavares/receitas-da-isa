@@ -1,0 +1,22 @@
+{
+  "id": "frango_curry",
+  "title": "Frango ao Curry",
+  "subtitle": "Especiarias ricas para uma noite especial.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Indiana",
+  "totalTime": 35,
+  "calories": 500,
+  "servings": 2,
+  "difficulty": "Médio",
+  "tags": ["Jantar", "Indiana", "Aromático", "Premium"],
+  "ingredients": ["Filés de peito de frango", "Curry em pó", "Leite de coco", "Cebola, alho e gengibre", "Arroz branco para acompanhar"],
+  "steps": [
+    "Refogue os aromáticos (cebola/alho/gengibre) até dourarem.",
+    "Adicione o fango e o curry, deixe fritar brevemente.",
+    "Cubra com o leite de coco e deixe cozinhar em fogo baixo.",
+    "Acerte o sal e a pimenta.",
+    "Cozinhe até o molho encorpar.",
+    "Sirva quente sobre o arroz."
+  ],
+  "createdAt": "2026-04-07T17:04:00Z"
+}

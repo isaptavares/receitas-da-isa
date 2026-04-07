@@ -1,0 +1,22 @@
+{
+  "id": "omelete_verde",
+  "title": "Omelete Verde",
+  "subtitle": "Gourmet, nutritivo e sofisticado.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Francesa",
+  "totalTime": 12,
+  "calories": 210,
+  "servings": 1,
+  "difficulty": "Fácil",
+  "tags": ["Café da Manhã", "Saudável", "Vegetariano", "Low Carb"],
+  "ingredients": ["3 ovos", "1 punhado de espinafre fresco", "Cebolinha picada", "Parmesão ralado", "Queijo branco em cubos"],
+  "steps": [
+    "Bata os ovos vigorosamente até espumarem.",
+    "Adicione o espinafre picado e as ervas.",
+    "Em uma frigideira com manteiga, despeje a mistura.",
+    "Quando estiver quase firme, adicione o queijo branco.",
+    "Dobre ao meio e finalize com parmesão para gratinar levemente.",
+    "Sirva com ervas frescas por cima."
+  ],
+  "createdAt": "2026-04-07T16:57:00Z"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "batata_rustica",
+  "title": "Batata Rústica Alecrim",
+  "subtitle": "Crocantes por fora, macias por dentro.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Americana",
+  "totalTime": 25,
+  "calories": 200,
+  "servings": 2,
+  "difficulty": "Fácil",
+  "tags": ["Acompanhamento", "Batatas", "Vegano", "Assados"],
+  "ingredients": ["Batatas inglesas com casca", "Dentes de alho esmagados", "Alecrim fresco", "Azeite de oliva extra virgem", "Sal grosso"],
+  "steps": [
+    "Lave bem as batatas e corte-as em canoas.",
+    "Tempere com o azeite, sal, alho e alecrim.",
+    "Espalhe em uma assadeira grande sem que fiquem sobrepostas.",
+    "Asse em forno alto (220°C) até dourar e ficar crocante.",
+    "Vire na metade do tempo para assar uniformemente.",
+    "Finalize com flor de sal se desejar."
+  ],
+  "createdAt": "2026-04-07T17:08:00Z"
+}

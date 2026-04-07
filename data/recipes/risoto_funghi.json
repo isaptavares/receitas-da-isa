@@ -1,0 +1,23 @@
+{
+  "id": "risoto_funghi",
+  "title": "Risoto de Funghi",
+  "subtitle": "Um clássico cremoso e reconfortante.",
+  "image": "images/placeholder_recipe.png",
+  "cuisine": "Italiana",
+  "totalTime": 40,
+  "calories": 600,
+  "servings": 2,
+  "difficulty": "Médio",
+  "tags": ["Almoço", "Massas", "Vegetariano", "Gourmet"],
+  "ingredients": ["1 xícara de arroz arbóreo", "50g de funghi secchi", "1/2 cebola picada", "100ml de vinho branco seco", "Caldo de legumes quente", "Parmesão e manteiga"],
+  "steps": [
+    "Hidrate o funghi em água quente por 20 minutos, reserve a água (filtrada).",
+    "Refogue a cebola na manteiga, adicione o arroz e o funghi picado.",
+    "Adicione o vinho branco e mexa até evaporar.",
+    "Vá adicionando o caldo de legumes e a água do funghi concha por concha, mexendo sempre.",
+    "Quando o arroz estiver al dente, desligue o fogo.",
+    "Finalize com uma colher generosa de manteiga e parmesão ralado.",
+    "Tampe e deixe descansar por 2 minutos antes de servir."
+  ],
+  "createdAt": "2026-04-07T17:00:00Z"
+}
