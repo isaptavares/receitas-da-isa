@@ -11,7 +11,7 @@
   "totalTime": 30,
   "difficulty": "Médio",
   "favorite": true,
-  "tags": ["Dia a dia", "Gostosão"],
+  "tags": ["Dia a dia", "Gostosão", "Almoço", "Jantar"],
   "ingredients": [
     { "item": "Espaguete", "amount": "200g" },
     { "item": "Pancetta ou guanciale", "amount": "150g" },

@@ -89,7 +89,8 @@ c:\Users\isapt\imagens\Backup drive isa 2\Livro de receitas\
 
 ## Deployment & Workflow Rules
 
-- **CRITICAL RULE FOR AI:** Every change must be committed and pushed to GitHub immediately.
+- **REGRA DE DEPLOY (NOVA):** Não suba as mudanças para o GitHub automaticamente. Mantenha as alterações apenas no Localhost (ambiente local) até que eu dê um comando explícito como "deploy", "pode subir na nuvem" ou "atualizar site oficial".
+- **Visualização Local:** Use o servidor Python (`python -m http.server 8080`) para testar as mudanças.
 - **Cache Troubleshooting:** 
   1. Renamed CSS to `main.css`.
   2. Added `?v=` timestamp to JSON `fetch` calls.
@@ -97,5 +98,5 @@ c:\Users\isapt\imagens\Backup drive isa 2\Livro de receitas\
 ---
 
 ## Conversation History Reference
-- **Conversation ID:** `b8fde2ca-7ac3-4a99-8ce7-dc9a60ce9ebd` (Last Update: 2026-04-06)
-- This session finalized the mobile responsiveness, interactive checklist feature, serving logic, and tag overhaul.
+- **Conversation ID:** `eee6c55b-58b8-4606-bad2-2438b489fdc4` (Last Update: 2026-04-07)
+- Esta sessão implementou o acesso via Localhost para dispositivos mobile e alterou o fluxo de deploy para manual/sob demanda.

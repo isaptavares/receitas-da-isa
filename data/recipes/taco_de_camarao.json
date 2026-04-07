@@ -1,0 +1,65 @@
+{
+  "id": "taco_de_camarao",
+  "title": "Taco de Camarão",
+  "subtitle": "Camarões crocantes na panko com aioli de pimenta e repolho roxo",
+  "cuisine": "Mexicana",
+  "description": "Tacos crocantes e picantes, perfeitos para uma reunião com amigos.",
+  "image": "images/taco_camarao.png",
+  "calories": 540,
+  "servings": 7,
+  "prepTime": 90,
+  "cookTime": 15,
+  "totalTime": 105,
+  "difficulty": "Médio",
+  "favorite": true,
+  "tags": [
+    "Gostosão",
+    "Fritura",
+    "Almoço",
+    "Jantar",
+    "Lanche"
+  ],
+  "ingredients": [
+    { "item": "Camarão médio", "amount": "0,5Kg" },
+    { "item": "Limões", "amount": "3" },
+    { "item": "Farinha de trigo", "amount": "a gosto" },
+    { "item": "Farinha Panko", "amount": "a gosto" },
+    { "item": "Ovos", "amount": "5" },
+    { "item": "Óleo de soja (ou maionese)", "amount": "250ml" },
+    { "item": "Pimenta Dedo de Moça", "amount": "a gosto" },
+    { "item": "Repolho Roxo", "amount": "a gosto" },
+    { "item": "Dentes de alho", "amount": "5" },
+    { "item": "Azeite", "amount": "a gosto" },
+    { "item": "Rap10", "amount": "2 pacotes" },
+    { "item": "Sal", "amount": "a gosto" },
+    { "item": "Pimenta do reino", "amount": "a gosto" }
+  ],
+  "steps": [
+    "Limpe e evicere os camarões.",
+    "Em uma vasilha, tempere-os com sal, pimenta, alho e limão.",
+    "Deixe os camarões marinando, reserve.",
+    "Em um liquidificador, faça um aioli com pimenta: coloque 2 ovos, 1 colher de sopa de suco de limão puro, e algumas rodelas de pimenta e mexa bem. Sem parar de bater, despeje em fio 250ml de óleo de soja. Controle as dosagens até o aioli atingir a viscosidade e sabor desejados. Reserve na geladeira. Opcional: coloque o aioli em uma bisnaga ou saco de confeitero. (Obs: Caso deseje não fazer o aioli, pode bater no liquidificador maionese com a pimenta e o limão).",
+    "Em uma tábua, corte tiras finas de repolho roxo, reserve.",
+    "Com um aro circular e uma faca, defina e corte 15 círculos de Rap10 que servirão de tortilha para os tacos.",
+    "Em um tábua, corte pimentas Dedo de Moça congeladas em rodelas finas (não precisa tirar as sementes). O congelamento torna o corte das pimentas mais certeiro. Reserve na geladeira.",
+    "Corte 2 limões em oitavos, Reserve na geladeira.",
+    "Pegue os camarões e os passe em farinha de trigo, em seguida em ovo e, em seguida, em farinha Panko.",
+    "Em óleo médio-alto, frite os camarões e os reserve em um prato com papel para fritura.",
+    "Empratamento: Posicione de 2 a 3 camarões em um dos lados da tortilha. Do outro lado, posicione as tiras de repolho roxo. Posicione também em cima da tortilha algumas rodelas de pimenta Dedo de Moça e 1/8 de limão.",
+    "Por fim, sirva uma porção generosa de aioli sobre o taco seguindo um movimento de zigzag.",
+    "Sirva o mais quente possível."
+  ],
+  "tips": [
+    "O congelamento das pimentas torna o corte muito mais certeiro e evita que elas amassem.",
+    "Você pode substituir o preparo do aioli batendo maionese pronta com pimenta e limão para ganhar tempo.",
+    "Corte os círculos de Rap10 com cuidado para aproveitar o máximo da massa."
+  ],
+  "nutrition": {
+    "calories": 540,
+    "protein": "32g",
+    "carbs": "44g",
+    "fat": "26g",
+    "fiber": "4g"
+  },
+  "createdAt": "2026-04-07"
+}

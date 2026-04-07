@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Receitas da Isa — receitas deliciosas de todo o mundo, com amor e muito sabor. Filtre por cozinha, ingredientes, calorias e muito mais.">
   <title>Receitas da Isa — Sabores do Mundo</title>
-  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/main.css?v=1.2">
 </head>
 <body>
 
@@ -55,6 +55,55 @@
       </div>
     </div>
   </header>
+
+  <!-- ===== CATEGORY SECTION ===== -->
+  <section class="section" id="categorias" aria-labelledby="categories-heading" style="padding-bottom: 0;">
+    <div class="section-header">
+      <div>
+        <div class="section-label">✦ O que você deseja?</div>
+        <h2 class="section-title" id="categories-heading">Explorar por <em>Categoria</em></h2>
+      </div>
+    </div>
+    
+    <div class="category-grid">
+      <div class="category-card" onclick="filterByCategory('Café da Manhã')" role="button" aria-label="Ver receitas de Café da Manhã">
+        <img src="images/cat_cafe_manha.png" alt="Café da Manhã" class="category-card-img" loading="lazy">
+        <div class="category-card-overlay">
+          <span class="category-card-name">Café da Manhã</span>
+        </div>
+      </div>
+      <div class="category-card" onclick="filterByCategory('Almoço')" role="button" aria-label="Ver receitas de Almoço">
+        <img src="images/cat_almoco.png" alt="Almoço" class="category-card-img" loading="lazy">
+        <div class="category-card-overlay">
+          <span class="category-card-name">Almoço</span>
+        </div>
+      </div>
+      <div class="category-card" onclick="filterByCategory('Lanche')" role="button" aria-label="Ver receitas de Lanche">
+        <img src="images/cat_lanche.png" alt="Lanche" class="category-card-img" loading="lazy">
+        <div class="category-card-overlay">
+          <span class="category-card-name">Lanche</span>
+        </div>
+      </div>
+      <div class="category-card" onclick="filterByCategory('Jantar')" role="button" aria-label="Ver receitas de Jantar">
+        <img src="images/cat_jantar.png" alt="Jantar" class="category-card-img" loading="lazy">
+        <div class="category-card-overlay">
+          <span class="category-card-name">Jantar</span>
+        </div>
+      </div>
+      <div class="category-card" onclick="filterByCategory('Sobremesa')" role="button" aria-label="Ver receitas de Sobremesa">
+        <img src="images/hero_bg.png" alt="Sobremesa" class="category-card-img" loading="lazy" style="filter: brightness(0.6) sepia(0.3);">
+        <div class="category-card-overlay">
+          <span class="category-card-name">Sobremesa</span>
+        </div>
+      </div>
+      <div class="category-card" onclick="filterByCategory('Acompanhamento')" role="button" aria-label="Ver receitas de Acompanhamento">
+        <img src="images/hero_bg.png" alt="Acompanhamento" class="category-card-img" loading="lazy" style="filter: brightness(0.6) sepia(0.3);">
+        <div class="category-card-overlay">
+          <span class="category-card-name long-text">Acompanhamento</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ===== CUISINE STRIP ===== -->
   <section class="section" style="padding-bottom: 2rem;" id="cuisines-section" aria-labelledby="cuisines-heading">
@@ -165,6 +214,19 @@
     let activeTags = [];
     let activeIngredients = [];
     let maxCalories = 1200;
+    
+    function filterByCategory(category) {
+      activeTags = [category];
+      activeCuisine = 'todas';
+      document.getElementById('filter-cuisine').value = 'todas';
+      document.getElementById('filter-search').value = '';
+      
+      renderTagChips();
+      renderCuisineStrip();
+      applyFilters();
+      
+      document.getElementById('receitas').scrollIntoView({ behavior: 'smooth' });
+    }
 
     async function init() {
       initNavbar();

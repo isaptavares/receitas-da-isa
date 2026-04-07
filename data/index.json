@@ -1,7 +1,7 @@
 {
   "siteName": "Receitas da Isa",
   "description": "Receitas de todo o mundo com amor e carinho",
-  "totalRecipes": 5,
+  "totalRecipes": 6,
   "cuisines": [
     "Italiana",
     "Japonesa",
@@ -18,7 +18,13 @@
     "Fritura",
     "Proteico",
     "Pouco calórico",
-    "Saudável"
+    "Saudável",
+    "Café da Manhã",
+    "Almoço",
+    "Lanche",
+    "Jantar",
+    "Sobremesa",
+    "Acompanhamento"
   ],
   "recipes": [
     {
@@ -34,7 +40,9 @@
       "favorite": true,
       "tags": [
         "Dia a dia",
-        "Gostosão"
+        "Gostosão",
+        "Almoço",
+        "Jantar"
       ],
       "file": "data/recipes/carbonara.json",
       "ingredients": [
@@ -61,7 +69,9 @@
       "favorite": false,
       "tags": [
         "Saudável",
-        "Pouco calórico"
+        "Pouco calórico",
+        "Almoço",
+        "Jantar"
       ],
       "file": "data/recipes/sushi.json",
       "ingredients": [
@@ -94,7 +104,10 @@
       "favorite": true,
       "tags": [
         "Fritura",
-        "Gostosão"
+        "Gostosão",
+        "Almoço",
+        "Jantar",
+        "Lanche"
       ],
       "file": "data/recipes/tacos.json",
       "ingredients": [
@@ -127,7 +140,9 @@
       "favorite": true,
       "tags": [
         "Gostosão",
-        "Falta checar"
+        "Falta checar",
+        "Almoço",
+        "Jantar"
       ],
       "file": "data/recipes/coq_au_vin.json",
       "ingredients": [
@@ -160,12 +175,14 @@
       "favorite": false,
       "tags": [
         "Gostosão",
-        "Proteico"
+        "Proteico",
+        "Almoço",
+        "Jantar"
       ],
       "file": "data/recipes/padthai.json",
       "ingredients": [
         "Macarrão de arroz largo",
-        "Camarão médio limpo",
+        "Camarão médio",
         "Ovos",
         "Brotos de feijão (bean sprouts)",
         "Cebolinha verde",
@@ -179,6 +196,41 @@
         "Limão tahiti",
         "Coentro"
       ]
+    },
+    {
+      "id": "taco_de_camarao",
+      "title": "Taco de Camarão",
+      "subtitle": "Camarões crocantes na panko com aioli de pimenta e repolho roxo",
+      "cuisine": "Mexicana",
+      "image": "images/taco_camarao.png",
+      "calories": 540,
+      "servings": 7,
+      "totalTime": 105,
+      "difficulty": "Médio",
+      "favorite": true,
+      "tags": [
+        "Gostosão",
+        "Fritura",
+        "Almoço",
+        "Jantar",
+        "Lanche"
+      ],
+      "file": "data/recipes/taco_de_camarao.json",
+      "ingredients": [
+        "Camarão médio",
+        "Limão",
+        "Farinha de trigo",
+        "Farinha Panko",
+        "Ovos",
+        "Óleo de soja",
+        "Pimenta Dedo de Moça",
+        "Repolho Roxo",
+        "Alho",
+        "Azeite",
+        "Rap10",
+        "Sal",
+        "Pimenta do reino"
+      ]
     }
   ],
   "allIngredients": [
@@ -188,12 +240,13 @@
     "Alho picado",
     "Amendoim torrado sem sal",
     "Arroz para sushi",
+    "Azeite",
     "Açúcar",
     "Açúcar mascavo",
     "Bacon em cubos",
     "Brotos de feijão (bean sprouts)",
     "Caldo de frango",
-    "Camarão médio limpo",
+    "Camarão médio",
     "Camarão tempurá",
     "Cebola roxa",
     "Cebolas pérola",
@@ -204,8 +257,10 @@
     "Cogumelos Paris ou crimini",
     "Cominho",
     "Cream cheese",
+    "Dentes de alho",
     "Espaguete",
     "Extrato de tomate",
+    "Farinha Panko",
     "Farinha de trigo",
     "Folhas de nori",
     "Frango inteiro cortado em pedaços",
@@ -226,12 +281,16 @@
     "Ovos inteiros",
     "Pancetta ou guanciale",
     "Pasta de tamarindo",
+    "Pimenta Dedo de Moça",
     "Pimenta chipotle em adobo",
     "Pimenta vermelha",
+    "Pimenta do reino",
     "Pimenta-do-reino preta moída na hora",
     "Páprica defumada",
     "Queijo Parmesão ralado",
     "Queijo Pecorino Romano ralado",
+    "Rap10",
+    "Repolho Roxo",
     "Sal",
     "Sal e pimenta",
     "Salmão fresco",
@@ -242,6 +301,7 @@
     "Vinagre de maçã",
     "Vinho tinto seco (Burgundy ou Pinot Noir)",
     "Wasabi",
-    "Óleo de amendoim"
+    "Óleo de amendoim",
+    "Óleo de soja"
   ]
 }
