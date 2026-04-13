@@ -45,6 +45,11 @@
     <ul class="nav-links" role="list">
       <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
       <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
+      <li id="nav-auth-container">
+        <button class="nav-login-btn" id="login-btn">
+          <span>🔑</span> <span>Entrar</span>
+        </button>
+      </li>
     </ul>
   </nav>
 
@@ -113,8 +118,9 @@
 
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
-  <script src="js/recipes.js"></script>
-  <script>
+  <script type="module" src="js/auth.js?v=1"></script>
+  <script type="module" src="js/recipes.js?v=4"></script>
+  <script type="module">
     // =============================================
     // FAVORITES PAGE CONTROLLER
     // =============================================
@@ -261,7 +267,13 @@
         applyFilters();
         showToast('Filtros limpos ✓');
       });
+
+      // Recarrega favoritos quando o usuário logar
+      window.addEventListener('authChange', () => init());
     });
+
+    // Expor funções usadas em onclick dinâmicos
+    window.toggleTag = toggleTag;
   </script>
 </body>
 </html>

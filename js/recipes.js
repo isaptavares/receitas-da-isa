@@ -1,6 +1,8 @@
 /* =============================================
-   RECEITAS DA ISA — Recipe Data Manager
+   RECEITAS DA ISA — Recipe Data Manager (Module)
    ============================================= */
+
+import { getUser, getCloudFavorites, cloudToggleFavorite } from './auth.js';
 
 const FAVORITES_KEY = 'receitas_isa_favorites';
 
@@ -17,9 +19,13 @@ const CUISINE_META = {
   'Grega':      { flag: '🇬🇷', emoji: '🫒' },
 };
 
-// ---- Favorites (localStorage) ----
+// ---- Favorites Logic ----
 
 function getFavorites() {
+  const user = getUser();
+  if (user) {
+    return getCloudFavorites();
+  }
   try {
     return JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
   } catch { return []; }
@@ -29,18 +35,28 @@ function isFavorite(id) {
   return getFavorites().includes(id);
 }
 
-function toggleFavorite(id) {
+async function toggleFavorite(id) {
+  const user = getUser();
+  
+  if (user) {
+    const nowFav = await cloudToggleFavorite(id);
+    if (nowFav) showToast('♥ Salvo na sua conta!');
+    else showToast('🤍 Removido da sua conta');
+    return nowFav;
+  }
+
+  // Local Storage fallback
   const favs = getFavorites();
   const idx = favs.indexOf(id);
   if (idx === -1) {
     favs.push(id);
-    showToast('♥ Adicionado aos favoritos!');
+    showToast('♥ Adicionado aos favoritos locais!');
   } else {
     favs.splice(idx, 1);
-    showToast('🤍 Removido dos favoritos');
+    showToast('🤍 Removido dos favoritos locais');
   }
   localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
-  return idx === -1; // returns true if now favorited
+  return idx === -1;
 }
 
 // ---- Data Loading ----
@@ -61,36 +77,21 @@ async function loadRecipe(id) {
 
 function filterRecipes(recipes, filters) {
   return recipes.filter(r => {
-    // Cuisine filter
     if (filters.cuisine && filters.cuisine !== 'todas' && r.cuisine !== filters.cuisine) return false;
-
-    // Calorie filter
     if (filters.maxCalories && r.calories > filters.maxCalories) return false;
-
-    // Difficulty filter
     if (filters.difficulty && filters.difficulty !== 'todas' && r.difficulty !== filters.difficulty) return false;
-
-    // Tag filter
     if (filters.tags && filters.tags.length > 0) {
-      const hasAll = filters.tags.every(t => r.tags.includes(t));
-      if (!hasAll) return false;
+      if (!filters.tags.every(t => r.tags.includes(t))) return false;
     }
-
-    // Search (title, subtitle, cuisine, tags)
     if (filters.search) {
       const q = filters.search.toLowerCase();
       const haystack = [r.title, r.subtitle, r.cuisine, ...(r.tags || [])].join(' ').toLowerCase();
       if (!haystack.includes(q)) return false;
     }
-
-    // Ingredients Filter (exact active ingredients matching)
     if (filters.ingredients && filters.ingredients.length > 0) {
-      // The recipe must contain ALL selected active ingredients
       const rIngs = (r.ingredients || []).map(i => i.toLowerCase());
-      const hasAll = filters.ingredients.every(i => rIngs.includes(i.toLowerCase()));
-      if (!hasAll) return false;
+      if (!filters.ingredients.every(i => rIngs.includes(i.toLowerCase()))) return false;
     }
-
     return true;
   });
 }
@@ -171,42 +172,22 @@ function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html'
   `;
 }
 
-// ---- Cuisine pills ----
+// ---- Favorite toggle handler (global compat) ----
 
-function renderCuisinePills(cuisines, activeCuisine, onSelect) {
-  const allPill = `
-    <button class="cuisine-pill ${!activeCuisine || activeCuisine === 'todas' ? 'active' : ''}"
-            onclick="${onSelect}('todas')" id="cuisine-pill-todas">
-      <span class="cuisine-pill-flag">🌍</span>
-      <span class="cuisine-pill-name">Todas</span>
-    </button>`;
-
-  const pills = cuisines.map(c => {
-    const meta = getCuisineMeta(c);
-    return `
-      <button class="cuisine-pill ${activeCuisine === c ? 'active' : ''}"
-              onclick="${onSelect}('${c}')" id="cuisine-pill-${c.toLowerCase()}">
-        <span class="cuisine-pill-flag">${meta.flag}</span>
-        <span class="cuisine-pill-name">${c}</span>
-      </button>`;
-  }).join('');
-
-  return allPill + pills;
-}
-
-// ---- Favorite toggle handler (global) ----
-
-function handleFavToggle(id) {
-  const nowFav = toggleFavorite(id);
-  // Update all buttons for this recipe on the page
+async function handleFavToggle(id) {
+  const nowFav = await toggleFavorite(id);
   document.querySelectorAll(`#fav-btn-${id}`).forEach(btn => {
     btn.textContent = nowFav ? '♥' : '♡';
     btn.classList.toggle('is-fav', nowFav);
     btn.setAttribute('aria-label', nowFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos');
   });
+  
+  // Se houver contador na hero, atualiza
+  const statFavs = document.getElementById('stat-favs');
+  if (statFavs) statFavs.textContent = getFavorites().length;
 }
 
-// ---- Toast ----
+// ---- UI Helpers ----
 
 function showToast(msg, duration = 2800) {
   let container = document.querySelector('.toast-container');
@@ -225,8 +206,6 @@ function showToast(msg, duration = 2800) {
   }, duration);
 }
 
-// ---- Navbar scroll effect ----
-
 function initNavbar() {
   const nav = document.querySelector('.navbar');
   if (!nav) return;
@@ -234,10 +213,31 @@ function initNavbar() {
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  // Mark active nav link
   const path = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.nav-link').forEach(link => {
     const href = link.getAttribute('href') || '';
     link.classList.toggle('active', href.includes(path) || (path === '' && href.includes('index')));
   });
 }
+
+// ---- Expor para escopo global (para compatibilidade com HTML legados) ----
+window.loadIndex = loadIndex;
+window.loadRecipe = loadRecipe;
+window.filterRecipes = filterRecipes;
+window.renderRecipeCard = renderRecipeCard;
+window.handleFavToggle = handleFavToggle;
+window.getFavorites = getFavorites;
+window.isFavorite = isFavorite;
+window.initNavbar = initNavbar;
+window.getCuisineMeta = getCuisineMeta;
+window.getDifficultyClass = getDifficultyClass;
+window.showToast = showToast;
+
+// Listen for auth changes to re-render or update state if needed
+window.addEventListener('authChange', () => {
+    // Força atualização de ícones de favoritos na tela atual se houver grid
+    const grid = document.getElementById('recipe-grid');
+    if (grid && window.applyFilters) {
+        window.applyFilters(); 
+    }
+});

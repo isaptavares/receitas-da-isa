@@ -17,11 +17,12 @@
 ## Tech Stack
 
 - Pure **HTML + CSS + Vanilla JavaScript** — no frameworks, no build step
+- **Firebase (Auth & Firestore)** — Cloud solution for user accounts and cross-device favorites (Novidade).
 - Google Fonts: **Playfair Display** (headings) + **Inter** (body)
 - Data stored as **JSON files** (one per recipe + one master index)
-- Favorites saved in **localStorage** (key: `receitas_isa_favorites`)
-- Master Stylesheet: `css/main.css` (Renamed from `styles.css` to force cache bypass)
-- **Cache-Busting Logic:** All JSON `fetch` calls in `js/recipes.js` include a timestamp (`?v=TIMESTAMP`) to prevent stale data/tags from appearing after updates.
+- Favorites: Saved in **Firestore** when logged in; **localStorage** as fallback (key: `receitas_isa_favorites`).
+- Master Stylesheet: `css/main.css` (Cache versioning used: `?v=2`)
+- **Cache-Busting Logic:** All JSON `fetch` calls in `js/recipes.js` include a timestamp (`?v=TIMESTAMP`) to prevent stale data.
 
 ---
 
@@ -44,10 +45,10 @@
 | `--clr-text-muted` | `#a09070` | Secondary text |
 
 ### Key Design Decisions
-- **Dark mode only** (intentional)
-- **Interactive Steps**: `step-item` elements are clickable. Clicking toggles the `.completed` class.
-- **Specific Mobile Overrides**: Mobile uses solid colors (like `#f5c76a`) for small elements (numbers) to prevent "muddy" rendering of gradients. 
-- **CRITICAL Mobile Specificity**: For the `.completed` state on mobile, rules must be defined **inside** the media query and use `!important` to override the base mobile `.step-item` styles.
+- **Dark mode only** (intentional).
+- **Interactive Steps**: `step-item` elements are clickable.
+- **Mobile List View (Novo):** No mobile, os cards de receita mudam de vertical para **horizontal** (imagem à esquerda, conteúdo à direita). O subtítulo (frase de efeito) é ocultado para permitir visualizar ~4 cards simultaneamente na tela.
+- **Specificity**: Regras críticas de mobile usam `!important` para garantir consistência em navegadores comuns de celular (MIUI/Android).
 
 ---
 
@@ -59,44 +60,50 @@ c:\Users\isapt\imagens\Backup drive isa 2\Livro de receitas\
 ├── favorites.html          ← Favorites page
 ├── recipe.html             ← Recipe detail (receives ?id=<recipe-id>)
 ├── CONTEXT.md              ← This file
+├── categories/             ← Dedicated category pages (Café da manhã, Almoco, etc.)
 ├── css/
-│   └── main.css            ← Master design system (Bypasses old styles.css cache)
+│   └── main.css            ← Master design system
 ├── js/
-│   └── recipes.js          ← Core logic: data loading (with cache-bust), filtering, favorites
+│   ├── auth.js            ← Firebase Authentication & user UI logic
+│   ├── firebase-config.js  ← Firebase project keys & initialization
+│   ├── recipes.js          ← Core logic: data loading, favorites, card rendering
+│   └── category-manager.js ← Logic for category pages (sorting, pagination)
 ├── images/                 ← Assets for recipes and UI
 └── data/
-    ├── index.json          ← Master recipe index (New tags implemented here)
-    └── recipes/            ← Individual recipe JSONs
+    ├── index.json          ← Master recipe index (21 recipes currently)
+    └── recipes/            ← Individual recipe JSONs (21 files)
 ```
 
 ---
 
 ## Recipe Logic & Features
 
-### 1. Serving Scaler (The "- 1 +" Logic)
-- **Base Unit:** The recipe is always loaded as "1 receita" (one batch), regardless of how many servings that batch yields.
-- **Dynamic Calculation:** Ingredients scale linearly (Value * Count). Macros stay fixed (per original serving).
-- **Yield Display:** "1 receita rende [X] porções" (Updates grammatically to "2 receitas rendem [2X] porções").
+### 1. Serving Scaler
+- Ingredients scale based on serving selector. Macros and base batch info stay proportional to the input data.
 
-### 2. Interactive Steps (Modo de Preparo)
-- **Click to Mark:** Each step in the `recipe.html` is an `<li>` with `onclick="this.classList.toggle('completed')"`.
-- **Visual State:** `.completed` adds a green border (`#2ecc71`) and green background.
+### 2. Category Pages (Novidade)
+- Páginas individuais por categoria com:
+  - **Ordenação:** Por data (createdAt), tempo total ou calorias.
+  - **Paginação:** Botão "Carregar Mais" (exibe 12 por vez).
+  - **Filtros:** Integrados via `js/category-manager.js`.
 
 ### 3. Tag System
-- **Taxonomy:** Only a specific set of tags from the user's reference image is supported: `Fácil de fazer`, `1 panela`, `Falta checar`, `Dia a dia`, `Gostosão`, `Fritura`, `Proteico`, `Pouco calórico`, `Saudável`.
+- Tags mantidas no layout mobile e desktop.
+- Categorias suportadas: Café da Maunhã, Almoço, Lanche, Jantar, Sobremesa, Acompanhamento.
 
 ---
 
 ## Deployment & Workflow Rules
 
-- **REGRA DE DEPLOY (NOVA):** Não suba as mudanças para o GitHub automaticamente. Mantenha as alterações apenas no Localhost (ambiente local) até que eu dê um comando explícito como "deploy", "pode subir na nuvem" ou "atualizar site oficial".
-- **Visualização Local:** Use o servidor Python (`python -m http.server 8080`) para testar as mudanças.
-- **Cache Troubleshooting:** 
-  1. Renamed CSS to `main.css`.
-  2. Added `?v=` timestamp to JSON `fetch` calls.
+- **REGRA DE DEPLOY:** Não suba as mudanças para o GitHub automaticamente. Aguarde comando explícito ("deploy", "pode subir").
+- **Visualização Local:** Testar sempre via `192.168.x.x:8080` para garantir responsividade mobile real.
+- **Placeholder de Imagens:** Atualmente, novas receitas usam `images/placeholder_recipe.png` (cartoon) devido a limites de cota de IA.
 
 ---
 
-## Conversation History Reference
-- **Conversation ID:** `eee6c55b-58b8-4606-bad2-2438b489fdc4` (Last Update: 2026-04-07)
-- Esta sessão implementou o acesso via Localhost para dispositivos mobile e alterou o fluxo de deploy para manual/sob demanda.
+- **Conversation ID:** `a81d785e-ba85-403f-9389-023c0e1a6688` (Last Update: 2026-04-13)
+- Esta sessão implementou:
+  - Integração com **Firebase Authentication** (Login pelo Google).
+  - Sincronização de **Favoritos na Nuvem** (Firestore Database).
+  - Componente de Perfil na Navbar (Avatar Dinâmico).
+  - Lógica de fallback para favoritos locais quando deslogado.

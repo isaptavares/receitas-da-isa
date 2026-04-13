@@ -158,6 +158,103 @@ ul { list-style: none; }
 
 .nav-link-icon { font-size: 1rem; }
 
+/* Botão de avatar compacto */
+.nav-user-avatar-btn {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.nav-user-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--clr-gold);
+  transition: box-shadow var(--transition), transform var(--transition);
+  display: block;
+}
+
+.nav-user-avatar-btn:hover .nav-user-avatar {
+  box-shadow: 0 0 0 3px rgba(232,168,56,0.35);
+  transform: scale(1.05);
+}
+
+.nav-user-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 120px;
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 0.4rem;
+  display: none;
+  flex-direction: column;
+  z-index: 1001;
+  animation: fadeUp 0.2s ease;
+}
+
+.nav-user-menu.active { display: flex; }
+
+.nav-user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--clr-text-muted);
+  transition: all var(--transition);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-user-menu-item:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--clr-gold);
+}
+
+.nav-user-menu-item.logout { color: var(--clr-terracotta); }
+.nav-user-menu-item.logout:hover { background: rgba(192,97,74,0.1); }
+
+/* Botão "Entrar" (quando deslogada) */
+.nav-login-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.1rem;
+  background: var(--gradient-gold);
+  color: #1a0f00;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+  font-family: inherit;
+}
+
+.nav-login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gold);
+  filter: brightness(1.1);
+}
+
+/* Animação do menu dropdown */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* =============================================
    HERO SECTION
    ============================================= */
