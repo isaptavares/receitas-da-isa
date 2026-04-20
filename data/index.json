@@ -1,7 +1,7 @@
 {
   "siteName": "Receitas da Isa",
   "description": "Receitas de todo o mundo com amor e carinho",
-  "totalRecipes": 21,
+  "totalRecipes": 22,
   "cuisines": [
     "Italiana",
     "Japonesa",
@@ -373,6 +373,22 @@
       "tags": ["1 panela", "Saudável"],
       "file": "data/recipes/arroz_basmati.json",
       "createdAt": "2026-04-07T17:09:00Z"
+    },
+    {
+      "id": "kebab_airfryer",
+      "title": "Kebab Enrolado na Airfryer",
+      "subtitle": "Rolinhos de carne temperada, crocantes por fora e suculentos por dentro, com molho tzatziki.",
+      "cuisine": "Grega",
+      "image": "images/placeholder_recipe.png",
+      "calories": 520,
+      "servings": 1,
+      "totalTime": 30,
+      "difficulty": "Médio",
+      "favorite": false,
+      "categories": ["Almoço", "Lanche"],
+      "tags": ["Proteico", "Gostosão"],
+      "file": "data/recipes/kebab_airfryer.json",
+      "createdAt": "2026-04-20T02:30:00Z"
     }
   ],
   "allIngredients": [
@@ -488,6 +504,14 @@
     "Batatas",
     "Cardamomo",
     "Cravo-da-índia",
-    "Pau de canela"
+    "Pau de canela",
+    "Acém moído",
+    "Castanha de caju",
+    "Pimenta da jamaica",
+    "Pimenta calabresa",
+    "Iogurte grego",
+    "Hortelã",
+    "Pepino",
+    "Tortilha"
   ]
 }

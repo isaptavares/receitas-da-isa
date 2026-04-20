@@ -1,0 +1,61 @@
+{
+  "id": "kebab_airfryer",
+  "title": "Kebab Enrolado na Airfryer",
+  "subtitle": "Rolinhos de carne temperada, crocantes por fora e suculentos por dentro, com molho tzatziki.",
+  "cuisine": "Grega",
+  "image": "images/placeholder_recipe.png",
+  "calories": 520,
+  "servings": 1,
+  "prepTime": 20,
+  "cookTime": 10,
+  "totalTime": 30,
+  "difficulty": "Médio",
+  "favorite": false,
+  "categories": ["Almoço", "Lanche"],
+  "tags": ["Proteico", "Gostosão"],
+  "source": "https://www.instagram.com/reel/DW2NLTrjhX0/?igsh=MWE1dDk2ZnQxOW55cQ==",
+  "ingredients": [
+    { "item": "Acém moído", "amount": "500g" },
+    { "item": "Cebola", "amount": "0,5 unidade" },
+    { "item": "Salsinha", "amount": "1 talo" },
+    { "item": "Castanha de caju", "amount": "2 mãozadas" },
+    { "item": "Dentes de alho", "amount": "3 unidades" },
+    { "item": "Páprica", "amount": "2 col chá" },
+    { "item": "Alho em pó", "amount": "1 col chá" },
+    { "item": "Pimenta da jamaica", "amount": "1 col chá" },
+    { "item": "Pimenta calabresa", "amount": "0,5 col chá" },
+    { "item": "Sal", "amount": "a gosto" },
+    { "item": "Iogurte grego", "amount": "200g" },
+    { "item": "Hortelã picada", "amount": "a gosto" },
+    { "item": "Alho ralado (molho)", "amount": "1 dente" },
+    { "item": "Suco de limão", "amount": "pontinha" },
+    { "item": "Azeite", "amount": "fio" },
+    { "item": "Ervas frescas", "amount": "a gosto" }
+  ],
+  "steps": [
+    "Bata no processador a cebola, salsinha, castanha de caju e alho até obter uma base uniforme.",
+    "Esprema bem a base no pano ou peneira para retirar o excesso de água.",
+    "Misture a base à carne moída junto com a páprica, alho em pó, pimenta da jamaica, pimenta calabresa e sal. Misture até ficar bem incorporado.",
+    "Abra a carne em uma camada uniforme sobre uma tortilha.",
+    "Enrole a carne como um rocambole (igual a um sushi).",
+    "Corte em rolinhos de aproximadamente dois dedos de espessura.",
+    "Espete os rolinhos, dê uma pincelada de azeite e leve à Airfryer por 8–10 minutos a 200°C.",
+    "Enquanto a carne assa, prepare o tzatziki misturando iogurte grego, hortelã picada, alho ralado, suco de limão, azeite e sal.",
+    "Faça uma saladinha simples com pepino, tomate e cebola roxa para acompanhar.",
+    "Quando os rolinhos estiverem dourados e crocantes, retire da Airfryer.",
+    "Monte o prato com os rolinhos, o tzatziki por cima, a saladinha ao lado e finalize com ervas e um fio de azeite."
+  ],
+  "tips": [
+    "Esprema bem a base antes de misturar à carne para os rolinhos não ficarem moles.",
+    "Corte com uns 2 dedos de espessura para o interior ficar suculento.",
+    "Fique de olho na Airfryer para não passar do ponto."
+  ],
+  "nutrition": {
+    "calories": 520,
+    "protein": "42g",
+    "carbs": "12g",
+    "fat": "32g",
+    "fiber": "2g"
+  },
+  "createdAt": "2026-04-20T02:30:00Z"
+}
