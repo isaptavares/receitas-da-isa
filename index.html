@@ -111,16 +111,6 @@
     </div>
   </section>
 
-  <!-- ===== CUISINE STRIP ===== -->
-  <section class="section" style="padding-bottom: 2rem;" id="cuisines-section" aria-labelledby="cuisines-heading">
-    <div class="section-header">
-      <div>
-        <div class="section-label">✦ Explore por cultura</div>
-        <h2 class="section-title" id="cuisines-heading">Por <em>Culinária</em></h2>
-      </div>
-    </div>
-    <div class="cuisine-scroll" id="cuisine-strip" role="list" aria-label="Filtro por culinária"></div>
-  </section>
 
   <!-- ===== RECIPE SECTION ===== -->
   <section class="section" id="receitas" aria-labelledby="recipes-heading">
@@ -269,6 +259,8 @@
 
     function renderCuisineStrip() {
       const strip = document.getElementById('cuisine-strip');
+      if (!strip) return; // Se a seção foi removida do HTML, não faz nada
+      
       const allBtn = `
         <button class="cuisine-pill ${activeCuisine === 'todas' ? 'active' : ''}"
                 onclick="selectCuisineStrip('todas')" id="cuisine-strip-todas" role="listitem">
