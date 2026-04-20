@@ -5,7 +5,8 @@ Para manter a organização do site e garantir que os filtros funcionem corretam
 ---
 
 ## 1. Categorias (Campo: `categories`)
-As categorias definem em qual página a receita será exibida (ex: página de Almoço). Cada receita **deve pertencer a pelo menos uma** categoria.
+As categorias definem em qual página a receita será exibida (ex: pasta `categories/`). Cada receita **deve pertencer a pelo menos uma** categoria.
+- **Seleção:** Múltipla.
 
 **Categorias permitidas:**
 - `Café da Manhã`
@@ -18,31 +19,40 @@ As categorias definem em qual página a receita será exibida (ex: página de Al
 ---
 
 ## 2. Tags (Campo: `tags`)
-As tags são usadas para filtrar receitas na página inicial. Elas descrevem características da receita.
-
-**Regras de Tags:**
+As tags descrevem características da receita e têm sua própria pasta `tags/`.
+- **Seleção:** Múltipla.
 - **Mínimo:** 1 tag por receita (use `Dia a dia` se não houver outra específica).
-- **Exclusividade:** Apenas as 9 tags abaixo são permitidas. Não crie tags novas.
 
 **Tags permitidas:**
-1. `Fácil de fazer`
-2. `1 panela`
-3. `Falta checar`
-4. `Dia a dia`
-5. `Gostosão`
-6. `Fritura`
-7. `Proteico`
-8. `Pouco calórico`
-9. `Saudável`
+1. `1 panela`
+2. `Falta checar`
+3. `Dia a dia`
+4. `Gostosão`
+5. `Fritura`
+6. `Proteico`
+7. `Pouco calórico`
+8. `Saudável`
 
 ---
 
-## 3. Exemplo de Estrutura JSON
+## 3. Dificuldade (Campo: `difficulty`)
+Define o nível de complexidade e possui a pasta `difficulties/`.
+- **Seleção:** Única (Obrigatório).
+
+**Opções permitidas:**
+- `Fácil`
+- `Médio`
+- `Difícil`
+
+---
+
+## 4. Exemplo de Estrutura JSON
 ```json
 {
   "title": "Exemplo de Receita",
   "categories": ["Almoço", "Jantar"],
-  "tags": ["Fácil de fazer", "Dia a dia"],
+  "tags": ["1 panela", "Dia a dia"],
+  "difficulty": "Fácil",
   ...
 }
 ```

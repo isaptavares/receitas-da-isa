@@ -15,7 +15,6 @@
     "Grega"
   ],
   "allTags": [
-    "Fácil de fazer",
     "1 panela",
     "Falta checar",
     "Dia a dia",
@@ -24,6 +23,11 @@
     "Proteico",
     "Pouco calórico",
     "Saudável"
+  ],
+  "allDifficulties": [
+    "Fácil",
+    "Médio",
+    "Difícil"
   ],
   "allCategories": [
     "Café da Manhã",
@@ -158,7 +162,7 @@
       "difficulty": "Fácil",
       "favorite": false,
       "categories": ["Café da Manhã"],
-      "tags": ["Saudável", "Fácil de fazer"],
+      "tags": ["Saudável"],
       "file": "data/recipes/bowl_frutas.json",
       "createdAt": "2026-04-07T16:56:00Z"
     },
@@ -238,7 +242,7 @@
       "difficulty": "Fácil",
       "favorite": false,
       "categories": ["Lanche"],
-      "tags": ["Saudável", "Fácil de fazer"],
+      "tags": ["Saudável"],
       "file": "data/recipes/sanduiche_natural.json",
       "createdAt": "2026-04-07T17:01:00Z"
     },
@@ -318,7 +322,7 @@
       "difficulty": "Fácil",
       "favorite": false,
       "categories": ["Sobremesa"],
-      "tags": ["Gostosão", "Fácil de fazer"],
+      "tags": ["Gostosão"],
       "file": "data/recipes/brownie_chocolate.json",
       "createdAt": "2026-04-07T17:06:00Z"
     },
@@ -350,7 +354,7 @@
       "difficulty": "Fácil",
       "favorite": false,
       "categories": ["Acompanhamento"],
-      "tags": ["Fácil de fazer", "Saudável"],
+      "tags": ["Saudável"],
       "file": "data/recipes/batata_rustica.json",
       "createdAt": "2026-04-07T17:08:00Z"
     },

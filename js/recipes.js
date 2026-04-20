@@ -113,7 +113,7 @@ function getCuisineMeta(cuisine) {
   return CUISINE_META[cuisine] || { flag: '🌍', emoji: '🍽️' };
 }
 
-function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html' } = {}) {
+function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html', imagePrefix = '' } = {}) {
   const fav = isFavorite(recipe.id);
   const meta = getCuisineMeta(recipe.cuisine);
   const diffClass = getDifficultyClass(recipe.difficulty);
@@ -131,7 +131,7 @@ function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html'
              aria-label="Ver receita: ${recipe.title}">
 
       <div class="card-image-wrap">
-        <img class="card-image" src="${recipe.image}" alt="${recipe.title}" loading="lazy">
+        <img class="card-image" src="${imagePrefix}${recipe.image}" alt="${recipe.title}" loading="lazy">
         <div class="card-image-overlay"></div>
 
         <div class="card-cuisine">
