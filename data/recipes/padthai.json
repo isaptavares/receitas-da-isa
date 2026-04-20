@@ -11,7 +11,8 @@
   "totalTime": 35,
   "difficulty": "Médio",
   "favorite": false,
-  "tags": ["Gostosão", "Proteico", "Almoço", "Jantar"],
+  "categories": ["Almoço", "Jantar"],
+  "tags": ["Gostosão", "Proteico"],
   "ingredients": [
     { "item": "Macarrão de arroz largo", "amount": "200g" },
     { "item": "Camarão médio limpo", "amount": "300g" },

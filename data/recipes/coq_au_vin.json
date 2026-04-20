@@ -11,7 +11,8 @@
   "totalTime": 110,
   "difficulty": "Médio",
   "favorite": true,
-  "tags": ["Gostosão", "Falta checar", "Almoço", "Jantar"],
+  "categories": ["Almoço", "Jantar"],
+  "tags": ["Gostosão", "Falta checar"],
   "ingredients": [
     { "item": "Frango inteiro cortado em pedaços", "amount": "1,5kg" },
     { "item": "Vinho tinto seco (Burgundy ou Pinot Noir)", "amount": "750ml" },

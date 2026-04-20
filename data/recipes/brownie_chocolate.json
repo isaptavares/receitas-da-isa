@@ -8,7 +8,8 @@
   "calories": 400,
   "servings": 8,
   "difficulty": "Fácil",
-  "tags": ["Sobremesa", "Chocolate", "Americana", "Assados"],
+  "categories": ["Sobremesa"],
+  "tags": ["Gostosão", "Fácil de fazer"],
   "ingredients": ["Chocolate meio amargo (70%)", "Manteiga sem sal", "Açúcar mascavo e branco", "Ovos extras", "Cacau em pó"],
   "steps": [
     "Derreta o chocolate com a manteiga em banho-maria.",

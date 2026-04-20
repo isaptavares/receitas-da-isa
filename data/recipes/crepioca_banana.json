@@ -8,7 +8,8 @@
   "calories": 250,
   "servings": 1,
   "difficulty": "Fácil",
-  "tags": ["Café da Manhã", "Proteica", "Sem Glúten", "Rápido"],
+  "categories": ["Café da Manhã"],
+  "tags": ["Proteico", "Saudável"],
   "ingredients": ["1 ovo grande", "2 colheres de sopa de goma de tapioca", "1 banana prata amassada", "Pitada de canela", "Mel a gosto"],
   "steps": [
     "Em um recipiente, bata bem o ovo com a tapioca.",

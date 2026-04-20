@@ -8,7 +8,8 @@
   "calories": 650,
   "servings": 4,
   "difficulty": "Difícil",
-  "tags": ["Jantar", "Frutos do Mar", "Espanhola", "Especial"],
+  "categories": ["Jantar"],
+  "tags": ["Gostosão", "Dia a dia"],
   "ingredients": ["Arroz bomba ou arroz para paella", "Camarões grandes", "Lulas fatiadas", "Mexilhões", "Açafrão legítimo", "Caldo de Peixe"],
   "steps": [
     "Grelhe os camarões primeiro e reserve.",

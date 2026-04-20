@@ -8,7 +8,8 @@
   "calories": 210,
   "servings": 1,
   "difficulty": "Fácil",
-  "tags": ["Café da Manhã", "Saudável", "Vegetariano", "Low Carb"],
+  "categories": ["Café da Manhã"],
+  "tags": ["Saudável", "Pouco calórico"],
   "ingredients": ["3 ovos", "1 punhado de espinafre fresco", "Cebolinha picada", "Parmesão ralado", "Queijo branco em cubos"],
   "steps": [
     "Bata os ovos vigorosamente até espumarem.",

@@ -12,13 +12,8 @@
   "totalTime": 105,
   "difficulty": "Médio",
   "favorite": true,
-  "tags": [
-    "Gostosão",
-    "Fritura",
-    "Almoço",
-    "Jantar",
-    "Lanche"
-  ],
+  "categories": ["Almoço", "Jantar", "Lanche"],
+  "tags": ["Gostosão", "Fritura"],
   "ingredients": [
     { "item": "Camarão médio", "amount": "0,5Kg" },
     { "item": "Limões", "amount": "3" },

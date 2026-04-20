@@ -8,7 +8,8 @@
   "calories": 700,
   "servings": 4,
   "difficulty": "Difícil",
-  "tags": ["Jantar", "Assados", "Tradicional", "Premium"],
+  "categories": ["Jantar"],
+  "tags": ["Gostosão", "Falta checar"],
   "ingredients": ["3 berinjelas grandes fatiadas", "500g de carne moída de cordeiro ou boi", "Molho de tomate caseiro", "Canela em pó", "Molho Béchamel"],
   "steps": [
     "Grelhe as fatias de berinjela até murcharem ligeiramente.",

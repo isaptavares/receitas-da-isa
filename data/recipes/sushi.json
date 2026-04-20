@@ -11,7 +11,8 @@
   "totalTime": 60,
   "difficulty": "Difícil",
   "favorite": false,
-  "tags": ["Saudável", "Pouco calórico", "Almoço", "Jantar"],
+  "categories": ["Almoço", "Jantar"],
+  "tags": ["Saudável", "Pouco calórico"],
   "ingredients": [
     { "item": "Arroz para sushi", "amount": "2 xícaras" },
     { "item": "Vinagre de arroz", "amount": "4 colheres de sopa" },

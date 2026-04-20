@@ -23,8 +23,8 @@ async function initCategoryPage() {
     const data = await loadIndexLocal();
     allRecipes = data.recipes;
     
-    // Filter by category tag
-    categoryRecipes = allRecipes.filter(r => (r.tags || []).includes(CATEGORY));
+    // Filter by category field
+    categoryRecipes = allRecipes.filter(r => (r.categories || []).includes(CATEGORY));
     
     // Update count
     countEl.textContent = `(${categoryRecipes.length} receita${categoryRecipes.length !== 1 ? 's' : ''})`;

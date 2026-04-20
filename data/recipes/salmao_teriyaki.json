@@ -8,7 +8,8 @@
   "calories": 450,
   "servings": 2,
   "difficulty": "Fácil",
-  "tags": ["Almoço", "Peixes", "Oriental", "Saudável"],
+  "categories": ["Almoço"],
+  "tags": ["Saudável", "Gostosão"],
   "ingredients": ["300g de filé de salmão", "1/2 xícara de molho shoyu", "2 colheres de sopa de mel", "Gengibre ralado", "Gergelim preto e branco"],
   "steps": [
     "Misture o shoyu, mel e gengibre em uma pequena panela e reduza até engrossar levemente.",

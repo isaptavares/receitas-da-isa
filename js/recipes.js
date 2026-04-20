@@ -85,7 +85,13 @@ function filterRecipes(recipes, filters) {
     }
     if (filters.search) {
       const q = filters.search.toLowerCase();
-      const haystack = [r.title, r.subtitle, r.cuisine, ...(r.tags || [])].join(' ').toLowerCase();
+      const haystack = [
+        r.title, 
+        r.subtitle, 
+        r.cuisine, 
+        ...(r.tags || []), 
+        ...(r.categories || [])
+      ].join(' ').toLowerCase();
       if (!haystack.includes(q)) return false;
     }
     if (filters.ingredients && filters.ingredients.length > 0) {

@@ -8,7 +8,8 @@
   "calories": 200,
   "servings": 2,
   "difficulty": "Fácil",
-  "tags": ["Acompanhamento", "Batatas", "Vegano", "Assados"],
+  "categories": ["Acompanhamento"],
+  "tags": ["Fácil de fazer", "Saudável"],
   "ingredients": ["Batatas inglesas com casca", "Dentes de alho esmagados", "Alecrim fresco", "Azeite de oliva extra virgem", "Sal grosso"],
   "steps": [
     "Lave bem as batatas e corte-as em canoas.",

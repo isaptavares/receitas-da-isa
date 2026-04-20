@@ -11,7 +11,8 @@
   "totalTime": 55,
   "difficulty": "Fácil",
   "favorite": true,
-  "tags": ["Fritura", "Gostosão", "Almoço", "Jantar", "Lanche"],
+  "categories": ["Almoço", "Jantar", "Lanche"],
+  "tags": ["Fritura", "Gostosão"],
   "ingredients": [
     { "item": "Lombo de porco", "amount": "600g" },
     { "item": "Abacaxi", "amount": "1/2 unidade" },

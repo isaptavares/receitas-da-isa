@@ -8,7 +8,8 @@
   "calories": 600,
   "servings": 2,
   "difficulty": "Médio",
-  "tags": ["Almoço", "Massas", "Vegetariano", "Gourmet"],
+  "categories": ["Almoço"],
+  "tags": ["Gostosão", "Dia a dia"],
   "ingredients": ["1 xícara de arroz arbóreo", "50g de funghi secchi", "1/2 cebola picada", "100ml de vinho branco seco", "Caldo de legumes quente", "Parmesão e manteiga"],
   "steps": [
     "Hidrate o funghi em água quente por 20 minutos, reserve a água (filtrada).",

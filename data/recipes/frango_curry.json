@@ -8,7 +8,8 @@
   "calories": 500,
   "servings": 2,
   "difficulty": "Médio",
-  "tags": ["Jantar", "Indiana", "Aromático", "Premium"],
+  "categories": ["Jantar"],
+  "tags": ["Saudável", "Proteico"],
   "ingredients": ["Filés de peito de frango", "Curry em pó", "Leite de coco", "Cebola, alho e gengibre", "Arroz branco para acompanhar"],
   "steps": [
     "Refogue os aromáticos (cebola/alho/gengibre) até dourarem.",

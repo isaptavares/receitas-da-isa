@@ -23,23 +23,15 @@
     "Fritura",
     "Proteico",
     "Pouco calórico",
-    "Saudável",
+    "Saudável"
+  ],
+  "allCategories": [
     "Café da Manhã",
     "Almoço",
     "Lanche",
     "Jantar",
     "Sobremesa",
-    "Acompanhamento",
-    "Vegano",
-    "Vegetariano",
-    "Low Carb",
-    "Churrasco",
-    "Oriental",
-    "Massas",
-    "Gourmet",
-    "Aromático",
-    "Premium",
-    "Especial"
+    "Acompanhamento"
   ],
   "recipes": [
     {
@@ -53,7 +45,8 @@
       "totalTime": 30,
       "difficulty": "Médio",
       "favorite": true,
-      "tags": ["Dia a dia", "Gostosão", "Almoço", "Jantar"],
+      "categories": ["Almoço", "Jantar"],
+      "tags": ["Dia a dia", "Gostosão"],
       "file": "data/recipes/carbonara.json",
       "createdAt": "2026-04-01T12:00:00Z"
     },
@@ -68,7 +61,8 @@
       "totalTime": 60,
       "difficulty": "Difícil",
       "favorite": false,
-      "tags": ["Saudável", "Pouco calórico", "Almoço", "Jantar"],
+      "categories": ["Almoço", "Jantar"],
+      "tags": ["Saudável", "Pouco calórico"],
       "file": "data/recipes/sushi.json",
       "createdAt": "2026-03-25T15:30:00Z"
     },
@@ -83,7 +77,8 @@
       "totalTime": 55,
       "difficulty": "Fácil",
       "favorite": true,
-      "tags": ["Fritura", "Gostosão", "Almoço", "Jantar", "Lanche"],
+      "categories": ["Almoço", "Jantar", "Lanche"],
+      "tags": ["Fritura", "Gostosão"],
       "file": "data/recipes/tacos.json",
       "createdAt": "2026-04-02T10:00:00Z"
     },
@@ -98,7 +93,8 @@
       "totalTime": 110,
       "difficulty": "Médio",
       "favorite": true,
-      "tags": ["Gostosão", "Falta checar", "Almoço", "Jantar"],
+      "categories": ["Almoço", "Jantar"],
+      "tags": ["Gostosão", "Falta checar"],
       "file": "data/recipes/coq_au_vin.json",
       "createdAt": "2026-03-20T18:00:00Z"
     },
@@ -113,7 +109,8 @@
       "totalTime": 35,
       "difficulty": "Médio",
       "favorite": false,
-      "tags": ["Gostosão", "Proteico", "Almoço", "Jantar"],
+      "categories": ["Almoço", "Jantar"],
+      "tags": ["Gostosão", "Proteico"],
       "file": "data/recipes/padthai.json",
       "createdAt": "2026-03-28T14:00:00Z"
     },
@@ -128,7 +125,8 @@
       "totalTime": 105,
       "difficulty": "Médio",
       "favorite": true,
-      "tags": ["Gostosão", "Fritura", "Almoço", "Jantar", "Lanche"],
+      "categories": ["Almoço", "Jantar", "Lanche"],
+      "tags": ["Gostosão", "Fritura"],
       "file": "data/recipes/taco_de_camarao.json",
       "createdAt": "2026-04-07T16:00:00Z"
     },
@@ -143,7 +141,8 @@
       "totalTime": 10,
       "difficulty": "Fácil",
       "favorite": false,
-      "tags": ["Café da Manhã", "Proteica", "Sem Glúten", "Rápido"],
+      "categories": ["Café da Manhã"],
+      "tags": ["Proteico", "Saudável"],
       "file": "data/recipes/crepioca_banana.json",
       "createdAt": "2026-04-07T16:55:00Z"
     },
@@ -158,7 +157,8 @@
       "totalTime": 5,
       "difficulty": "Fácil",
       "favorite": false,
-      "tags": ["Café da Manhã", "Vegano", "Antioxidante", "Rápido"],
+      "categories": ["Café da Manhã"],
+      "tags": ["Saudável", "Fácil de fazer"],
       "file": "data/recipes/bowl_frutas.json",
       "createdAt": "2026-04-07T16:56:00Z"
     },
@@ -173,7 +173,8 @@
       "totalTime": 12,
       "difficulty": "Fácil",
       "favorite": false,
-      "tags": ["Café da Manhã", "Saudável", "Vegetariano", "Low Carb"],
+      "categories": ["Café da Manhã"],
+      "tags": ["Saudável", "Pouco calórico"],
       "file": "data/recipes/omelete_verde.json",
       "createdAt": "2026-04-07T16:57:00Z"
     },
@@ -188,7 +189,8 @@
       "totalTime": 30,
       "difficulty": "Médio",
       "favorite": false,
-      "tags": ["Almoço", "Churrasco", "Carnes", "Premium"],
+      "categories": ["Almoço"],
+      "tags": ["Gostosão", "Proteico"],
       "file": "data/recipes/picanha_grelhada.json",
       "createdAt": "2026-04-07T16:58:00Z"
     },
@@ -203,7 +205,8 @@
       "totalTime": 20,
       "difficulty": "Fácil",
       "favorite": false,
-      "tags": ["Almoço", "Peixes", "Oriental", "Saudável"],
+      "categories": ["Almoço"],
+      "tags": ["Saudável", "Gostosão"],
       "file": "data/recipes/salmao_teriyaki.json",
       "createdAt": "2026-04-07T16:59:00Z"
     },
@@ -218,7 +221,8 @@
       "totalTime": 40,
       "difficulty": "Médio",
       "favorite": false,
-      "tags": ["Almoço", "Massas", "Vegetariano", "Gourmet"],
+      "categories": ["Almoço"],
+      "tags": ["Gostosão", "Dia a dia"],
       "file": "data/recipes/risoto_funghi.json",
       "createdAt": "2026-04-07T17:00:00Z"
     },
@@ -233,7 +237,8 @@
       "totalTime": 10,
       "difficulty": "Fácil",
       "favorite": false,
-      "tags": ["Lanche", "Saudável", "Frango", "Rápido"],
+      "categories": ["Lanche"],
+      "tags": ["Saudável", "Fácil de fazer"],
       "file": "data/recipes/sanduiche_natural.json",
       "createdAt": "2026-04-07T17:01:00Z"
     },
@@ -248,7 +253,8 @@
       "totalTime": 15,
       "difficulty": "Fácil",
       "favorite": false,
-      "tags": ["Lanche", "Proteico", "Saudável", "Rapido"],
+      "categories": ["Lanche"],
+      "tags": ["Proteico", "Saudável"],
       "file": "data/recipes/wrap_frango.json",
       "createdAt": "2026-04-07T17:02:00Z"
     },
@@ -263,7 +269,8 @@
       "totalTime": 60,
       "difficulty": "Difícil",
       "favorite": false,
-      "tags": ["Jantar", "Assados", "Tradicional", "Premium"],
+      "categories": ["Jantar"],
+      "tags": ["Gostosão", "Falta checar"],
       "file": "data/recipes/moussaka.json",
       "createdAt": "2026-04-07T17:03:00Z"
     },
@@ -278,7 +285,8 @@
       "totalTime": 35,
       "difficulty": "Médio",
       "favorite": false,
-      "tags": ["Jantar", "Indiana", "Aromático", "Premium"],
+      "categories": ["Jantar"],
+      "tags": ["Saudável", "Proteico"],
       "file": "data/recipes/frango_curry.json",
       "createdAt": "2026-04-07T17:04:00Z"
     },
@@ -293,7 +301,8 @@
       "totalTime": 50,
       "difficulty": "Difícil",
       "favorite": false,
-      "tags": ["Jantar", "Frutos do Mar", "Espanhola", "Especial"],
+      "categories": ["Jantar"],
+      "tags": ["Gostosão", "Dia a dia"],
       "file": "data/recipes/paella_mariscos.json",
       "createdAt": "2026-04-07T17:05:00Z"
     },
@@ -308,7 +317,8 @@
       "totalTime": 45,
       "difficulty": "Fácil",
       "favorite": false,
-      "tags": ["Sobremesa", "Chocolate", "Americana", "Assados"],
+      "categories": ["Sobremesa"],
+      "tags": ["Gostosão", "Fácil de fazer"],
       "file": "data/recipes/brownie_chocolate.json",
       "createdAt": "2026-04-07T17:06:00Z"
     },
@@ -323,7 +333,8 @@
       "totalTime": 15,
       "difficulty": "Médio",
       "favorite": false,
-      "tags": ["Sobremesa", "Chocolate", "Francesa", "Especial"],
+      "categories": ["Sobremesa"],
+      "tags": ["Gostosão", "Dia a dia"],
       "file": "data/recipes/petit_gateau.json",
       "createdAt": "2026-04-07T17:07:00Z"
     },
@@ -338,7 +349,8 @@
       "totalTime": 25,
       "difficulty": "Fácil",
       "favorite": false,
-      "tags": ["Acompanhamento", "Batatas", "Vegano", "Assados"],
+      "categories": ["Acompanhamento"],
+      "tags": ["Fácil de fazer", "Saudável"],
       "file": "data/recipes/batata_rustica.json",
       "createdAt": "2026-04-07T17:08:00Z"
     },
@@ -353,7 +365,8 @@
       "totalTime": 20,
       "difficulty": "Fácil",
       "favorite": false,
-      "tags": ["Acompanhamento", "Arroz", "Indiana", "Aromático"],
+      "categories": ["Acompanhamento"],
+      "tags": ["1 panela", "Saudável"],
       "file": "data/recipes/arroz_basmati.json",
       "createdAt": "2026-04-07T17:09:00Z"
     }

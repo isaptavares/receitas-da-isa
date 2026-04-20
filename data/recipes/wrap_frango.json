@@ -8,7 +8,8 @@
   "calories": 400,
   "servings": 1,
   "difficulty": "Fácil",
-  "tags": ["Lanche", "Proteico", "Saudável", "Rapido"],
+  "categories": ["Lanche"],
+  "tags": ["Proteico", "Saudável"],
   "ingredients": ["1 tortilha de trigo", "Filé de frango em tiras grelhado", "1/2 avocado fatiado", "Tomates cereja cortado", "Molho de hortelã"],
   "steps": [
     "Aqueça levemente a tortilha em uma frigideira.",
