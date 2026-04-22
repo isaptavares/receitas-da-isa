@@ -102,8 +102,18 @@ c:\Users\isapt\imagens\Backup drive isa 2\Livro de receitas\
 ---
 
 - **Conversation ID:** `a81d785e-ba85-403f-9389-023c0e1a6688` (Last Update: 2026-04-13)
-- Esta sessão implementou:
+- Sessão anterior implementou:
   - Integração com **Firebase Authentication** (Login pelo Google).
   - Sincronização de **Favoritos na Nuvem** (Firestore Database).
   - Componente de Perfil na Navbar (Avatar Dinâmico).
   - Lógica de fallback para favoritos locais quando deslogado.
+
+---
+
+- **Conversation ID:** `4695f9ec-b04e-4fba-9d62-ce7ffcc51167` (Last Update: 2026-04-22)
+- Esta sessão implementou:
+  - Substituição do botão de "Imprimir" na página da receita por um botão de "Compartilhar" (ícone sem texto).
+  - Implementação de um Modal de Compartilhamento com duas opções:
+    1. **Link da Receita:** Usa a Web Share API nativa (`navigator.share`).
+    2. **Salvar PDF:** Usa `window.print()`.
+  - Otimização pesada do `@media print` no `recipe.html` para PDFs: Layout side-by-side (Ingredientes à direita/esquerda da Nutrição), redução de margens e fontes, visando caber toda a receita em uma única folha A4.
