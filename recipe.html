@@ -41,14 +41,251 @@
     .tips-panel {
       margin-top: 2rem;
     }
-    .print-btn {
+    .share-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      font-size: 0.85rem;
-      padding: 0.6rem 1.2rem;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      padding: 0;
+      flex-shrink: 0;
     }
-    /* Print styles handled by css/styles.css @media print block */
+    .share-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+    /* Share Modal Styles */
+    .share-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .share-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .share-modal {
+      background: var(--clr-surface);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      width: 90%;
+      max-width: 320px;
+      border: 1px solid var(--clr-border);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transform: translateY(20px);
+      transition: transform 0.2s ease;
+    }
+    .share-modal-overlay.active .share-modal {
+      transform: translateY(0);
+    }
+    .share-modal-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: var(--clr-text);
+    }
+    .share-option {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      background: var(--clr-surface-2);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-sm);
+      color: var(--clr-text);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .share-option:hover {
+      background: rgba(232,168,56,0.1);
+      border-color: var(--clr-gold);
+    }
+    .share-option:last-child {
+      margin-bottom: 0;
+    }
+    .share-option-icon {
+      font-size: 1.5rem;
+    }
+    /* Print styles */
+    @media print {
+      /* Hide unnecessary elements */
+      nav, footer, .back-btn, .recipe-detail-actions, .loading-spinner, .share-modal-overlay {
+        display: none !important;
+      }
+      
+      @page {
+        margin: 1.5cm;
+      }
+      
+      /* Compact Grid layout */
+      .recipe-body {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-areas: 
+          "ing nut"
+          "steps steps" !important;
+        gap: 1.5rem 2rem !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      
+      .recipe-col-ingredients { grid-area: ing !important; margin: 0 !important; }
+      .recipe-col-steps { grid-area: steps !important; margin-top: 1rem !important; }
+      .recipe-col-nutrition { grid-area: nut !important; margin: 0 !important; }
+
+      /* Hero section adjustments */
+      .recipe-hero {
+        height: auto !important;
+        min-height: auto !important;
+        padding: 0 !important;
+        margin-bottom: 1.5rem !important;
+      }
+      .recipe-hero-img, .recipe-hero-overlay {
+        display: none !important;
+      }
+      .recipe-hero-content {
+        position: static !important;
+        padding: 0 !important;
+      }
+
+      /* Compact Colors and legibility */
+      body, .recipe-page {
+        background: #fff !important;
+        color: #000 !important;
+        font-size: 10pt !important;
+      }
+      .recipe-detail-title {
+        color: #000 !important;
+        font-size: 20pt !important;
+        margin-bottom: 0.2rem !important;
+      }
+      .recipe-detail-subtitle {
+        color: #333 !important;
+        margin-bottom: 0.8rem !important;
+        font-size: 11pt !important;
+      }
+      .recipe-detail-meta {
+        color: #333 !important;
+        gap: 0.5rem 1rem !important;
+      }
+      .recipe-meta-pill {
+        color: #000 !important;
+        border: 1px solid #ccc !important;
+        padding: 0.1rem 0.4rem !important;
+        font-size: 9pt !important;
+      }
+      .recipe-detail-cuisine {
+        color: #000 !important;
+        margin-bottom: 0.4rem !important;
+      }
+      .recipe-detail-tags {
+        margin-top: 0.5rem !important;
+      }
+      .recipe-detail-tag {
+        padding: 0.1rem 0.4rem !important;
+        font-size: 8pt !important;
+        border-color: #ccc !important;
+        color: #333 !important;
+      }
+      
+      /* Panels and lists compacting */
+      .recipe-panel {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+      }
+      .recipe-panel-title {
+        color: #000 !important;
+        border-bottom: 1px solid #000 !important;
+        padding-bottom: 0.2rem !important;
+        margin-bottom: 0.5rem !important;
+        font-size: 12pt !important;
+      }
+      
+      /* Ingredients */
+      .ingredient-item {
+        border-bottom: 1px solid #eee !important;
+        padding: 0.3rem 0 !important;
+        font-size: 10pt !important;
+      }
+      .ingredient-name { color: #000 !important; }
+      .ingredient-amount { color: #000 !important; }
+      
+      /* Steps */
+      .recipe-section-title {
+        font-size: 14pt !important;
+        margin-bottom: 0.8rem !important;
+        border-bottom: 1px solid #000 !important;
+        padding-bottom: 0.2rem !important;
+        color: #000 !important;
+      }
+      .steps-list {
+        gap: 0.5rem !important;
+      }
+      .step-item {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        gap: 0.8rem !important;
+        margin-bottom: 0.5rem !important;
+        break-inside: avoid;
+      }
+      .step-number {
+        border: 1px solid #000 !important;
+        background: transparent !important;
+        color: #000 !important;
+        width: 24px !important;
+        height: 24px !important;
+        min-width: 24px !important;
+        font-size: 9pt !important;
+      }
+      .step-text {
+        color: #000 !important;
+        font-size: 10pt !important;
+        padding-top: 0 !important;
+        line-height: 1.4 !important;
+      }
+      
+      /* Nutrition */
+      .nutrition-grid {
+        gap: 0.4rem !important;
+      }
+      .nutrition-item {
+        border: 1px solid #ddd !important;
+        background: transparent !important;
+        padding: 0.4rem !important;
+      }
+      .nutrition-value {
+        font-size: 11pt !important;
+        color: #000 !important;
+        background: transparent !important;
+        -webkit-text-fill-color: #000 !important;
+      }
+      .nutrition-label {
+        font-size: 7pt !important;
+        color: #000 !important;
+        margin-top: 0.1rem !important;
+      }
+      .nutrition-vd {
+        font-size: 6pt !important;
+        color: #555 !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -248,8 +485,8 @@
                         aria-label="${fav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
                   ${fav ? '♥ Nas suas favoritas' : '♡ Adicionar aos favoritos'}
                 </button>
-                <button class="btn btn-outline print-btn" onclick="window.print()" id="print-btn">
-                  🖨️ Imprimir receita
+                <button class="btn btn-outline share-btn" onclick="openShareModal()" id="share-btn" aria-label="Compartilhar receita">
+                  <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
                 </button>
               </div>
             </div>
@@ -299,6 +536,21 @@
             </div>
 
           </div>
+
+          <!-- SHARE MODAL -->
+          <div class="share-modal-overlay" id="share-modal" onclick="closeShareModal(event)">
+            <div class="share-modal" onclick="event.stopPropagation()">
+              <h3 class="share-modal-title">O que compartilhar?</h3>
+              <button class="share-option" onclick="shareLink()">
+                <span class="share-option-icon">🔗</span>
+                Enviar link da receita
+              </button>
+              <button class="share-option" onclick="sharePDF()">
+                <span class="share-option-icon">📄</span>
+                Salvar ou enviar PDF
+              </button>
+            </div>
+          </div>
         </article>
       `;
     }
@@ -338,11 +590,53 @@
       }
     }
 
+    function openShareModal() {
+      const modal = document.getElementById('share-modal');
+      if (modal) modal.classList.add('active');
+    }
+    
+    function closeShareModal(e) {
+      const modal = document.getElementById('share-modal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    async function shareLink() {
+      closeShareModal();
+      if (!globalRecipe) return;
+      const shareData = {
+        title: globalRecipe.title,
+        text: `Confira esta receita de ${globalRecipe.title}!`,
+        url: window.location.href
+      };
+      
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          console.log('Erro ao compartilhar:', err);
+        }
+      } else {
+        // Fallback
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link copiado para a área de transferência!');
+      }
+    }
+
+    function sharePDF() {
+      closeShareModal();
+      // Print dialog is the native way to "Save as PDF"
+      window.print();
+    }
+
     document.addEventListener('DOMContentLoaded', init);
 
     // Expor funções usadas em onclick dinâmicos
     window.updateServings = updateServings;
     window.handleDetailFav = handleDetailFav;
+    window.openShareModal = openShareModal;
+    window.closeShareModal = closeShareModal;
+    window.shareLink = shareLink;
+    window.sharePDF = sharePDF;
   </script>
 </body>
 </html>
