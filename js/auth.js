@@ -11,6 +11,7 @@ import {
 // --- State ---
 let currentUser = null;
 let userFavorites = [];
+let userPlanner = {};
 
 // --- UI Elements ---
 const authContainer = document.getElementById('nav-auth-container');
@@ -20,31 +21,35 @@ function initAuth() {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
-      await fetchUserFavorites(user.uid);
+      await fetchUserData(user.uid);
       updateAuthUI(true);
     } else {
       currentUser = null;
       userFavorites = [];
+      userPlanner = {};
       updateAuthUI(false);
     }
     
     // Notifica outros scripts que o estado mudou
-    window.dispatchEvent(new CustomEvent('authChange', { detail: { user: currentUser, favorites: userFavorites } }));
+    window.dispatchEvent(new CustomEvent('authChange', { detail: { user: currentUser, favorites: userFavorites, planner: userPlanner } }));
   });
 }
 
-async function fetchUserFavorites(uid) {
+async function fetchUserData(uid) {
   try {
     const userDoc = await getDoc(doc(db, 'users', uid));
     if (userDoc.exists()) {
-      userFavorites = userDoc.data().favorites || [];
+      const data = userDoc.data();
+      userFavorites = data.favorites || [];
+      userPlanner = data.planner || {};
     } else {
       // Cria o documento do usuário se não existir
-      await setDoc(doc(db, 'users', uid), { favorites: [] });
+      await setDoc(doc(db, 'users', uid), { favorites: [], planner: {} });
       userFavorites = [];
+      userPlanner = {};
     }
   } catch (err) {
-    console.error("Erro ao buscar favoritos:", err);
+    console.error("Erro ao buscar dados do usuário:", err);
   }
 }
 
@@ -125,8 +130,48 @@ export async function cloudToggleFavorite(recipeId) {
   }
 }
 
+export async function cloudUpdatePlanner(recipeId, quantity) {
+  if (!currentUser) return false;
+  const userRef = doc(db, 'users', currentUser.uid);
+  try {
+    userPlanner[recipeId] = quantity;
+    await updateDoc(userRef, { planner: userPlanner });
+    return true;
+  } catch (err) {
+    console.error("Erro ao atualizar planner:", err);
+    return false;
+  }
+}
+
+export async function cloudRemoveFromPlanner(recipeId) {
+  if (!currentUser) return false;
+  const userRef = doc(db, 'users', currentUser.uid);
+  try {
+    delete userPlanner[recipeId];
+    await updateDoc(userRef, { planner: userPlanner });
+    return true;
+  } catch (err) {
+    console.error("Erro ao remover do planner:", err);
+    return false;
+  }
+}
+
+export async function cloudClearPlanner() {
+  if (!currentUser) return false;
+  const userRef = doc(db, 'users', currentUser.uid);
+  try {
+    userPlanner = {};
+    await updateDoc(userRef, { planner: {} });
+    return true;
+  } catch (err) {
+    console.error("Erro ao limpar planner:", err);
+    return false;
+  }
+}
+
 export function getUser() { return currentUser; }
 export function getCloudFavorites() { return userFavorites; }
+export function getCloudPlanner() { return userPlanner; }
 
 // Sempre pedir para escolher conta ao fazer login
 provider.setCustomParameters({ prompt: 'select_account' });

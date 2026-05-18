@@ -1922,3 +1922,14 @@ footer {
   .cat-page-title { font-size: 2.2rem; }
   .cat-page-controls { flex-direction: column; align-items: flex-start; gap: 0.5rem; margin-top: 1rem; }
 }
+
+/* =============================================
+   VISIBILITY UTILITIES
+   ============================================= */
+.mobile-only { display: none !important; }
+
+@media (max-width: 800px) {
+  .desktop-only { display: none !important; }
+  select.mobile-only { display: block !important; }
+  div.mobile-only { display: flex !important; }
+}

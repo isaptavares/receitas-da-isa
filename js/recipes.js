@@ -2,21 +2,22 @@
    RECEITAS DA ISA — Recipe Data Manager (Module)
    ============================================= */
 
-import { getUser, getCloudFavorites, cloudToggleFavorite } from './auth.js';
+import { getUser, getCloudFavorites, cloudToggleFavorite, getCloudPlanner, cloudUpdatePlanner, cloudRemoveFromPlanner, cloudClearPlanner } from './auth.js';
 
 const FAVORITES_KEY = 'receitas_isa_favorites';
+const PLANNER_KEY = 'receitas_isa_planner';
 
 const CUISINE_META = {
-  'Italiana':   { flag: '🇮🇹', emoji: '🍝' },
-  'Japonesa':   { flag: '🇯🇵', emoji: '🍣' },
-  'Mexicana':   { flag: '🇲🇽', emoji: '🌮' },
-  'Francesa':   { flag: '🇫🇷', emoji: '🍷' },
-  'Tailandesa': { flag: '🇹🇭', emoji: '🍜' },
-  'Brasileira': { flag: '🇧🇷', emoji: '🍖' },
-  'Americana':  { flag: '🇺🇸', emoji: '🍔' },
-  'Indiana':    { flag: '🇮🇳', emoji: '🍛' },
-  'Espanhola':  { flag: '🇪🇸', emoji: '🥘' },
-  'Grega':      { flag: '🇬🇷', emoji: '🫒' },
+  'Italiana':   { flag: '🇮🇹', code: 'it', emoji: '🍝' },
+  'Japonesa':   { flag: '🇯🇵', code: 'jp', emoji: '🍣' },
+  'Mexicana':   { flag: '🇲🇽', code: 'mx', emoji: '🌮' },
+  'Francesa':   { flag: '🇫🇷', code: 'fr', emoji: '🍷' },
+  'Tailandesa': { flag: '🇹🇭', code: 'th', emoji: '🍜' },
+  'Brasileira': { flag: '🇧🇷', code: 'br', emoji: '🍖' },
+  'Americana':  { flag: '🇺🇸', code: 'us', emoji: '🍔' },
+  'Indiana':    { flag: '🇮🇳', code: 'in', emoji: '🍛' },
+  'Espanhola':  { flag: '🇪🇸', code: 'es', emoji: '🥘' },
+  'Grega':      { flag: '🇬🇷', code: 'gr', emoji: '🫒' },
 };
 
 // ---- Favorites Logic ----
@@ -57,6 +58,85 @@ async function toggleFavorite(id) {
   }
   localStorage.setItem(FAVORITES_KEY, JSON.stringify(favs));
   return idx === -1;
+}
+
+// ---- Local Storage Fallbacks for Planner ----
+
+export function getPlanner() {
+  let localPlanner = {};
+  try {
+    localPlanner = JSON.parse(localStorage.getItem(PLANNER_KEY)) || {};
+  } catch {}
+
+  let merged = localPlanner;
+  const user = getUser();
+  if (user) {
+    const cloudPlanner = getCloudPlanner();
+    merged = { ...cloudPlanner, ...localPlanner }; // local sobrepõe a nuvem
+  }
+  
+  const finalPlanner = {};
+  for (const key in merged) {
+    if (merged[key] > 0) finalPlanner[key] = merged[key];
+  }
+  return finalPlanner;
+}
+
+export async function updatePlanner(id, servings) {
+  const user = getUser();
+  let success = false;
+  if (user) {
+    success = await cloudUpdatePlanner(id, servings);
+    if (success) showToast('📅 Receita adicionada ao Planejador!');
+  }
+
+  if (!success) {
+    let planner = {};
+    try { planner = JSON.parse(localStorage.getItem(PLANNER_KEY)) || {}; } catch {}
+    planner[id] = servings;
+    localStorage.setItem(PLANNER_KEY, JSON.stringify(planner));
+    showToast('📅 Receita adicionada ao Planejador!');
+  }
+  return true;
+}
+
+export async function removeFromPlanner(id) {
+  const user = getUser();
+  let success = false;
+  if (user) {
+    success = await cloudRemoveFromPlanner(id);
+    if (success) showToast('Removido do Planejador');
+  }
+
+  let planner = {};
+  try { planner = JSON.parse(localStorage.getItem(PLANNER_KEY)) || {}; } catch {}
+  
+  planner[id] = 0; // Soft delete local para não ser revivido pela nuvem
+  localStorage.setItem(PLANNER_KEY, JSON.stringify(planner));
+  if (!success) showToast('Removido do Planejador');
+  return true;
+}
+
+export async function clearPlanner() {
+  const user = getUser();
+  let success = false;
+  if (user) {
+    success = await cloudClearPlanner();
+    if (success) showToast('Planejador limpo! Nova semana começando.');
+  }
+
+  // Soft delete de tudo localmente para não reviver
+  let localPlanner = {};
+  try { localPlanner = JSON.parse(localStorage.getItem(PLANNER_KEY)) || {}; } catch {}
+  const cloudPlanner = user ? getCloudPlanner() : {};
+  
+  const allKeys = new Set([...Object.keys(localPlanner), ...Object.keys(cloudPlanner)]);
+  const clearedPlanner = {};
+  allKeys.forEach(k => clearedPlanner[k] = 0);
+  
+  localStorage.setItem(PLANNER_KEY, JSON.stringify(clearedPlanner));
+  if (!success) showToast('Planejador limpo! Nova semana começando.');
+  return true;
 }
 
 // ---- Data Loading ----
@@ -113,7 +193,7 @@ function getCuisineMeta(cuisine) {
   return CUISINE_META[cuisine] || { flag: '🌍', emoji: '🍽️' };
 }
 
-function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html', imagePrefix = '' } = {}) {
+function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html', imagePrefix = '', plannerServings = null } = {}) {
   const fav = isFavorite(recipe.id);
   const meta = getCuisineMeta(recipe.cuisine);
   const diffClass = getDifficultyClass(recipe.difficulty);
@@ -121,6 +201,8 @@ function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html'
   const tagsHtml = (recipe.tags || []).slice(0, 3).map(t =>
     `<span class="card-tag">${t}</span>`
   ).join('');
+  
+  const plannerBadge = plannerServings ? `<div style="position: absolute; top: 12px; left: 12px; background: var(--clr-gold); color: var(--clr-surface); padding: 0.3rem 0.6rem; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: bold; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">Render: ${plannerServings * recipe.servings} porções</div>` : '';
 
   return `
     <article class="recipe-card ${featured ? 'featured' : ''}" 
@@ -131,11 +213,12 @@ function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html'
              aria-label="Ver receita: ${recipe.title}">
 
       <div class="card-image-wrap">
+        ${plannerBadge}
         <img class="card-image" src="${imagePrefix}${recipe.image}" alt="${recipe.title}" loading="lazy">
         <div class="card-image-overlay"></div>
 
         <div class="card-cuisine">
-          <span class="cuisine-flag">${meta.flag}</span>
+          ${meta.code ? `<img src="https://flagcdn.com/w20/${meta.code}.png" alt="${recipe.cuisine}" style="width: 16px; margin-right: 6px; vertical-align: middle; border-radius: 2px;">` : `<span class="cuisine-flag">${meta.flag}</span>`}
           ${recipe.cuisine}
         </div>
 
@@ -234,6 +317,10 @@ window.renderRecipeCard = renderRecipeCard;
 window.handleFavToggle = handleFavToggle;
 window.getFavorites = getFavorites;
 window.isFavorite = isFavorite;
+window.getPlanner = getPlanner;
+window.updatePlanner = updatePlanner;
+window.removeFromPlanner = removeFromPlanner;
+window.clearPlanner = clearPlanner;
 window.initNavbar = initNavbar;
 window.getCuisineMeta = getCuisineMeta;
 window.getDifficultyClass = getDifficultyClass;

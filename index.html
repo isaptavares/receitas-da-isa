@@ -21,6 +21,7 @@
     <ul class="nav-links" role="list">
       <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
       <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
+      <li><a class="nav-link" href="planner.html" id="nav-planner"><span class="nav-link-icon">📅</span> <span>Planejador</span></a></li>
       <li id="nav-auth-container">
         <!-- O botão de login ou perfil será inserido aqui via JS -->
         <button class="nav-login-btn" id="login-btn">
@@ -162,8 +163,12 @@
           </div>
         </div>
         <div class="filter-group" style="flex:2;">
-          <span class="filter-label">🏷️ Tags</span>
-          <div class="tags-filter" id="tags-filter" role="group" aria-label="Filtro por tags"></div>
+          <label class="filter-label" for="filter-tags-dropdown">🏷️ Tags</label>
+          <select class="filter-select mobile-only" id="filter-tags-dropdown" aria-label="Selecionar tags">
+            <option value="">Selecione uma tag...</option>
+          </select>
+          <div class="tags-filter desktop-only" id="tags-filter" role="group" aria-label="Filtro por tags"></div>
+          <div class="tags-filter mobile-only" id="tags-filter-selected-mobile" role="group" aria-label="Tags selecionadas"></div>
         </div>
       </div>
 
@@ -196,8 +201,8 @@
 
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
-  <script type="module" src="js/auth.js?v=1"></script>
-  <script type="module" src="js/recipes.js?v=4"></script>
+  <script type="module" src="js/auth.js?v=2"></script>
+  <script type="module" src="js/recipes.js?v=7"></script>
   <script type="module">
     // =============================================
     // HOME PAGE CONTROLLER
@@ -237,6 +242,7 @@
         updateHeroStats(index);
         renderCuisineStrip();
         populateCuisineSelect();
+        populateTagsDropdown();
         renderTagChips();
         populateIngredientDatalist();
         renderIngredientChips();
@@ -295,14 +301,37 @@
       });
     }
 
+    function populateTagsDropdown() {
+      const sel = document.getElementById('filter-tags-dropdown');
+      if (!sel) return;
+      sel.innerHTML = '<option value="">Selecione uma tag...</option>';
+      allTags.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t; opt.textContent = t;
+        sel.appendChild(opt);
+      });
+    }
+
     function renderTagChips() {
-      const container = document.getElementById('tags-filter');
-      container.innerHTML = allTags.map(t => `
-        <button class="tag-chip ${activeTags.includes(t) ? 'active' : ''}"
-                onclick="toggleTag('${t}')" id="tag-chip-${t.replace(/\s/g,'-')}"
-                aria-pressed="${activeTags.includes(t)}">
-          ${t}
-        </button>`).join('');
+      const containerDesktop = document.getElementById('tags-filter');
+      if (containerDesktop) {
+        containerDesktop.innerHTML = allTags.map(t => `
+          <button class="tag-chip ${activeTags.includes(t) ? 'active' : ''}"
+                  onclick="toggleTag('${t}')" id="tag-chip-${t.replace(/\\s/g,'-')}"
+                  aria-pressed="${activeTags.includes(t)}">
+            ${t}
+          </button>`).join('');
+      }
+
+      const containerMobile = document.getElementById('tags-filter-selected-mobile');
+      if (containerMobile) {
+        containerMobile.innerHTML = activeTags.map(t => `
+          <button class="tag-chip active"
+                  onclick="toggleTag('${t}')"
+                  aria-pressed="true">
+            ${t} <span style="font-size: 0.8em; margin-left: 4px;">✕</span>
+          </button>`).join('');
+      }
     }
 
     function toggleTag(tag) {
@@ -392,13 +421,24 @@
       const ingInput = document.getElementById('filter-ingredient-input');
       ingInput.addEventListener('input', (e) => {
         const val = e.target.value;
-        // Se o valor digitado existir EXATAMENTE na lista de todos ingredientes, adiciona e limpa.
-        // Assim, funciona como autocomplete e restringe a itens conhecidos.
         if (globalIngredients.includes(val)) {
           addIngredient(val);
           e.target.value = '';
         }
       });
+
+      const tagsDropdown = document.getElementById('filter-tags-dropdown');
+      if (tagsDropdown) {
+        tagsDropdown.addEventListener('change', (e) => {
+          const val = e.target.value;
+          if (val && !activeTags.includes(val)) {
+            activeTags.push(val);
+            renderTagChips();
+            applyFilters();
+          }
+          e.target.value = ''; // reseta o select
+        });
+      }
 
       const calSlider = document.getElementById('filter-calories');
       const calDisplay = document.getElementById('calorie-display');
