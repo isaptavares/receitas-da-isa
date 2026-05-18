@@ -58,6 +58,7 @@
 c:\Users\isapt\imagens\Backup drive isa 2\Livro de receitas\
 ├── index.html              ← Home page
 ├── favorites.html          ← Favorites page
+├── planner.html            ← Menu Planner & Shopping List (Novo)
 ├── recipe.html             ← Recipe detail (receives ?id=<recipe-id>)
 ├── CONTEXT.md              ← This file
 ├── categories/             ← Dedicated category pages (Café da manhã, Almoco, etc.)
@@ -117,3 +118,14 @@ c:\Users\isapt\imagens\Backup drive isa 2\Livro de receitas\
     1. **Link da Receita:** Usa a Web Share API nativa (`navigator.share`).
     2. **Salvar PDF:** Usa `window.print()`.
   - Otimização pesada do `@media print` no `recipe.html` para PDFs: Layout side-by-side (Ingredientes à direita/esquerda da Nutrição), redução de margens e fontes, visando caber toda a receita em uma única folha A4.
+
+---
+
+- **Conversation ID:** `0a3fc7ff-f6f7-4c21-b4a6-392bce416065` (Last Update: 2026-05-18)
+- Esta sessão implementou:
+  - Funcionalidade completa de **Planejador de Menu** (`planner.html`).
+  - Sincronização e fallback local ultra-robusto no armazenamento local caso a nuvem (Firestore) bloqueie ou falhe (incluindo "soft deletes" marcando quantidades como `0` para que receitas deletadas offline não sejam revividas indevidamente pela nuvem).
+  - Modal de **Lista de Compras** que consolida ingredientes e soma automaticamente valores. Inclui motor avançado de conversão que interpreta **frações culinárias** (ex: `1/2`, `3/4`) e converte gramas/litros.
+  - Lógica de ordenação inteligente na lista de compras (itens calculáveis no topo, itens "a gosto" isolados no fim da lista).
+  - Notificações de confirmação elegantes e rastreio de botões com status "✅ Adicionado ao Planejador!".
+
