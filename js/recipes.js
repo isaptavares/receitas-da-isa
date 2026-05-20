@@ -307,6 +307,49 @@ function initNavbar() {
     const href = link.getAttribute('href') || '';
     link.classList.toggle('active', href.includes(path) || (path === '' && href.includes('index')));
   });
+
+  // Injetar menu mobile se não existir
+  if (!document.getElementById('mobile-menu-btn')) {
+    const navLinksList = nav.querySelector('.nav-links');
+    if (navLinksList) {
+      const liBtn = document.createElement('li');
+      liBtn.className = 'mobile-menu-container';
+      liBtn.innerHTML = `<button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menu">☰</button>`;
+      navLinksList.appendChild(liBtn);
+
+      const mobileMenu = document.createElement('div');
+      mobileMenu.className = 'mobile-dropdown';
+      mobileMenu.id = 'mobile-dropdown';
+      // Adjust path for links if inside a subdirectory (categories, tags)
+      const isSubdir = window.location.pathname.includes('/categories/') || window.location.pathname.includes('/tags/') || window.location.pathname.includes('/difficulties/');
+      const prefix = isSubdir ? '../' : '';
+      
+      mobileMenu.innerHTML = `
+        <a class="mobile-nav-link" href="${prefix}index.html"><span>🏠</span> Início</a>
+        <a class="mobile-nav-link" href="${prefix}favorites.html"><span>♥</span> Favoritas</a>
+        <a class="mobile-nav-link" href="${prefix}planner.html"><span>📅</span> Planejador</a>
+      `;
+      nav.appendChild(mobileMenu);
+
+      mobileMenu.querySelectorAll('.mobile-nav-link').forEach(link => {
+        const href = link.getAttribute('href') || '';
+        const hrefBase = href.split('/').pop();
+        link.classList.toggle('active', hrefBase.includes(path) || (path === '' && hrefBase.includes('index')));
+      });
+
+      const btn = liBtn.querySelector('#mobile-menu-btn');
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        mobileMenu.classList.toggle('active');
+      };
+      
+      document.addEventListener('click', (e) => {
+        if (!liBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+          mobileMenu.classList.remove('active');
+        }
+      });
+    }
+  }
 }
 
 // ---- Expor para escopo global (para compatibilidade com HTML legados) ----

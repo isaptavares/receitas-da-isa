@@ -4,7 +4,8 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, collection, addDoc, getDocs, deleteDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDSr3_Nnzdz-_QFsStd8oBCQNhH2qfVf08",
@@ -19,10 +20,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 const provider = new GoogleAuthProvider();
 
 export { 
-  auth, db, provider, 
+  auth, db, storage, provider, 
   signInWithPopup, signOut, onAuthStateChanged,
-  doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove 
+  doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove,
+  collection, addDoc, getDocs, deleteDoc, query, orderBy, serverTimestamp,
+  storageRef, uploadBytes, getDownloadURL
 };

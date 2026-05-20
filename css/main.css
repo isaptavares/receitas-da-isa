@@ -174,6 +174,7 @@ ul { list-style: none; }
   border: 2px solid var(--clr-gold);
   transition: box-shadow var(--transition), transform var(--transition);
   display: block;
+  flex-shrink: 0;
 }
 
 .nav-user-avatar-btn:hover .nav-user-avatar {
@@ -1380,8 +1381,66 @@ footer {
 /* =============================================
    RESPONSIVE
    ============================================= */
+
+.mobile-menu-container {
+  display: none;
+}
+.mobile-menu-btn {
+  font-size: 1.5rem;
+  color: var(--clr-gold);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mobile-dropdown {
+  display: none;
+  position: absolute;
+  top: var(--nav-height);
+  right: clamp(1.5rem, 5vw, 4rem);
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  flex-direction: column;
+  min-width: 180px;
+  padding: 0.5rem;
+  z-index: 1000;
+  animation: fadeUp 0.2s ease;
+}
+.mobile-dropdown.active {
+  display: flex;
+}
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1rem;
+  color: var(--clr-text-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+}
+.mobile-nav-link:hover, .mobile-nav-link.active {
+  background: rgba(255,255,255,0.05);
+  color: var(--clr-gold);
+}
+
 @media (max-width: 640px) {
-  .nav-links .nav-link span { display: none; }
+  /* Hide desktop links, show hamburger menu */
+  .nav-links > li:nth-child(1),
+  .nav-links > li:nth-child(2),
+  .nav-links > li:nth-child(3) {
+    display: none;
+  }
+  .mobile-menu-container {
+    display: block;
+  }
+  
   .hero-stats { gap: 1.5rem; }
   
   /* GRID & CARDS MOBILE */
