@@ -243,7 +243,7 @@
           featured: false, 
           plannerServings: currentPlanner[r.id]
         })
-      ).join('');
+).join('');
     }
 
     async function handleClear() {
@@ -304,6 +304,176 @@
       }
     }
 
+    function parseAndStandardize(name, amountStr) {
+      // 1. Normalizar nome do ingrediente
+      let normalizedName = name.trim();
+      
+      // Remover detalhes de preparo e termos redundantes
+      const removals = [
+        /\s+picad[oa]s?/gi,
+        /\s+ralad[oa]s?/gi,
+        /\s+fatiad[oa]s?/gi,
+        /\s+moíd[oa]s?/gi,
+        /\s+amassad[oa]s?/gi,
+        /\s+espremid[oa]s?/gi,
+        /\s+em\s+cubos/gi,
+        /\s+em\s+rodelas/gi,
+        /\s+inteir[oa]s?/gi,
+        /\s+ralado\s+\(molho\)/gi,
+        /\s+em\s+pó/gi,
+        /\s+frescas?/gi,
+        /\s+seco/gi,
+        /\s+secchi/gi,
+        /\s+ou\s+guanciale/gi,
+        /\s+branco\s+seco/gi
+      ];
+
+      removals.forEach(regex => {
+        normalizedName = normalizedName.replace(regex, '');
+      });
+
+      normalizedName = normalizedName.trim();
+
+      // Tratar caso específico do alho (nome deve ser 'Dentes de alho' e unidade 'unidades')
+      if (normalizedName.toLowerCase().includes('alho') && !normalizedName.toLowerCase().includes('pó')) {
+        normalizedName = 'Dentes de alho';
+      }
+
+      // Tratar caso específico de cebola (cebola picada -> cebola)
+      if (normalizedName.toLowerCase() === 'cebola') {
+        normalizedName = 'Cebola';
+      }
+
+      normalizedName = normalizedName.charAt(0).toUpperCase() + normalizedName.slice(1);
+
+      // 2. Parse da quantidade e unidade original
+      let parsed = parseAmount(amountStr);
+      let value = parsed.value;
+      let unit = parsed.unit.toLowerCase().trim();
+
+      // Normalizar unidades de contagem para 'unidades'
+      if (unit === 'unidade' || unit === 'unidades' || unit === 'u' || unit === 'dente' || unit === 'dentes' || unit === 'talo' || unit === 'talos' || unit === 'mãozada' || unit === 'mãozadas') {
+        unit = 'unidades';
+      }
+
+      // Se for dentes de alho, forçar a unidade para 'unidades'
+      if (normalizedName === 'Dentes de alho') {
+        unit = 'unidades';
+      }
+
+      // Normalização de massa
+      if (unit === 'g' || unit === 'gr' || unit === 'grama' || unit === 'gramas') {
+        unit = 'g';
+      } else if (unit === 'kg' || unit === 'kgs' || unit === 'quilo' || unit === 'quilos') {
+        value *= 1000;
+        unit = 'g';
+      }
+
+      // Normalização de volume / líquidos (ML)
+      const liquidUnitsMap = {
+        'ml': 1,
+        'mls': 1,
+        'l': 1000,
+        'litro': 1000,
+        'litros': 1000,
+        'xícara': 240,
+        'xícaras': 240,
+        'xicara': 240,
+        'xicaras': 240,
+        'colher': 15,
+        'colheres': 15,
+        'colher de sopa': 15,
+        'colheres de sopa': 15,
+        'col de sopa': 15,
+        'col. sopa': 15,
+        'colher de chá': 5,
+        'colheres de chá': 5,
+        'col de chá': 5,
+        'col. chá': 5,
+        'col chá': 5
+      };
+
+      let isLiquid = false;
+      for (const [keyUnit, multiplier] of Object.entries(liquidUnitsMap)) {
+        if (unit === keyUnit) {
+          value *= multiplier;
+          unit = 'ml';
+          isLiquid = true;
+          break;
+        }
+      }
+
+      // 3. Aplicar preferências de conversão 1g = 1ml com base no ingrediente
+      const lowerName = normalizedName.toLowerCase();
+
+      // Forçar Sal e Pimenta-do-reino para "a gosto"
+      if (lowerName === 'sal' || lowerName === 'pimenta-do-reino') {
+        value = 0;
+        unit = 'a gosto';
+      }
+      
+      const ingredientPreferences = {
+        // Líquidos -> ML
+        'azeite': 'ml',
+        'óleo': 'ml',
+        'vinho': 'ml',
+        'leite': 'ml',
+        'água': 'ml',
+        'suco': 'ml',
+        'caldo': 'ml',
+        'shoyu': 'ml',
+        'vinagre': 'ml',
+        'mel': 'ml',
+        'molho': 'ml',
+        
+        // Sólidos -> G
+        'manteiga': 'g',
+        'queijo': 'g',
+        'parmesão': 'g',
+        'pecorino': 'g',
+        'presunto': 'g',
+        'pancetta': 'g',
+        'guanciale': 'g',
+        'carne': 'g',
+        'frango': 'g',
+        'peixe': 'g',
+        'arroz': 'g',
+        'funghi': 'g',
+        'chocolate': 'g',
+        'farinha': 'g',
+        'açúcar': 'g',
+        'sal': 'g',
+        'pimenta': 'g',
+        'pimenta-do-reino': 'g',
+        'castanha': 'g'
+      };
+
+      // Procurar match de preferência
+      let preferredUnit = null;
+      for (const [prefKey, prefUnit] of Object.entries(ingredientPreferences)) {
+        if (lowerName.includes(prefKey)) {
+          preferredUnit = prefUnit;
+          break;
+        }
+      }
+
+      if (preferredUnit) {
+        if (unit === 'ml' && preferredUnit === 'g') {
+          // Converter de ml para g (1:1)
+          unit = 'g';
+        } else if (unit === 'g' && preferredUnit === 'ml') {
+          // Converter de g para ml (1:1)
+          unit = 'ml';
+        }
+      }
+
+      return {
+        name: normalizedName,
+        value: value,
+        unit: unit
+      };
+    }
+
     function formatAmount(value, unit) {
       if (unit === 'a gosto') return 'a gosto';
       if (value === 0) return unit; // Unparsed original string
@@ -338,6 +508,11 @@
         else numStr = fracStr;
       }
 
+      // Se for unidades, tratar singular/plural bonito
+      if (unit === 'unidades') {
+        return value === 1 ? `1 unidade` : `${numStr} unidades`;
+      }
+
       return `${numStr} ${unit}`.trim();
     }
 
@@ -354,15 +529,13 @@
         
         (recipe.ingredients || []).forEach(ing => {
           const name = ing.item.trim();
-          // Capitalize first letter for consistency in grouping
-          const normalizedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+          const amountStr = ing.amount || '';
           
-          const parsed = parseAmount(ing.amount);
+          // Normalização e conversão inteligente
+          const standardized = parseAndStandardize(name, amountStr);
           
-          // se for "a gosto" ou não foi possível parsear, o unit atuará como chave para não somar com outros
-          const key = `${normalizedName}|${parsed.unit}`;
-          
-          const addedValue = parsed.value * servingsMultiplier;
+          const key = `${standardized.name}|${standardized.unit}`;
+          const addedValue = standardized.value * servingsMultiplier;
 
           if (itemsMap.has(key)) {
             itemsMap.set(key, itemsMap.get(key) + addedValue);

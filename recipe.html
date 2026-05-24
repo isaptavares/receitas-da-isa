@@ -415,7 +415,12 @@
           <p class="step-text">${step}</p>
         </li>`).join('');
 
-      const n = recipe.nutrition;
+      const n = recipe.nutrition || {
+        calories: recipe.calories || 0,
+        protein: "0g",
+        carbs: "0g",
+        fat: "0g"
+      };
       
       const calcVD = (val, max) => {
         const num = parseFloat(String(val).replace(/[^0-9.]/g, '')) || 0;
@@ -471,9 +476,9 @@
               <p class="recipe-detail-subtitle">${recipe.subtitle}</p>
 
               <div class="recipe-detail-meta">
-                <span class="recipe-meta-pill">⏱ <strong>${recipe.prepTime} min</strong> preparo</span>
-                <span class="recipe-meta-pill">🔥 <strong>${recipe.cookTime} min</strong> cozimento</span>
-                <span class="recipe-meta-pill">⏳ <strong>${recipe.totalTime} min</strong> total</span>
+                ${recipe.prepTime ? `<span class="recipe-meta-pill">⏱ <strong>${recipe.prepTime} min</strong> preparo</span>` : ''}
+                ${recipe.cookTime ? `<span class="recipe-meta-pill">🔥 <strong>${recipe.cookTime} min</strong> cozimento</span>` : ''}
+                ${recipe.totalTime ? `<span class="recipe-meta-pill">⏳ <strong>${recipe.totalTime} min</strong> total</span>` : ''}
                 <span class="recipe-meta-pill">👤 <strong>${recipe.servings}</strong> porções</span>
                 <span class="recipe-meta-pill card-difficulty ${diffClass}" style="padding:0.3rem 0.8rem;">${recipe.difficulty}</span>
               </div>
