@@ -2,7 +2,8 @@
    RECEITAS DA ISA — Recipe Data Manager (Module)
    ============================================= */
 
-import { getUser, getCloudFavorites, cloudToggleFavorite, getCloudPlanner, cloudUpdatePlanner, cloudRemoveFromPlanner, cloudClearPlanner } from './auth.js';
+import { getUser, getCloudFavorites, cloudToggleFavorite, getCloudPlanner, cloudUpdatePlanner, cloudRemoveFromPlanner, cloudClearPlanner, authReady } from './auth.js';
+import { getUserRecipes, getUserRecipeById } from './user-recipes.js';
 
 const FAVORITES_KEY = 'receitas_isa_favorites';
 const PLANNER_KEY = 'receitas_isa_planner';
@@ -144,10 +145,62 @@ export async function clearPlanner() {
 async function loadIndex() {
   const res = await fetch('data/index.json?v=' + Date.now());
   if (!res.ok) throw new Error('Não foi possível carregar o índice de receitas.');
-  return res.json();
+  const index = await res.json();
+
+  // Aguarda o Firebase confirmar se há um usuário logado antes de decidir se busca na nuvem
+  await authReady;
+
+  // Buscar receitas do usuário no Firestore se logado
+  let userRecipes = [];
+  const user = getUser();
+  if (user) {
+    try {
+      userRecipes = await getUserRecipes();
+    } catch (e) {
+      console.warn("Erro ao buscar receitas do usuário:", e);
+    }
+  }
+
+  // Buscar receitas do usuário locais no LocalStorage
+  let localUserRecipes = [];
+  try {
+    localUserRecipes = JSON.parse(localStorage.getItem('receitas_isa_user_recipes')) || [];
+  } catch (e) {
+    console.warn("Erro ao buscar receitas locais:", e);
+  }
+
+  const mergedRecipes = [...userRecipes, ...localUserRecipes, ...index.recipes];
+  index.recipes = mergedRecipes;
+  index.totalRecipes = mergedRecipes.length;
+
+  return index;
 }
 
 async function loadRecipe(id) {
+  // Aguarda o Firebase confirmar se há um usuário logado antes de decidir se busca na nuvem
+  await authReady;
+
+  // 1. Tenta carregar das receitas criadas pelo usuário (Firestore)
+  const user = getUser();
+  if (user) {
+    try {
+      const userRecipe = await getUserRecipeById(id);
+      if (userRecipe) return userRecipe;
+    } catch (e) {
+      console.warn("Erro ao buscar receita do usuário no Firestore:", e);
+    }
+  }
+
+  // 2. Tenta carregar das receitas locais em LocalStorage (caso o usuário não esteja logado)
+  try {
+    const localUserRecipes = JSON.parse(localStorage.getItem('receitas_isa_user_recipes')) || [];
+    const localRecipe = localUserRecipes.find(r => r.id === id);
+    if (localRecipe) return localRecipe;
+  } catch (e) {
+    console.warn("Erro ao buscar receita local no LocalStorage:", e);
+  }
+
+  // 3. Carrega do JSON estático local
   const res = await fetch(`data/recipes/${id}.json?v=` + Date.now());
   if (!res.ok) throw new Error(`Receita "${id}" não encontrada.`);
   return res.json();
@@ -175,7 +228,7 @@ function filterRecipes(recipes, filters) {
       if (!haystack.includes(q)) return false;
     }
     if (filters.ingredients && filters.ingredients.length > 0) {
-      const rIngs = (r.ingredients || []).map(i => i.toLowerCase());
+      const rIngs = (r.ingredients || []).map(i => (typeof i === 'string' ? i : (i.item || '')).toLowerCase());
       if (!filters.ingredients.every(i => rIngs.includes(i.toLowerCase()))) return false;
     }
     return true;
@@ -278,7 +331,7 @@ async function handleFavToggle(id) {
 
 // ---- UI Helpers ----
 
-function showToast(msg, duration = 2800) {
+function showToast(msg, duration = 2800, actionHtml = '') {
   let container = document.querySelector('.toast-container');
   if (!container) {
     container = document.createElement('div');
@@ -287,7 +340,7 @@ function showToast(msg, duration = 2800) {
   }
   const toast = document.createElement('div');
   toast.className = 'toast';
-  toast.innerHTML = `<span class="toast-icon">✦</span> ${msg}`;
+  toast.innerHTML = `<span class="toast-icon">✦</span> <span class="toast-msg">${msg}</span>${actionHtml}`;
   container.appendChild(toast);
   setTimeout(() => {
     toast.classList.add('removing');

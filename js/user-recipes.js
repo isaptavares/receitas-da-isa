@@ -168,6 +168,44 @@ export async function deleteUserRecipe(firestoreId) {
   await deleteDoc(ref);
 }
 
+export async function autocompleteRecipeWithAI(partialRecipe) {
+  const prompt = `Você é um chef especialista e nutricionista.
+Recebemos uma receita parcialmente preenchida pelo usuário. Sua tarefa é preencher APENAS os campos opcionais que o usuário deixou em branco ou nulos, com base no título, ingredientes e modo de preparo fornecidos. Preserve exatamente as informações que o usuário já preencheu.
+
+Aqui estão os dados atuais da receita (em JSON):
+${JSON.stringify(partialRecipe, null, 2)}
+
+Campos que você DEVE preencher se estiverem em branco ou nulos (se o usuário já preencheu, deixe como está):
+- "subtitle": uma linha curta e atrativa descrevendo o prato.
+- "cuisine": uma destas opções: Brasileira, Italiana, Japonesa, Mexicana, Francesa, Tailandesa, Americana, Indiana, Espanhola, Grega.
+- "difficulty": Fácil, Médio ou Difícil.
+- "categories": array com uma ou mais categorias apropriadas de: Café da Manhã, Almoço, Lanche, Jantar, Sobremesa, Acompanhamento.
+- "tags": array de tags curtas (ex: "Saudável", "Rápido", "Low Carb", "Sem Glúten", etc).
+- "prepTime": estimativa de tempo de preparo em minutos (número inteiro).
+- "cookTime": estimativa de tempo de cozimento em minutos (número inteiro).
+- "totalTime": soma de prepTime e cookTime (número inteiro).
+- "calories": estimativa de calorias por porção (número inteiro).
+- "servings": número de porções estimadas (número inteiro).
+- "nutrition": objeto estimando a nutrição por porção:
+  {
+    "calories": número inteiro,
+    "protein": "string (ex: 28g)",
+    "carbs": "string (ex: 72g)",
+    "fat": "string (ex: 24g)"
+  }
+
+Retorne APENAS o objeto JSON completo atualizado (sem markdown, sem backticks, sem texto adicional).`;
+
+  const body = {
+    contents: [{
+      parts: [{ text: prompt }]
+    }],
+    generationConfig: { temperature: 0.1 }
+  };
+  
+  return callGemini(body);
+}
+
 // Expose globally
 window.getUserRecipes = getUserRecipes;
 window.getUserRecipeById = getUserRecipeById;
@@ -176,3 +214,4 @@ window.saveUserRecipe = saveUserRecipe;
 window.extractRecipeFromYouTube = extractRecipeFromYouTube;
 window.extractRecipeFromText = extractRecipeFromText;
 window.uploadRecipeImage = uploadRecipeImage;
+window.autocompleteRecipeWithAI = autocompleteRecipeWithAI;

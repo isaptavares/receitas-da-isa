@@ -256,6 +256,109 @@ ul { list-style: none; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ----------- Botão de Adicionar Receita Expansível ----------- */
+.add-recipe-menu-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 1rem;
+  z-index: 1002;
+}
+
+.add-recipe-main-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gradient-gold);
+  color: #1a0f00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+  border: none;
+  line-height: 1;
+}
+
+.add-recipe-main-btn:hover {
+  box-shadow: var(--shadow-gold);
+  transform: scale(1.05);
+}
+
+.add-recipe-menu-container.active .add-recipe-main-btn {
+  transform: rotate(135deg);
+  background: var(--clr-terracotta);
+  color: var(--clr-cream);
+}
+
+.add-recipe-options {
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%) scale(0.6);
+  display: flex;
+  gap: 0.6rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+  transform-origin: left center;
+  white-space: nowrap;
+}
+
+.add-recipe-menu-container.active .add-recipe-options {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-50%) scale(1);
+}
+
+.add-recipe-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  background: var(--clr-surface-2);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  color: var(--clr-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(0);
+}
+
+.add-recipe-menu-container.active .add-recipe-option-btn {
+  transform: scale(1);
+}
+
+.add-recipe-menu-container.active .add-recipe-option-btn:nth-child(1) {
+  transition-delay: 0.05s;
+}
+.add-recipe-menu-container.active .add-recipe-option-btn:nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+.add-recipe-option-btn:hover {
+  background: rgba(232,168,56,0.1);
+  border-color: var(--clr-gold);
+  color: var(--clr-gold-light);
+  transform: translateY(-2px) scale(1.03) !important;
+}
+
+@media (max-width: 576px) {
+  .add-recipe-option-btn .label-text {
+    display: none;
+  }
+  .add-recipe-option-btn {
+    padding: 0.45rem 0.6rem;
+    font-size: 1rem;
+  }
+}
+
 /* =============================================
    HERO SECTION
    ============================================= */
@@ -1369,6 +1472,15 @@ footer {
 }
 .toast-icon { color: var(--clr-gold); }
 .toast.removing { animation: fadeUp 0.3s reverse forwards; }
+.toast-msg { flex: 1; }
+.toast-action-btn {
+  color: var(--clr-gold-light);
+  font-weight: 600;
+  white-space: nowrap;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition);
+}
+.toast-action-btn:hover { border-color: var(--clr-gold-light); }
 
 /* =============================================
    UTILITY CLASSES

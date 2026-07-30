@@ -326,7 +326,7 @@
 
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
-  <script type="module" src="js/auth.js?v=2"></script>
+  <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/recipes.js?v=7"></script>
   <script type="module">
     // =============================================
@@ -345,26 +345,33 @@
       if (!globalRecipe) return '';
       
       return globalRecipe.ingredients.map(ing => {
-        let scaledAmount = ing.amount;
+        // Suporte para ingredientes como string simples (formato antigo) e objetos {item, amount}
+        const isObj = typeof ing === 'object' && ing !== null;
+        const name = isObj ? (ing.item || '') : ing;
+        const rawAmount = isObj ? (ing.amount || '') : '';
+
+        let scaledAmount = rawAmount;
         
-        // Extract numbers at the beginning (ex: "200g", "2", "1.5 xícaras")
-        const match = ing.amount.match(/^([\d.,]+)\s*(.*)$/);
-        if (match) {
-           let numText = match[1].replace(',', '.');
-           let num = parseFloat(numText);
-           if (!isNaN(num)) {
-             let scaledNum = num * currentServings;
-             // Round to max 1 decimal place to avoid long fractions
-             scaledNum = Math.round(scaledNum * 10) / 10;
-             let scaledStr = scaledNum.toString().replace('.', ',');
-             scaledAmount = `${scaledStr} ${match[2]}`.trim();
-           }
+        if (rawAmount) {
+          // Extract numbers at the beginning (ex: "200g", "2", "1.5 xícaras")
+          const match = rawAmount.match(/^([\d.,]+)\s*(.*)$/);
+          if (match) {
+             let numText = match[1].replace(',', '.');
+             let num = parseFloat(numText);
+             if (!isNaN(num)) {
+               let scaledNum = num * currentServings;
+               // Round to max 1 decimal place to avoid long fractions
+               scaledNum = Math.round(scaledNum * 10) / 10;
+               let scaledStr = scaledNum.toString().replace('.', ',');
+               scaledAmount = `${scaledStr} ${match[2]}`.trim();
+             }
+          }
         }
 
         return `
         <li class="ingredient-item">
-          <span class="ingredient-name">${ing.item}</span>
-          <span class="ingredient-amount">${scaledAmount}</span>
+          <span class="ingredient-name">${name}</span>
+          ${scaledAmount ? `<span class="ingredient-amount">${scaledAmount}</span>` : ''}
         </li>`;
       }).join('');
     }

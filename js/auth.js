@@ -16,6 +16,13 @@ let userPlanner = {};
 // --- UI Elements ---
 const authContainer = document.getElementById('nav-auth-container');
 
+// Resolve na primeira vez que o Firebase confirma o estado de login (logado ou não).
+// Em todo carregamento de página, currentUser começa null até essa confirmação chegar —
+// código que depende de getUser() logo no início (ex: carregar receita) deve aguardar isso
+// para não tratar um usuário logado como deslogado por causa da corrida assíncrona.
+let resolveAuthReady;
+export const authReady = new Promise(resolve => { resolveAuthReady = resolve; });
+
 // --- Initialization ---
 function initAuth() {
   onAuthStateChanged(auth, async (user) => {
@@ -29,9 +36,14 @@ function initAuth() {
       userPlanner = {};
       updateAuthUI(false);
     }
-    
+
     // Notifica outros scripts que o estado mudou
     window.dispatchEvent(new CustomEvent('authChange', { detail: { user: currentUser, favorites: userFavorites, planner: userPlanner } }));
+
+    if (resolveAuthReady) {
+      resolveAuthReady();
+      resolveAuthReady = null;
+    }
   });
 }
 

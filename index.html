@@ -11,13 +11,30 @@
 
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar" id="navbar" aria-label="Navegação principal">
-    <a class="nav-logo" href="index.html" aria-label="Receitas da Isa - Início">
-      <span class="nav-logo-icon">🍴</span>
-      <span class="nav-logo-text">
-        Receitas da Isa
-        <em class="nav-logo-sub">sabores do mundo</em>
-      </span>
-    </a>
+    <div style="display: flex; align-items: center;">
+      <a class="nav-logo" href="index.html" aria-label="Receitas da Isa - Início">
+        <span class="nav-logo-icon">🍴</span>
+        <span class="nav-logo-text">
+          Receitas da Isa
+          <em class="nav-logo-sub">sabores do mundo</em>
+        </span>
+      </a>
+
+      <!-- Botão Adicionar Receita Expansível -->
+      <div class="add-recipe-menu-container" id="add-recipe-menu-container">
+        <button class="add-recipe-main-btn" id="add-recipe-main-btn" aria-label="Adicionar receita" onclick="toggleAddRecipeMenu(event)">
+          <span>+</span>
+        </button>
+        <div class="add-recipe-options" id="add-recipe-options">
+          <a href="add-recipe-manual.html" class="add-recipe-option-btn manual" title="Adicionar Manualmente">
+            <span>✍️</span> <span class="label-text">Manualmente</span>
+          </a>
+          <a href="add-recipe-link.html" class="add-recipe-option-btn link" title="Adicionar por Link de Rede Social">
+            <span>🔗</span> <span class="label-text">Por Link</span>
+          </a>
+        </div>
+      </div>
+    </div>
     <ul class="nav-links" role="list">
       <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
       <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
@@ -201,7 +218,7 @@
 
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
-  <script type="module" src="js/auth.js?v=2"></script>
+  <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/recipes.js?v=7"></script>
   <script type="module">
     // =============================================
@@ -474,7 +491,26 @@
       });
     });
 
+    // Lógica para o menu expansível de adicionar receita
+    function toggleAddRecipeMenu(event) {
+      event.stopPropagation();
+      const container = document.getElementById('add-recipe-menu-container');
+      container.classList.toggle('active');
+    }
+
+    document.addEventListener('click', (e) => {
+      const container = document.getElementById('add-recipe-menu-container');
+      if (container && container.classList.contains('active')) {
+        const btn = document.getElementById('add-recipe-main-btn');
+        const options = document.getElementById('add-recipe-options');
+        if (btn && options && !btn.contains(e.target) && !options.contains(e.target)) {
+          container.classList.remove('active');
+        }
+      }
+    });
+
     // Expor funções usadas em onclick dinâmicos para o escopo global
+    window.toggleAddRecipeMenu = toggleAddRecipeMenu;
     window.selectCuisineStrip = selectCuisineStrip;
     window.toggleTag = toggleTag;
     window.removeIngredient = removeIngredient;
