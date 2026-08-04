@@ -45,11 +45,12 @@ Retorne APENAS um objeto JSON válido (sem markdown, sem backticks, sem texto ad
 }
 
 Regras:
+- REGRA CRUCIAL DE FIDELIDADE: Seja extremamente fiel e literal à receita fornecida na fonte (imagem, PDF, vídeo ou texto). NÃO invente ingredientes, NÃO altere as quantidades ou medidas fornecidas, e NÃO crie nem modifique os passos do modo de preparo. Não faça improvisos.
 - cuisine: use uma de: Brasileira, Italiana, Japonesa, Mexicana, Francesa, Tailandesa, Americana, Indiana, Espanhola, Grega
 - difficulty: Fácil, Médio ou Difícil
 - categories: use uma ou mais de: Café da Manhã, Almoço, Lanche, Jantar, Sobremesa, Acompanhamento
-- Seja MUITO detalhado nos passos (mínimo 4 passos)
-- SEMPRE inclua estimativas de macronutrientes, mesmo que não explicitamente mencionados
+- Transcreva fielmente as instruções originais do modo de preparo dividindo em passos claros
+- SEMPRE inclua estimativas de macronutrientes, estimando de forma realista apenas com base nos ingredientes fornecidos na receita
 - Os ingredientes devem ter item e amount separados
 - totalTime = prepTime + cookTime`;
 
