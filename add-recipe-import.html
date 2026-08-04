@@ -238,12 +238,14 @@
             'Não foi possível salvar a receita no banco de dados.'
           );
 
-          hideLoading();
-          showToast(`🎉 Receita "${extractedRecipe.title}" importada e criada com sucesso!`, 3000);
+          // Exibe popup de sucesso com cota de tempo maior e sem o spinner de loading
+          showLoading("🎉 Receita Importada com Sucesso!", `A receita "${extractedRecipe.title}" foi interpretada pela IA e salva. Redirecionando...`, false);
+          
+          showToast(`🎉 Receita "${extractedRecipe.title}" importada!`, 3000);
           
           setTimeout(() => {
             window.location.href = `recipe.html?id=${savedId}`;
-          }, 600);
+          }, 3000);
 
         } catch (err) {
           console.error("Erro na importação:", err);
@@ -266,14 +268,24 @@
       });
     }
 
-    function showLoading(title, subtitle) {
+    function showLoading(title, subtitle, showSpinner = true) {
       document.getElementById('loading-text').textContent = title;
       document.getElementById('loading-subtext').textContent = subtitle || 'Por favor, aguarde.';
+      
+      const spinner = document.querySelector('.loading-spinner');
+      if (spinner) {
+        spinner.style.display = showSpinner ? 'block' : 'none';
+      }
+      
       document.getElementById('loading-overlay').style.display = 'flex';
     }
 
     function hideLoading() {
       document.getElementById('loading-overlay').style.display = 'none';
+      const spinner = document.querySelector('.loading-spinner');
+      if (spinner) {
+        spinner.style.display = 'block';
+      }
     }
 
     function withTimeout(promise, ms, message) {

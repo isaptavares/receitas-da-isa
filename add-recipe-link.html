@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Importar Receita por Link — Receitas da Isa</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS Styles -->
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar" aria-label="Navegação principal">
+    <div style="display: flex; align-items: center;">
+      <a class="nav-logo" href="index.html" aria-label="Receitas da Isa - Início">
+        Receitas da Isa
+      </a>
+      
+      <!-- Botão Flutuante de Adição Rápida (Estilo Navbar) -->
+      <div class="nav-add-btn-container" id="add-recipe-menu-container">
+        <button class="nav-add-btn" onclick="toggleAddRecipeMenu(event)" aria-label="Adicionar receita" aria-haspopup="true">
+          <span>+</span>
+        </button>
+        <div class="add-recipe-options" id="add-recipe-options" role="menu">
+          <a href="add-recipe-manual.html" class="add-recipe-option-btn manual" title="Adicionar Receita Manualmente">
+            <span>✍️</span> <span class="label-text">Manualmente</span>
+          </a>
+          <a href="add-recipe-link.html" class="add-recipe-option-btn link active" title="Adicionar por Link de Rede Social">
+            <span>🔗</span> <span class="label-text">Por Link</span>
+          </a>
+          <a href="add-recipe-import.html" class="add-recipe-option-btn import" title="Importar Foto ou PDF">
+            <span>📤</span> <span class="label-text">Importar</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <ul class="nav-links" role="list">
+      <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
+      <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
+      <li><a class="nav-link" href="planner.html" id="nav-planner"><span class="nav-link-icon">📅</span> <span>Planejador</span></a></li>
+      <li id="nav-auth-container">
+        <button class="nav-login-btn" id="login-btn">
+          <span>🔑</span> <span>Entrar</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ===== CONTENT ===== -->
+  <main>
+    <section class="import-section">
+      <div class="form-header">
+        <h1 class="form-title">Nova Receita por <em>Link</em></h1>
+        <p class="form-subtitle">Insira o link de um vídeo do YouTube ou de um site de receitas público. A IA do Gemini lerá a página ou vídeo para criar a receita completa na sua conta.</p>
+      </div>
+
+      <div id="import-card-container">
+        <div class="link-cards-container">
+          
+          <!-- SEÇÃO 1: VÍDEO DO YOUTUBE -->
+          <div class="link-card">
+            <div class="link-card-header">
+              <div class="link-card-icon">🎥</div>
+              <h2 class="link-card-title">Link do YouTube</h2>
+            </div>
+            <p class="link-card-desc">Cole a URL de um vídeo de receita do YouTube. A IA interpretará o áudio e as imagens do vídeo para recriar o passo a passo.</p>
+            <div class="link-input-group">
+              <label class="link-input-label" for="youtube-url">URL do Vídeo</label>
+              <input type="url" id="youtube-url" class="form-input" placeholder="https://www.youtube.com/watch?v=..." required>
+            </div>
+            <button class="btn btn-primary" id="process-youtube-btn" style="margin-top: auto;">🤖 Importar Vídeo</button>
+          </div>
+
+          <!-- SEÇÃO 2: SITE DE RECEITAS -->
+          <div class="link-card">
+            <div class="link-card-header">
+              <div class="link-card-icon">🌐</div>
+              <h2 class="link-card-title">Site de Receitas</h2>
+            </div>
+            <p class="link-card-desc">Cole a URL de uma receita de qualquer site público (ex: Panelinha, TudoGostoso, etc.). A IA lerá o texto do site para extrair os ingredientes e etapas.</p>
+            <div class="link-input-group">
+              <label class="link-input-label" for="website-url">URL do Site</label>
+              <input type="url" id="website-url" class="form-input" placeholder="https://..." required>
+            </div>
+            <button class="btn btn-primary" id="process-website-btn" style="margin-top: auto;">🤖 Importar do Site</button>
+          </div>
+
+        </div>
+
+        <div style="display: flex; justify-content: center; margin-top: 2.5rem;">
+          <a href="index.html" class="btn btn-outline">Cancelar</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== LOADING OVERLAY ===== -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text">Processando...</div>
+    <div class="loading-subtext" id="loading-subtext">Isso pode levar alguns segundos. Por favor, aguarde.</div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <span class="footer-logo">🍴 Receitas da Isa</span>
+    <span class="footer-copy">Feito com <span>♥</span> e muito sabor • 2026</span>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/recipes.js?v=7"></script>
+  <script type="module">
+    import { extractRecipeFromYouTube, extractRecipeFromText, saveUserRecipe } from './js/user-recipes.js';
+    import { getUser, authReady } from './js/auth.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initNavbar();
+
+      await authReady;
+      const user = getUser();
+      if (!user) {
+        showToast("🔒 Você precisa estar logado para usar a importação!", 4000);
+        // Exibe bloqueio visual na tela
+        const container = document.getElementById('import-card-container');
+        if (container) {
+          container.innerHTML = `
+            <div style="background: var(--clr-card-bg); border: 1px solid var(--clr-card-border); border-radius: 16px; padding: 2.5rem; text-align: center; color: var(--clr-text-muted); max-width: 500px; margin: 2rem auto;">
+              <span style="font-size: 3rem;">🔒</span>
+              <h3 style="margin-top: 1.5rem; color: var(--clr-text);">Área Restrita</h3>
+              <p style="margin-top: 0.5rem;">Esta funcionalidade requer login ativo para salvar as receitas no banco de dados.</p>
+              <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="document.getElementById('login-btn').click()">🔑 Fazer Login</button>
+            </div>
+          `;
+        }
+        return;
+      }
+
+      setupLinkImports();
+    });
+
+    function setupLinkImports() {
+      const youtubeBtn = document.getElementById('process-youtube-btn');
+      const websiteBtn = document.getElementById('process-website-btn');
+      const youtubeInput = document.getElementById('youtube-url');
+      const websiteInput = document.getElementById('website-url');
+
+      // ---- Importação de YouTube ----
+      youtubeBtn.addEventListener('click', async () => {
+        const url = youtubeInput.value.trim();
+        if (!url) {
+          showToast("⚠️ Por favor, insira o link do vídeo do YouTube.");
+          return;
+        }
+
+        disableControls(true);
+        showLoading("Analisando vídeo no YouTube... 🎥", "O Gemini está assistindo e extraindo as instruções do vídeo...");
+
+        try {
+          // Chama extrator
+          const extractedRecipe = await withTimeout(
+            extractRecipeFromYouTube(url),
+            40000,
+            'A IA demorou muito para responder sobre o vídeo.'
+          );
+
+          showLoading("Criando receita no Firestore...", "Salvando a receita na sua conta...");
+          
+          extractedRecipe.image = "images/placeholder_recipe.png";
+          
+          const savedId = await withTimeout(
+            saveUserRecipe(extractedRecipe),
+            20000,
+            'Erro ao salvar a receita no Firestore.'
+          );
+
+          showLoading("🎉 Vídeo Importado com Sucesso!", `A receita "${extractedRecipe.title}" foi extraída e salva com sucesso!`, false);
+          showToast(`🎉 Receita "${extractedRecipe.title}" importada!`, 3000);
+
+          setTimeout(() => {
+            window.location.href = `recipe.html?id=${savedId}`;
+          }, 3000);
+
+        } catch (err) {
+          console.error("Erro ao importar do YouTube:", err);
+          hideLoading();
+          disableControls(false);
+          showToast(`❌ Falha ao importar vídeo: ${err.message || err}`);
+        }
+      });
+
+      // ---- Importação de Site ----
+      websiteBtn.addEventListener('click', async () => {
+        const url = websiteInput.value.trim();
+        if (!url) {
+          showToast("⚠️ Por favor, insira o link do site de receitas.");
+          return;
+        }
+
+        disableControls(true);
+        showLoading("Lendo site de receitas... 🌐", "Obtendo o conteúdo da página de forma segura...");
+
+        try {
+          // Obtém o texto limpo da receita usando proxy AllOrigins
+          const pageText = await withTimeout(
+            fetchCleanTextFromWebsite(url),
+            25000,
+            'O carregamento do site demorou demais.'
+          );
+
+          showLoading("Analisando com Inteligência Artificial... 🤖", "O Gemini está interpretando os ingredientes e instruções do site...");
+
+          const extractedRecipe = await withTimeout(
+            extractRecipeFromText(pageText),
+            35000,
+            'O Gemini demorou muito para interpretar o texto do site.'
+          );
+
+          showLoading("Criando receita no Firestore...", "Salvando a receita na sua conta...");
+
+          extractedRecipe.image = "images/placeholder_recipe.png";
+
+          const savedId = await withTimeout(
+            saveUserRecipe(extractedRecipe),
+            20000,
+            'Erro ao salvar a receita no Firestore.'
+          );
+
+          showLoading("🎉 Site Importado com Sucesso!", `A receita "${extractedRecipe.title}" foi salva na sua conta!`, false);
+          showToast(`🎉 Receita "${extractedRecipe.title}" importada!`, 3000);
+
+          setTimeout(() => {
+            window.location.href = `recipe.html?id=${savedId}`;
+          }, 3000);
+
+        } catch (err) {
+          console.error("Erro ao importar do site:", err);
+          hideLoading();
+          disableControls(false);
+          showToast(`❌ Falha ao importar do site: ${err.message || err}`);
+        }
+      });
+
+      function disableControls(disabled) {
+        youtubeBtn.disabled = disabled;
+        websiteBtn.disabled = disabled;
+        youtubeInput.disabled = disabled;
+        websiteInput.disabled = disabled;
+      }
+    }
+
+    // Proxy CORS para puxar o conteúdo de texto da página
+    async function fetchCleanTextFromWebsite(targetUrl) {
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+      const res = await fetch(proxyUrl);
+      if (!res.ok) throw new Error("Não foi possível acessar a página de destino através do proxy de rede.");
+      
+      const data = await res.json();
+      if (!data.contents) throw new Error("A página retornou vazia ou está indisponível.");
+      
+      // Converte HTML em documento parseável
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(data.contents, 'text/html');
+      
+      // Limpa tags desnecessárias para reduzir tokens e poluição
+      doc.querySelectorAll('script, style, iframe, nav, footer, header, noscript, svg, img, video, form, button, link, meta').forEach(el => el.remove());
+      
+      const text = doc.body.innerText || doc.body.textContent || '';
+      const cleanText = text.replace(/\s+/g, ' ').trim();
+      
+      if (cleanText.length < 50) {
+        throw new Error("O conteúdo extraído da página é muito curto ou inacessível.");
+      }
+      
+      return cleanText;
+    }
+
+    function showLoading(title, subtitle, showSpinner = true) {
+      document.getElementById('loading-text').textContent = title;
+      document.getElementById('loading-subtext').textContent = subtitle || 'Por favor, aguarde.';
+      
+      const spinner = document.querySelector('.loading-spinner');
+      if (spinner) {
+        spinner.style.display = showSpinner ? 'block' : 'none';
+      }
+      
+      document.getElementById('loading-overlay').style.display = 'flex';
+    }
+
+    function hideLoading() {
+      document.getElementById('loading-overlay').style.display = 'none';
+      const spinner = document.querySelector('.loading-spinner');
+      if (spinner) {
+        spinner.style.display = 'block';
+      }
+    }
+
+    function withTimeout(promise, ms, message) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms))
+      ]);
+    }
+
+    // Toggle do menu flutuante
+    window.toggleAddRecipeMenu = function(event) {
+      event.stopPropagation();
+      const container = document.getElementById('add-recipe-menu-container');
+      container.classList.toggle('active');
+    };
+
+    document.addEventListener('click', () => {
+      const container = document.getElementById('add-recipe-menu-container');
+      if (container) container.classList.remove('active');
+    });
+  </script>
+</body>
+</html>
