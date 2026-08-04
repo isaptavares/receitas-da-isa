@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Importar Receita por Foto ou PDF — Receitas da Isa. Faça o upload do arquivo e deixe nossa Inteligência Artificial ler e criar a receita automaticamente.">
+  <title>Importar Receita por Foto ou PDF — Receitas da Isa</title>
+  <link rel="stylesheet" href="css/main.css?v=2">
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar" aria-label="Navegação principal">
+    <div style="display: flex; align-items: center;">
+      <a class="nav-logo" href="index.html" aria-label="Receitas da Isa - Início">
+        <span class="nav-logo-icon">🍴</span>
+        <span class="nav-logo-text">
+          Receitas da Isa
+          <em class="nav-logo-sub">sabores do mundo</em>
+        </span>
+      </a>
+
+      <!-- Botão Adicionar Receita Expansível -->
+      <div class="add-recipe-menu-container" id="add-recipe-menu-container">
+        <button class="add-recipe-main-btn" id="add-recipe-main-btn" aria-label="Adicionar receita" onclick="toggleAddRecipeMenu(event)">
+          <span>+</span>
+        </button>
+        <div class="add-recipe-options" id="add-recipe-options">
+          <a href="add-recipe-manual.html" class="add-recipe-option-btn manual" title="Adicionar Manualmente">
+            <span>✍️</span> <span class="label-text">Manualmente</span>
+          </a>
+          <a href="add-recipe-link.html" class="add-recipe-option-btn link" title="Adicionar por Link de Rede Social">
+            <span>🔗</span> <span class="label-text">Por Link</span>
+          </a>
+          <a href="add-recipe-import.html" class="add-recipe-option-btn import active" title="Importar Foto ou PDF">
+            <span>📤</span> <span class="label-text">Importar</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <ul class="nav-links" role="list">
+      <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
+      <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
+      <li><a class="nav-link" href="planner.html" id="nav-planner"><span class="nav-link-icon">📅</span> <span>Planejador</span></a></li>
+      <li id="nav-auth-container">
+        <button class="nav-login-btn" id="login-btn">
+          <span>🔑</span> <span>Entrar</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ===== CONTENT ===== -->
+  <main>
+    <section class="import-section">
+      <div class="form-header">
+        <h1 class="form-title">Nova Receita por <em>Importação</em></h1>
+        <p class="form-subtitle">Faça o upload de uma foto do seu livro de receitas ou um arquivo PDF. O Gemini lerá tudo e criará os dados da receita de forma automática na sua conta.</p>
+      </div>
+
+      <div class="import-card" id="import-card-container">
+        <!-- Area de Arrastar/Soltar arquivo -->
+        <div class="drop-zone" id="drop-zone">
+          <span class="icon">📤</span>
+          <h3>Arraste e solte o arquivo aqui</h3>
+          <p>ou clique para navegar nos seus arquivos</p>
+          <span style="font-size: 0.78rem; color: var(--clr-text-muted);">Formatos suportados: JPG, PNG, WEBP, PDF (Até 10MB)</span>
+          <input type="file" id="recipe-file" accept="image/*,application/pdf" style="display: none;">
+        </div>
+
+        <!-- Prévia do arquivo selecionado -->
+        <div class="file-preview" id="file-preview">
+          <div class="file-info">
+            <span class="file-icon" id="file-icon">📄</span>
+            <div>
+              <div class="file-name" id="file-name">receita.pdf</div>
+              <div class="file-size" id="file-size">1.2 MB</div>
+            </div>
+          </div>
+          <button class="btn-remove-file" onclick="clearFileSelection()" title="Remover arquivo">✕</button>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="import-actions">
+          <a href="index.html" class="btn btn-outline">Cancelar</a>
+          <button class="btn btn-primary" id="process-file-btn" disabled>🤖 Processar com IA</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== LOADING OVERLAY ===== -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text">Processando...</div>
+    <div class="loading-subtext" id="loading-subtext">Isso pode levar alguns segundos. Por favor, aguarde.</div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <span class="footer-logo">🍴 Receitas da Isa</span>
+    <span class="footer-copy">Feito com <span>♥</span> e muito sabor • 2026</span>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/recipes.js?v=7"></script>
+  <script type="module">
+    import { extractRecipeFromFile, saveUserRecipe } from './js/user-recipes.js';
+    import { getUser, authReady } from './js/auth.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initNavbar();
+
+      await authReady;
+      const user = getUser();
+      if (!user) {
+        showToast("🔒 Você precisa estar logado para usar a importação!", 4000);
+        // Exibe bloqueio visual na tela
+        const container = document.getElementById('import-card-container');
+        if (container) {
+          container.innerHTML = `
+            <div style="padding: 2.5rem; text-align: center; color: var(--clr-text-muted);">
+              <span style="font-size: 3rem;">🔒</span>
+              <h3 style="margin-top: 1.5rem; color: var(--clr-text);">Área Restrita</h3>
+              <p style="margin-top: 0.5rem;">Esta funcionalidade requer login ativo para salvar as receitas no banco de dados.</p>
+              <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="document.getElementById('login-btn').click()">🔑 Fazer Login</button>
+            </div>
+          `;
+        }
+        return;
+      }
+
+      setupFileUpload();
+    });
+
+    function setupFileUpload() {
+      const fileInput = document.getElementById('recipe-file');
+      const dropZone = document.getElementById('drop-zone');
+      const filePreview = document.getElementById('file-preview');
+      const fileNameEl = document.getElementById('file-name');
+      const fileSizeEl = document.getElementById('file-size');
+      const fileIconEl = document.getElementById('file-icon');
+      const processBtn = document.getElementById('process-file-btn');
+      
+      let selectedFile = null;
+
+      // Clique na zona ativa o input de arquivo
+      dropZone.addEventListener('click', () => fileInput.click());
+
+      // Manipulação de Drag & Drop
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+          handleFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          handleFile(e.target.files[0]);
+        }
+      });
+
+      function handleFile(file) {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+        if (!allowedTypes.includes(file.type)) {
+          showToast('❌ Tipo de arquivo não suportado. Envie uma foto (JPG, PNG, WEBP) ou PDF.');
+          return;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+          showToast('❌ Arquivo muito grande. O limite máximo é 10MB.');
+          return;
+        }
+
+        selectedFile = file;
+        
+        // Exibe detalhes do arquivo
+        fileNameEl.textContent = file.name;
+        fileSizeEl.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+        fileIconEl.textContent = file.type === 'application/pdf' ? '📄' : '📸';
+        
+        filePreview.style.display = 'flex';
+        processBtn.disabled = false;
+        showToast('✓ Arquivo selecionado com sucesso!');
+      }
+
+      window.clearFileSelection = function() {
+        selectedFile = null;
+        fileInput.value = '';
+        filePreview.style.display = 'none';
+        processBtn.disabled = true;
+      };
+
+      // Processar com IA
+      processBtn.addEventListener('click', async () => {
+        if (!selectedFile) return;
+
+        const user = getUser();
+        if (!user) {
+          showToast('🔒 Você precisa estar logado para salvar receitas.');
+          return;
+        }
+
+        showLoading("Analisando com Inteligência Artificial... 🤖", "O Gemini está lendo e interpretando a receita a partir do arquivo enviado...");
+        processBtn.disabled = true;
+
+        try {
+          // Converte arquivo para base64
+          const base64Data = await fileToBase64(selectedFile);
+          
+          // Envia para o Gemini
+          const extractedRecipe = await withTimeout(
+            extractRecipeFromFile(base64Data, selectedFile.type),
+            35000,
+            'A Inteligência Artificial demorou muito para responder.'
+          );
+
+          showLoading("Criando receita no Firestore...", "Salvando receita na nuvem...");
+
+          // Configura imagem padrão
+          extractedRecipe.image = "images/placeholder_recipe.png";
+
+          // Salva receita
+          const savedId = await withTimeout(
+            saveUserRecipe(extractedRecipe),
+            20000,
+            'Não foi possível salvar a receita no banco de dados.'
+          );
+
+          hideLoading();
+          showToast(`🎉 Receita "${extractedRecipe.title}" importada e criada com sucesso!`, 3000);
+          
+          setTimeout(() => {
+            window.location.href = `recipe.html?id=${savedId}`;
+          }, 600);
+
+        } catch (err) {
+          console.error("Erro na importação:", err);
+          hideLoading();
+          processBtn.disabled = false;
+          showToast(`❌ Falha ao importar: ${err.message || err}`);
+        }
+      });
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = reader.result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function showLoading(title, subtitle) {
+      document.getElementById('loading-text').textContent = title;
+      document.getElementById('loading-subtext').textContent = subtitle || 'Por favor, aguarde.';
+      document.getElementById('loading-overlay').style.display = 'flex';
+    }
+
+    function hideLoading() {
+      document.getElementById('loading-overlay').style.display = 'none';
+    }
+
+    function withTimeout(promise, ms, message) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms))
+      ]);
+    }
+
+    // Toggle do menu flutuante
+    window.toggleAddRecipeMenu = function(event) {
+      event.stopPropagation();
+      const container = document.getElementById('add-recipe-menu-container');
+      container.classList.toggle('active');
+    };
+
+    document.addEventListener('click', (e) => {
+      const container = document.getElementById('add-recipe-menu-container');
+      if (container && container.classList.contains('active')) {
+        if (!container.contains(e.target)) {
+          container.classList.remove('active');
+        }
+      }
+    });
+  </script>
+</body>
+</html>

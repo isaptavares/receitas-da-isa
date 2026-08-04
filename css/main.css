@@ -341,6 +341,9 @@ ul { list-style: none; }
 .add-recipe-menu-container.active .add-recipe-option-btn:nth-child(2) {
   transition-delay: 0.12s;
 }
+.add-recipe-menu-container.active .add-recipe-option-btn:nth-child(3) {
+  transition-delay: 0.19s;
+}
 
 .add-recipe-option-btn:hover {
   background: rgba(232,168,56,0.1);
@@ -2135,3 +2138,124 @@ footer {
   select.mobile-only { display: block !important; }
   div.mobile-only { display: flex !important; }
 }
+
+/* =============================================
+   IMPORT RECIPE PAGE STYLES
+   ============================================= */
+.import-section {
+  padding-top: calc(var(--nav-height) + 2rem);
+  padding-bottom: 4rem;
+  max-width: 700px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.import-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition);
+  position: relative;
+}
+
+.import-card:hover {
+  border-color: var(--clr-border-hover);
+}
+
+.drop-zone {
+  border: 2px dashed rgba(232, 168, 56, 0.3);
+  border-radius: var(--radius-md);
+  padding: 3.5rem 2rem;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.01);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--clr-gold);
+  background: rgba(232, 168, 56, 0.04);
+}
+
+.drop-zone .icon {
+  font-size: 3.5rem;
+  line-height: 1;
+}
+
+.drop-zone h3 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--clr-text);
+  margin: 0;
+}
+
+.drop-zone p {
+  color: var(--clr-text-muted);
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.file-preview {
+  margin-top: 1.5rem;
+  padding: 1.2rem;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  background: var(--clr-surface-2);
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-align: left;
+}
+
+.file-info .file-icon {
+  font-size: 2.2rem;
+}
+
+.file-info .file-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--clr-text);
+  word-break: break-all;
+}
+
+.file-info .file-size {
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+}
+
+.btn-remove-file {
+  background: none;
+  border: none;
+  color: var(--clr-text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.btn-remove-file:hover {
+  color: var(--clr-terracotta);
+}
+
+.import-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+

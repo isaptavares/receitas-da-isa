@@ -10,9 +10,9 @@ import {
   storageRef, uploadBytes, getDownloadURL
 } from './firebase-config.js';
 import { getUser } from './auth.js';
+import { GEMINI_KEY } from './api-key.js';
 
-const GEMINI_KEY = 'AIzaSyAY0N43COoHw-h3ogfTLX_qsJwJ6L0CjXg';
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${GEMINI_KEY}`;
 
 const RECIPE_PROMPT = `Você é um chef especialista e nutricionista. Analise este conteúdo e extraia a receita completa com todos os detalhes.
 
@@ -283,6 +283,20 @@ Retorne APENAS o objeto JSON completo atualizado (sem markdown, sem backticks, s
   return callGemini(body);
 }
 
+export async function extractRecipeFromFile(base64Data, mimeType) {
+  const prompt = RECIPE_PROMPT;
+  const body = {
+    contents: [{
+      parts: [
+        { text: prompt },
+        { inlineData: { mimeType: mimeType, data: base64Data } }
+      ]
+    }],
+    generationConfig: { temperature: 0.1 }
+  };
+  return callGemini(body);
+}
+
 // Expose globally
 window.getUserRecipes = getUserRecipes;
 window.getUserRecipeById = getUserRecipeById;
@@ -293,3 +307,4 @@ window.extractRecipeFromYouTube = extractRecipeFromYouTube;
 window.extractRecipeFromText = extractRecipeFromText;
 window.uploadRecipeImage = uploadRecipeImage;
 window.autocompleteRecipeWithAI = autocompleteRecipeWithAI;
+window.extractRecipeFromFile = extractRecipeFromFile;
