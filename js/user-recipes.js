@@ -46,6 +46,7 @@ Retorne APENAS um objeto JSON válido (sem markdown, sem backticks, sem texto ad
 
 Regras:
 - REGRA CRUCIAL DE FIDELIDADE: Seja extremamente fiel e literal à receita fornecida na fonte (imagem, PDF, vídeo ou texto). NÃO invente ingredientes, NÃO altere as quantidades ou medidas fornecidas, e NÃO crie nem modifique os passos do modo de preparo. Não faça improvisos.
+- Dica para sites como TudoGostoso: o número de rendimento/porções (servings) geralmente vem indicado no cabeçalho ou título da seção de ingredientes (ex: "Ingredientes (8 porções)", "Ingredientes - 8 porções" ou similar). Fique atento a essa informação no texto para preencher o campo "servings" corretamente.
 - cuisine: use uma de: Brasileira, Italiana, Japonesa, Mexicana, Francesa, Tailandesa, Americana, Indiana, Espanhola, Grega
 - difficulty: Fácil, Médio ou Difícil
 - categories: use uma ou mais de: Café da Manhã, Almoço, Lanche, Jantar, Sobremesa, Acompanhamento
