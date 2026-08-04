@@ -142,13 +142,22 @@ export async function clearPlanner() {
 
 // ---- Data Loading ----
 
-async function loadIndex() {
+async function waitForAuth() {
+  try {
+    await Promise.race([
+      authReady,
+      new Promise(resolve => setTimeout(resolve, 1500))
+    ]);
+  } catch (e) {}
+}
+
+export async function loadIndex() {
   const res = await fetch('data/index.json?v=' + Date.now());
   if (!res.ok) throw new Error('Não foi possível carregar o índice de receitas.');
   const index = await res.json();
 
-  // Aguarda o Firebase confirmar se há um usuário logado antes de decidir se busca na nuvem
-  await authReady;
+  // Aguarda o Firebase confirmar login (com timeout de 1.5s para não travar a tela)
+  await waitForAuth();
 
   // Buscar receitas do usuário no Firestore se logado
   let userRecipes = [];
@@ -176,9 +185,9 @@ async function loadIndex() {
   return index;
 }
 
-async function loadRecipe(id) {
-  // Aguarda o Firebase confirmar se há um usuário logado antes de decidir se busca na nuvem
-  await authReady;
+export async function loadRecipe(id) {
+  // Aguarda o Firebase confirmar login (com timeout de 1.5s para não travar a tela)
+  await waitForAuth();
 
   // 1. Tenta carregar das receitas criadas pelo usuário (Firestore)
   const user = getUser();
@@ -208,7 +217,7 @@ async function loadRecipe(id) {
 
 // ---- Filter Logic ----
 
-function filterRecipes(recipes, filters) {
+export function filterRecipes(recipes, filters) {
   return recipes.filter(r => {
     if (filters.cuisine && filters.cuisine !== 'todas' && r.cuisine !== filters.cuisine) return false;
     if (filters.maxCalories && r.calories > filters.maxCalories) return false;
@@ -246,7 +255,7 @@ function getCuisineMeta(cuisine) {
   return CUISINE_META[cuisine] || { flag: '🌍', emoji: '🍽️' };
 }
 
-function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html', imagePrefix = '', plannerServings = null } = {}) {
+export function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html', imagePrefix = '', plannerServings = null } = {}) {
   const fav = isFavorite(recipe.id);
   const meta = getCuisineMeta(recipe.cuisine);
   const diffClass = getDifficultyClass(recipe.difficulty);
@@ -255,7 +264,12 @@ function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html'
     `<span class="card-tag">${t}</span>`
   ).join('');
   
-  const plannerBadge = plannerServings ? `<div style="position: absolute; top: 12px; left: 12px; background: var(--clr-gold); color: var(--clr-surface); padding: 0.3rem 0.6rem; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: bold; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">Render: ${plannerServings * recipe.servings} porções</div>` : '';
+  const plannerBadge = plannerServings ? `<div style="position: absolute; top: 12px; left: 12px; background: var(--clr-gold); color: var(--clr-surface); padding: 0.3rem 0.6rem; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: bold; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">Render: ${plannerServings * (recipe.servings || 1)} porções</div>` : '';
+
+  const totalTime = recipe.totalTime || recipe.prepTime || 15;
+  const calories = recipe.calories || 300;
+  const servings = recipe.servings || 2;
+  const subtitle = recipe.subtitle || '';
 
   return `
     <article class="recipe-card ${featured ? 'featured' : ''}" 
@@ -263,42 +277,50 @@ function renderRecipeCard(recipe, { featured = false, targetPage = 'recipe.html'
              id="card-${recipe.id}"
              onclick="window.location='${targetPage}?id=${recipe.id}'"
              role="article"
-             aria-label="Ver receita: ${recipe.title}">
+             aria-label="Ver receita: ${recipe.title || 'Receita'}">
 
       <div class="card-image-wrap">
         ${plannerBadge}
-        <img class="card-image" src="${imagePrefix}${recipe.image}" alt="${recipe.title}" loading="lazy">
+        <img class="card-image" src="${imagePrefix}${recipe.image || 'images/placeholder_recipe.png'}" alt="${recipe.title || ''}" loading="lazy">
         <div class="card-image-overlay"></div>
 
         <div class="card-cuisine">
-          ${meta.code ? `<img src="https://flagcdn.com/w20/${meta.code}.png" alt="${recipe.cuisine}" style="width: 16px; margin-right: 6px; vertical-align: middle; border-radius: 2px;">` : `<span class="cuisine-flag">${meta.flag}</span>`}
-          ${recipe.cuisine}
+          ${meta.code ? `<img src="https://flagcdn.com/w20/${meta.code}.png" alt="${recipe.cuisine || ''}" style="width: 16px; margin-right: 6px; vertical-align: middle; border-radius: 2px;">` : `<span class="cuisine-flag">${meta.flag}</span>`}
+          ${recipe.cuisine || 'Brasileira'}
         </div>
 
-        <button class="card-fav-btn ${fav ? 'is-fav' : ''}"
-                id="fav-btn-${recipe.id}"
-                aria-label="${fav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}"
-                onclick="event.stopPropagation(); handleFavToggle('${recipe.id}')">
-          ${fav ? '♥' : '♡'}
-        </button>
+        <div class="card-actions-wrapper" onclick="event.stopPropagation();">
+          <a href="add-recipe-manual.html?edit=${recipe.id}" class="card-action-btn" title="Editar receita">
+            ✏️
+          </a>
+          <button class="card-action-btn delete-btn" title="Excluir receita" onclick="handleCardDelete('${recipe.id}')">
+            🗑️
+          </button>
+          <button class="card-fav-btn ${fav ? 'is-fav' : ''}"
+                  id="fav-btn-${recipe.id}"
+                  aria-label="${fav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}"
+                  onclick="handleFavToggle('${recipe.id}')">
+            ${fav ? '♥' : '♡'}
+          </button>
+        </div>
       </div>
 
       <div class="card-body">
-        <h3 class="card-title">${recipe.title}</h3>
-        <p class="card-subtitle">${recipe.subtitle}</p>
+        <h3 class="card-title">${recipe.title || 'Sem título'}</h3>
+        <p class="card-subtitle">${subtitle}</p>
 
         <div class="card-meta">
           <span class="card-meta-item">
             <span class="card-meta-icon">⏱</span>
-            <strong>${recipe.totalTime} min</strong>
+            <strong>${totalTime} min</strong>
           </span>
           <span class="card-meta-item">
             <span class="card-meta-icon">🔥</span>
-            <strong>${recipe.calories} kcal</strong>
+            <strong>${calories} kcal</strong>
           </span>
           <span class="card-meta-item">
             <span class="card-meta-icon">👤</span>
-            <strong>${recipe.servings} porções</strong>
+            <strong>${servings} porções</strong>
           </span>
         </div>
 
@@ -406,11 +428,39 @@ function initNavbar() {
 }
 
 // ---- Expor para escopo global (para compatibilidade com HTML legados) ----
+async function handleCardDelete(id) {
+  const card = document.getElementById(`card-${id}`);
+  const title = card?.querySelector('.card-title')?.textContent || 'esta receita';
+  if (confirm(`Tem certeza que deseja excluir a receita "${title}"?`)) {
+    try {
+      if (window.deleteUserRecipe) {
+        await window.deleteUserRecipe(id);
+      } else {
+        const localRecipes = JSON.parse(localStorage.getItem('receitas_isa_user_recipes')) || [];
+        const updated = localRecipes.filter(r => r.id !== id && r.firestoreId !== id);
+        localStorage.setItem('receitas_isa_user_recipes', JSON.stringify(updated));
+      }
+      if (window.showToast) window.showToast("🗑️ Receita excluída com sucesso!", 3000);
+      if (card) {
+        card.style.transition = 'all 0.3s ease';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.9)';
+        setTimeout(() => card.remove(), 300);
+      }
+    } catch (err) {
+      console.error("Erro ao excluir receita:", err);
+      if (window.showToast) window.showToast("❌ Erro ao excluir receita.");
+    }
+  }
+}
+
+// Expor globalmente para uso inline (onclick)
 window.loadIndex = loadIndex;
 window.loadRecipe = loadRecipe;
 window.filterRecipes = filterRecipes;
 window.renderRecipeCard = renderRecipeCard;
 window.handleFavToggle = handleFavToggle;
+window.handleCardDelete = handleCardDelete;
 window.getFavorites = getFavorites;
 window.isFavorite = isFavorite;
 window.getPlanner = getPlanner;

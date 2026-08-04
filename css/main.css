@@ -806,6 +806,37 @@ ul { list-style: none; }
 }
 .cuisine-flag { font-size: 0.9rem; }
 
+.card-actions-wrapper {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 20;
+}
+
+.card-actions-wrapper .card-fav-btn,
+.card-actions-wrapper .card-action-btn {
+  position: static !important;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15,13,10,0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--clr-border);
+  border-radius: 50%;
+  font-size: 0.9rem;
+  transition: all var(--transition);
+  color: var(--clr-text-muted);
+  text-decoration: none;
+  cursor: pointer;
+}
+.card-actions-wrapper .card-action-btn:hover { border-color: var(--clr-gold); color: var(--clr-gold); transform: scale(1.1); }
+.card-actions-wrapper .card-action-btn.delete-btn:hover { border-color: var(--clr-terracotta); color: var(--clr-terracotta); }
+
 .card-fav-btn {
   position: absolute;
   top: 0.9rem; right: 0.9rem;

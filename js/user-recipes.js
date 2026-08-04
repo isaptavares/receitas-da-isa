@@ -139,7 +139,9 @@ export async function getUserRecipes() {
   try {
     const col = collection(db, 'users', user.uid, 'my_recipes');
     const q = query(col, orderBy('createdAt', 'desc'));
-    const snapshot = await getDocs(q);
+    const snapshotPromise = getDocs(q);
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout Firestore')), 3000));
+    const snapshot = await Promise.race([snapshotPromise, timeoutPromise]);
     return snapshot.docs.map(d => ({
       ...d.data(),
       id: d.id,
@@ -147,25 +149,99 @@ export async function getUserRecipes() {
       isUserCreated: true
     }));
   } catch (e) {
-    console.error('Erro ao buscar receitas:', e);
+    console.warn('Busca de receitas no Firestore excedeu tempo limite ou falhou:', e);
     return [];
   }
 }
 
-export async function getUserRecipeById(firestoreId) {
+async function findUserRecipeDocRef(id) {
   const user = getUser();
   if (!user) return null;
-  const ref = doc(db, 'users', user.uid, 'my_recipes', firestoreId);
-  const snap = await getDoc(ref);
-  if (!snap.exists()) return null;
-  return { ...snap.data(), id: snap.id, firestoreId: snap.id, isUserCreated: true };
+  
+  // 1. Tenta direto pelo ID do documento
+  try {
+    const directRef = doc(db, 'users', user.uid, 'my_recipes', id);
+    const directSnap = await getDoc(directRef);
+    if (directSnap.exists()) {
+      return { ref: directRef, snap: directSnap };
+    }
+  } catch (e) {
+    // Segue para busca em lote
+  }
+
+  // 2. Busca na coleção se id for slug ou data.id
+  try {
+    const col = collection(db, 'users', user.uid, 'my_recipes');
+    const snapshot = await getDocs(col);
+    const foundDoc = snapshot.docs.find(d => d.id === id || d.data().id === id);
+    if (foundDoc) {
+      return { ref: doc(db, 'users', user.uid, 'my_recipes', foundDoc.id), snap: foundDoc };
+    }
+  } catch (e) {
+    console.warn("Erro ao buscar documento de receita no Firestore:", e);
+  }
+
+  return null;
 }
 
-export async function deleteUserRecipe(firestoreId) {
+export async function getUserRecipeById(id) {
+  const docResult = await findUserRecipeDocRef(id);
+  if (docResult && docResult.snap.exists()) {
+    const data = docResult.snap.data();
+    return {
+      ...data,
+      id: docResult.snap.id,
+      firestoreId: docResult.snap.id,
+      isUserCreated: true
+    };
+  }
+  return null;
+}
+
+export async function deleteUserRecipe(id) {
   const user = getUser();
-  if (!user) return;
-  const ref = doc(db, 'users', user.uid, 'my_recipes', firestoreId);
-  await deleteDoc(ref);
+  if (user) {
+    try {
+      const docResult = await findUserRecipeDocRef(id);
+      if (docResult && docResult.ref) {
+        await deleteDoc(docResult.ref);
+      }
+    } catch (e) {
+      console.warn("Erro ao deletar no Firestore:", e);
+    }
+  }
+  try {
+    const localRecipes = JSON.parse(localStorage.getItem('receitas_isa_user_recipes')) || [];
+    const updated = localRecipes.filter(r => r.id !== id && r.firestoreId !== id);
+    localStorage.setItem('receitas_isa_user_recipes', JSON.stringify(updated));
+  } catch (e) {
+    console.warn("Erro ao deletar localmente:", e);
+  }
+}
+
+export async function updateUserRecipe(id, recipeData) {
+  const user = getUser();
+  if (user) {
+    try {
+      const docResult = await findUserRecipeDocRef(id);
+      if (docResult && docResult.ref) {
+        await updateDoc(docResult.ref, {
+          ...recipeData,
+          updatedAt: serverTimestamp()
+        });
+        return docResult.snap.id;
+      }
+    } catch (e) {
+      console.warn("Erro ao atualizar no Firestore, tentando LocalStorage:", e);
+    }
+  }
+  const localRecipes = JSON.parse(localStorage.getItem('receitas_isa_user_recipes')) || [];
+  const idx = localRecipes.findIndex(r => r.id === id || r.firestoreId === id);
+  if (idx !== -1) {
+    localRecipes[idx] = { ...localRecipes[idx], ...recipeData };
+    localStorage.setItem('receitas_isa_user_recipes', JSON.stringify(localRecipes));
+  }
+  return id;
 }
 
 export async function autocompleteRecipeWithAI(partialRecipe) {
@@ -210,6 +286,7 @@ Retorne APENAS o objeto JSON completo atualizado (sem markdown, sem backticks, s
 window.getUserRecipes = getUserRecipes;
 window.getUserRecipeById = getUserRecipeById;
 window.deleteUserRecipe = deleteUserRecipe;
+window.updateUserRecipe = updateUserRecipe;
 window.saveUserRecipe = saveUserRecipe;
 window.extractRecipeFromYouTube = extractRecipeFromYouTube;
 window.extractRecipeFromText = extractRecipeFromText;

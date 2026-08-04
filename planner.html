@@ -191,7 +191,8 @@
     async function init() {
       initNavbar();
       try {
-        const index = await loadIndex();
+        const fetchIndex = window.loadIndex || loadIndex;
+        const index = await fetchIndex();
         allRecipes = index.recipes;
         
         loadPlannerData();

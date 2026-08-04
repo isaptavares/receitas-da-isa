@@ -625,16 +625,10 @@
           </div>
         </div>
 
-        <!-- Tempos de Preparo -->
-        <div class="form-group row">
-          <div>
-            <label class="form-label" for="recipe-preptime">Tempo de Preparo (minutos)</label>
-            <input type="number" id="recipe-preptime" class="form-input" placeholder="Ex: 15" min="1">
-          </div>
-          <div>
-            <label class="form-label" for="recipe-cooktime">Tempo de Cozimento (minutos)</label>
-            <input type="number" id="recipe-cooktime" class="form-input" placeholder="Ex: 30" min="1">
-          </div>
+        <!-- Tempo de Preparo -->
+        <div class="form-group">
+          <label class="form-label" for="recipe-preptime">Tempo de Preparo (minutos)</label>
+          <input type="number" id="recipe-preptime" class="form-input" placeholder="Ex: 25" min="1">
         </div>
 
         <!-- Porções e Calorias -->
@@ -766,38 +760,146 @@
   <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/recipes.js?v=7"></script>
   <script type="module">
-    import { saveUserRecipe, autocompleteRecipeWithAI, uploadRecipeImage } from './js/user-recipes.js';
-    import { getUser } from './js/auth.js';
+    import { saveUserRecipe, updateUserRecipe, autocompleteRecipeWithAI, uploadRecipeImage } from './js/user-recipes.js';
+    import { getUser, authReady } from './js/auth.js';
 
-    // Inicia com 3 linhas vazias de ingredientes
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       initNavbar();
-      for (let i = 0; i < 3; i++) {
+      
+      await authReady;
+      if (!getUser()) {
+        showToast("🔒 Faça login para poder salvar suas receitas na sua conta!", 6000);
+      }
+
+      // Verifica se está no modo de edição
+      const editId = new URLSearchParams(window.location.search).get('edit');
+      if (editId) {
+        await checkEditMode(editId);
+      } else {
         addIngredientRow();
       }
     });
 
+    // Função para preencher formulário no modo de edição
+    async function checkEditMode(editId) {
+      try {
+        showLoading("Carregando receita...", "Preenchendo dados para edição...");
+        const recipe = window.loadRecipe ? await window.loadRecipe(editId) : null;
+        hideLoading();
+
+        if (!recipe) {
+          showToast("⚠️ Receita não encontrada para edição.");
+          addIngredientRow();
+          return;
+        }
+
+        // Altera títulos
+        const titleEl = document.querySelector('.form-title');
+        if (titleEl) titleEl.innerHTML = 'Editar <em>Receita</em>';
+        const submitBtn = document.getElementById('submit-recipe-btn');
+        if (submitBtn) submitBtn.innerHTML = '💾 Salvar Alterações';
+
+        // Preenche campos principais
+        document.getElementById('recipe-title').value = recipe.title || '';
+
+        // Preenche ingredientes
+        const container = document.getElementById('ingredients-container');
+        container.innerHTML = '';
+        if (Array.isArray(recipe.ingredients) && recipe.ingredients.length > 0) {
+          recipe.ingredients.forEach(ing => {
+            const itemStr = typeof ing === 'string' ? ing : (ing.item || '');
+            const amountStr = typeof ing === 'object' && ing.amount ? ing.amount : '';
+            addIngredientRow(itemStr, amountStr);
+          });
+        } else {
+          addIngredientRow();
+        }
+
+        // Preenche modo de preparo
+        if (Array.isArray(recipe.steps)) {
+          document.getElementById('recipe-steps').value = recipe.steps.join('\n');
+        } else if (typeof recipe.steps === 'string') {
+          document.getElementById('recipe-steps').value = recipe.steps;
+        }
+        if (window.updateStepsEditor) updateStepsEditor();
+
+        // Preenche campos opcionais
+        if (recipe.cuisine) document.getElementById('recipe-cuisine').value = recipe.cuisine;
+        if (recipe.difficulty) document.getElementById('recipe-difficulty').value = recipe.difficulty;
+        if (recipe.prepTime || recipe.totalTime) document.getElementById('recipe-preptime').value = recipe.prepTime || recipe.totalTime;
+        if (recipe.servings) document.getElementById('recipe-servings').value = recipe.servings;
+        if (recipe.calories) document.getElementById('recipe-calories').value = recipe.calories;
+
+        // Prévia da imagem
+        if (recipe.image) {
+          document.getElementById('recipe-image-url').value = recipe.image;
+          const previewImg = document.getElementById('image-preview-img');
+          const previewContainer = document.getElementById('image-preview-container');
+          if (previewImg && previewContainer) {
+            previewImg.src = recipe.image;
+            previewContainer.style.display = 'flex';
+          }
+        }
+
+        // Preenche categorias
+        if (Array.isArray(recipe.categories)) {
+          recipe.categories.forEach(cat => {
+            const cb = document.querySelector(`input[name="recipe-category"][value="${cat}"]`);
+            if (cb) cb.checked = true;
+          });
+        }
+
+        // Preenche tags
+        if (Array.isArray(recipe.tags)) {
+          recipe.tags.forEach(tag => {
+            const cb = document.querySelector(`input[name="recipe-tag"][value="${tag}"]`);
+            if (cb) cb.checked = true;
+          });
+        }
+
+      } catch (err) {
+        hideLoading();
+        console.error("Erro ao carregar receita para edição:", err);
+        showToast("⚠️ Falha ao carregar receita para edição.");
+        addIngredientRow();
+      }
+    }
+
     // Adiciona uma linha de ingrediente
-    window.addIngredientRow = function() {
+    window.addIngredientRow = function(itemVal = '', amountVal = '') {
       const container = document.getElementById('ingredients-container');
       const row = document.createElement('div');
       row.className = 'ingredient-row';
       row.innerHTML = `
-        <input type="text" class="form-input ing-item" placeholder="Ex: Farinha de trigo" required>
-        <input type="text" class="form-input ing-amount" placeholder="Ex: 2 xícaras" required>
+        <input type="text" class="form-input ing-item" placeholder="Ex: Farinha de trigo" value="${itemVal.replace(/"/g, '&quot;')}" oninput="handleIngredientInput(this)">
+        <input type="text" class="form-input ing-amount" placeholder="Ex: 2 xícaras" value="${amountVal.replace(/"/g, '&quot;')}" oninput="handleIngredientInput(this)">
         <button type="button" class="btn-remove-ing" onclick="removeIngredientRow(this)" aria-label="Remover ingrediente">✕</button>
       `;
       container.appendChild(row);
     };
 
+    // Adiciona dinamicamente uma nova linha ao digitar na última linha existente
+    window.handleIngredientInput = function(input) {
+      const row = input.closest('.ingredient-row');
+      const container = document.getElementById('ingredients-container');
+      if (row === container.lastElementChild) {
+        const itemVal = row.querySelector('.ing-item').value.trim();
+        const amountVal = row.querySelector('.ing-amount').value.trim();
+        if (itemVal || amountVal) {
+          addIngredientRow();
+        }
+      }
+    };
+
     // Remove uma linha de ingrediente
     window.removeIngredientRow = function(button) {
       const container = document.getElementById('ingredients-container');
-      // Garante que fique pelo menos 1 linha
       if (container.children.length > 1) {
         button.closest('.ingredient-row').remove();
       } else {
-        showToast("⚠️ Pelo menos um ingrediente é obrigatório.");
+        const row = button.closest('.ingredient-row');
+        row.querySelector('.ing-item').value = '';
+        row.querySelector('.ing-amount').value = '';
       }
     };
 
@@ -939,7 +1041,7 @@
       document.getElementById('recipe-form').reset();
 
       document.getElementById('ingredients-container').innerHTML = '';
-      for (let i = 0; i < 3; i++) addIngredientRow();
+      addIngredientRow();
 
       document.getElementById('recipe-steps').value = '';
       updateStepsEditor();
@@ -1032,6 +1134,46 @@
       ]);
     }
 
+    // Otimiza e comprime imagens pesadas (ex: fotos de celular de 10MB) para ~150KB antes do upload
+    function compressImageFile(file, maxWidth = 1000, quality = 0.8) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            canvas.toBlob((blob) => {
+              const base64 = canvas.toDataURL('image/jpeg', quality);
+              if (!blob) {
+                resolve({ base64, file });
+                return;
+              }
+              const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), { type: 'image/jpeg', lastModified: Date.now() });
+              resolve({ base64, file: compressedFile });
+            }, 'image/jpeg', quality);
+          };
+          img.onerror = () => reject(new Error('Erro ao carregar imagem para compressão.'));
+          img.src = event.target.result;
+        };
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(file);
+      });
+    }
+
     // Auxiliar para gerar slug local
     function generateSlug(title) {
       return title
@@ -1059,6 +1201,13 @@
       event.preventDefault();
       
       const user = getUser();
+      if (!user) {
+        showToast("🔒 Você precisa estar logado para salvar e cadastrar receitas!");
+        const loginBtn = document.getElementById('login-btn');
+        if (loginBtn) loginBtn.click();
+        return;
+      }
+
       const title = document.getElementById('recipe-title').value.trim();
       const ingredients = getIngredientsList();
       const steps = getStepsList();
@@ -1083,9 +1232,7 @@
       
       const prepVal = document.getElementById('recipe-preptime').value;
       const prepTime = prepVal ? parseInt(prepVal) : null;
-      
-      const cookVal = document.getElementById('recipe-cooktime').value;
-      const cookTime = cookVal ? parseInt(cookVal) : null;
+      const cookTime = null;
       
       const servingsVal = document.getElementById('recipe-servings').value;
       const servings = servingsVal ? parseInt(servingsVal) : null;
@@ -1105,8 +1252,8 @@
         cuisine,
         difficulty,
         prepTime,
-        cookTime,
-        totalTime: (prepTime || cookTime) ? ((prepTime || 0) + (cookTime || 0)) : null,
+        cookTime: null,
+        totalTime: prepTime,
         servings,
         calories,
         categories,
@@ -1162,28 +1309,33 @@
         }
       }
 
-      // 3. Processamento da imagem
+      // 3. Processamento da imagem (Com compressão + Fallback Base64 garantido)
       const imageFile = document.getElementById('recipe-image').files[0];
       const imageUrlInput = document.getElementById('recipe-image-url').value.trim();
       let finalImageUrl = "images/placeholder_recipe.png";
 
       if (imageFile) {
-        if (user) {
-          showLoading("Fazendo upload da imagem...", "Enviando imagem de capa da receita...");
-          try {
-            const tempSlug = generateSlug(title);
-            finalImageUrl = await withTimeout(uploadRecipeImage(imageFile, tempSlug), 30000, 'O upload da imagem demorou demais.');
-          } catch (err) {
-            console.error("Erro no upload do arquivo:", err);
-            showToast("⚠️ Falha ao salvar imagem, usando placeholder.");
+        showLoading("Otimizando imagem...", "Redimensionando e comprimindo a foto...");
+        try {
+          // Comprime fotos gigantes de celular (ex: 8MB) para ~150KB em milissegundos
+          const compressed = await compressImageFile(imageFile, 1000, 0.85);
+
+          if (user) {
+            showLoading("Enviando imagem...", "Salvando imagem de capa da receita...");
+            try {
+              const tempSlug = generateSlug(title);
+              finalImageUrl = await withTimeout(uploadRecipeImage(compressed.file, tempSlug), 8000, 'Upload no Firebase Storage demorou.');
+            } catch (storageErr) {
+              console.warn("Storage demorou ou falhou. Salvando foto diretamente em Base64:", storageErr);
+              // Fallback infalível: salva o Base64 comprimido para a imagem NUNCA ser perdida
+              finalImageUrl = compressed.base64;
+            }
+          } else {
+            finalImageUrl = compressed.base64;
           }
-        } else {
-          showLoading("Processando imagem local...", "Otimizando imagem para salvar no navegador...");
-          try {
-            finalImageUrl = await withTimeout(fileToBase64(imageFile), 10000, 'Falha ao processar a imagem.');
-          } catch (err) {
-            console.error("Erro ao processar imagem base64:", err);
-          }
+        } catch (err) {
+          console.error("Erro no processamento da imagem:", err);
+          showToast("⚠️ Falha ao comprimir imagem, tentando manter original.");
         }
       } else if (imageUrlInput) {
         finalImageUrl = imageUrlInput;
@@ -1191,10 +1343,14 @@
       
       finalRecipe.image = finalImageUrl;
 
-      // 4. Salvar receita (Firestore se logado, senão LocalStorage)
+      // 4. Salvar ou Atualizar receita
       let savedId;
+      const editId = new URLSearchParams(window.location.search).get('edit');
       try {
-        if (user) {
+        if (editId) {
+          showLoading("Atualizando receita...", "Salvando suas alterações...");
+          savedId = await withTimeout(updateUserRecipe(editId, finalRecipe), 20000, 'Atualizar a receita demorou demais.');
+        } else if (user) {
           showLoading("Salvando no Firestore...", "Registrando sua receita na nuvem...");
           savedId = await withTimeout(saveUserRecipe(finalRecipe), 20000, 'Salvar a receita na nuvem demorou demais.');
         } else {
@@ -1207,12 +1363,11 @@
         }
         
         hideLoading();
-        showToast(
-          `🎉 Receita "${title}" criada com sucesso!`,
-          8000,
-          `<a href="recipe.html?id=${savedId}" class="toast-action-btn">Abrir receita →</a>`
-        );
-        resetRecipeForm();
+        const successMsg = editId ? `🎉 Receita "${title}" atualizada com sucesso!` : `🎉 Receita "${title}" criada com sucesso!`;
+        showToast(`${successMsg} Redirecionando...`, 3000);
+        setTimeout(() => {
+          window.location.href = `recipe.html?id=${savedId || editId}`;
+        }, 500);
 
       } catch (err) {
         console.error("Erro ao salvar:", err);

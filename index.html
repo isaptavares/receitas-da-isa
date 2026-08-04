@@ -250,7 +250,8 @@
     async function init() {
       initNavbar();
       try {
-        const index = await loadIndex();
+        const fetchIndex = window.loadIndex || loadIndex;
+        const index = await fetchIndex();
         allRecipes = index.recipes;
         allCuisines = index.cuisines;
         allTags = index.allTags;
@@ -398,7 +399,8 @@
         ingredients: activeIngredients,
       };
 
-      const filtered = filterRecipes(allRecipes, filters);
+      const filterFn = window.filterRecipes || filterRecipes;
+      const filtered = filterFn(allRecipes, filters);
       renderGrid(filtered);
 
       const count = document.getElementById('results-count');
