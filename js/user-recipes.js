@@ -5,7 +5,7 @@
 
 import {
   db, storage,
-  collection, addDoc, getDocs, deleteDoc, doc, getDoc,
+  collection, addDoc, getDocs, deleteDoc, doc, getDoc, updateDoc,
   query, orderBy, serverTimestamp,
   storageRef, uploadBytes, getDownloadURL
 } from './firebase-config.js';
@@ -232,7 +232,8 @@ export async function updateUserRecipe(id, recipeData) {
         return docResult.snap.id;
       }
     } catch (e) {
-      console.warn("Erro ao atualizar no Firestore, tentando LocalStorage:", e);
+      console.error("Erro ao atualizar no Firestore:", e);
+      throw e;
     }
   }
   const localRecipes = JSON.parse(localStorage.getItem('receitas_isa_user_recipes')) || [];

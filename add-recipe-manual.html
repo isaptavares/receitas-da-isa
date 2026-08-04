@@ -1372,14 +1372,14 @@
       } catch (err) {
         console.error("Erro ao salvar:", err);
         hideLoading();
-        showToast("❌ Ocorreu um erro ao salvar a receita. Tente novamente.");
+        showToast(`❌ Ocorreu um erro ao salvar a receita: ${err.message || err}`);
       }
 
       } catch (err) {
         // Rede de segurança: garante que a tela de carregamento nunca fique travada,
         // mesmo diante de um erro inesperado não previsto nos blocos acima.
         console.error("Erro inesperado ao criar receita:", err);
-        showToast("❌ Algo deu errado ao criar a receita. Tente novamente.");
+        showToast(`❌ Algo deu errado ao criar a receita: ${err.message || err}`);
       } finally {
         hideLoading();
         submitBtn.disabled = false;
