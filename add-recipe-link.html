@@ -207,11 +207,11 @@
         showLoading("Lendo site de receitas... 🌐", "Obtendo o conteúdo da página de forma segura...");
 
         try {
-          // Obtém o texto limpo da receita usando proxy AllOrigins
+          // Obtém o texto limpo da receita usando múltiplos proxies em fallback
           const pageText = await withTimeout(
             fetchCleanTextFromWebsite(url),
-            25000,
-            'O carregamento do site demorou demais.'
+            45000,
+            'O carregamento do site demorou demais ou todos os proxies de conexão falharam.'
           );
 
           showLoading("Analisando com Inteligência Artificial... 🤖", "O Gemini está interpretando os ingredientes e instruções do site...");
@@ -255,18 +255,59 @@
       }
     }
 
-    // Proxy CORS para puxar o conteúdo de texto da página
+    // Proxy CORS com mecanismo robusto de fallback (tentando múltiplos servidores se um falhar ou demorar)
     async function fetchCleanTextFromWebsite(targetUrl) {
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
-      const res = await fetch(proxyUrl);
-      if (!res.ok) throw new Error("Não foi possível acessar a página de destino através do proxy de rede.");
-      
-      const data = await res.json();
-      if (!data.contents) throw new Error("A página retornou vazia ou está indisponível.");
-      
+      const proxies = [
+        // 1. AllOrigins (Retorna JSON contendo os dados brutos no campo contents)
+        async (url) => {
+          const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+          if (!res.ok) throw new Error("AllOrigins falhou");
+          const data = await res.json();
+          if (!data.contents) throw new Error("AllOrigins retornou corpo vazio");
+          return data.contents;
+        },
+        // 2. CorsProxy.io (Excelente, grátis para localhost/desenvolvimento)
+        async (url) => {
+          const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+          if (!res.ok) throw new Error("CorsProxy.io falhou");
+          const html = await res.text();
+          if (html.includes('"error":"Free usage is limited')) {
+            throw new Error("CorsProxy.io barrou por não estar rodando em localhost");
+          }
+          return html;
+        },
+        // 3. CodeTabs (Retorna o conteúdo HTML diretamente)
+        async (url) => {
+          const res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`);
+          if (!res.ok) throw new Error("CodeTabs falhou");
+          return res.text();
+        }
+      ];
+
+      let htmlContent = null;
+      let lastError = null;
+
+      for (const proxyFn of proxies) {
+        try {
+          // Timeout individual de 12 segundos por proxy
+          htmlContent = await withTimeout(proxyFn(targetUrl), 12000, "Proxy timeout");
+          if (htmlContent) {
+            console.log("Sucesso ao carregar a página utilizando um dos servidores proxy.");
+            break;
+          }
+        } catch (e) {
+          console.warn("Um dos proxies CORS falhou, tentando o seguinte da lista...", e);
+          lastError = e;
+        }
+      }
+
+      if (!htmlContent) {
+        throw new Error(`Não foi possível carregar a página nos servidores proxy disponíveis. (Último erro: ${lastError ? lastError.message : 'Desconhecido'})`);
+      }
+
       // Converte HTML em documento parseável
       const parser = new DOMParser();
-      const doc = parser.parseFromString(data.contents, 'text/html');
+      const doc = parser.parseFromString(htmlContent, 'text/html');
       
       // Limpa tags desnecessárias para reduzir tokens e poluição
       doc.querySelectorAll('script, style, iframe, nav, footer, header, noscript, svg, img, video, form, button, link, meta').forEach(el => el.remove());
