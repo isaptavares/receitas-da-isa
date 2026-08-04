@@ -1,2 +1,1 @@
-# Ignore API Keys
-js/api-key.js
+# API keys are obfuscated and included in this repository to support static hosting
