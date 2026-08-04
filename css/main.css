@@ -2402,3 +2402,25 @@ footer {
   color: var(--clr-text-muted);
 }
 
+/* =============================================
+   GLOBAL FORM INPUTS
+   ============================================= */
+.form-input {
+  background: var(--clr-surface-2);
+  color: var(--clr-text);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+  transition: all var(--transition);
+  width: 100%;
+}
+
+.form-input:focus {
+  border-color: var(--clr-gold);
+  box-shadow: 0 0 12px rgba(232, 168, 56, 0.15);
+  background: var(--clr-surface-3);
+}
+
