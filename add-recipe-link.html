@@ -276,15 +276,61 @@
       }
     }
 
-    // Helper para obter vídeo MP4 do Instagram/TikTok ou extrair legenda de fallback
+    // Helper robusto com 4 níveis de extração para Instagram e TikTok
     async function fetchVideoBlobOrText(url) {
+      // TIER 1: TikTok Direct API (TikWM) - Obter MP4 ou Legenda
+      if (url.includes('tiktok.com')) {
+        try {
+          const tikRes = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
+          if (tikRes.ok) {
+            const tikData = await tikRes.json();
+            if (tikData.data && tikData.data.play) {
+              const videoRes = await fetch(tikData.data.play);
+              if (videoRes.ok) {
+                const blob = await videoRes.blob();
+                return { isRecipeObject: false, blob: blob };
+              }
+            }
+            if (tikData.data && tikData.data.title && tikData.data.title.length > 25) {
+              const extracted = await extractRecipeFromText(tikData.data.title);
+              if (extracted && extracted.title) {
+                return { isRecipeObject: true, data: extracted };
+              }
+            }
+          }
+        } catch (e) {
+          console.warn("TikWM falhou, tentando os próximos níveis...", e);
+        }
+      }
+
+      // TIER 2: Instagram oEmbed API via Proxy (Obter Legenda Oficial da Publicação)
+      if (url.includes('instagram.com')) {
+        try {
+          const oembedApi = `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.instagram.com/oembed/?url=' + url)}`;
+          const oembedRes = await fetch(oembedApi);
+          if (oembedRes.ok) {
+            const data = await oembedRes.json();
+            if (data.contents) {
+              const parsed = JSON.parse(data.contents);
+              if (parsed.title && parsed.title.length > 20) {
+                const extracted = await extractRecipeFromText(parsed.title);
+                if (extracted && extracted.title) {
+                  return { isRecipeObject: true, data: extracted };
+                }
+              }
+            }
+          }
+        } catch (e) {
+          console.warn("Instagram oEmbed falhou, tentando Cobalt e proxies...", e);
+        }
+      }
+
+      // TIER 3: Cobalt API (Tentar obter o arquivo MP4 direto para a IA assistir)
       const cobaltEndpoints = [
         'https://api.cobalt.tools/api/json',
         'https://co.wuk.sh/api/json',
         'https://cobalt.stream/api/json'
       ];
-
-      let mp4Url = null;
 
       for (const endpoint of cobaltEndpoints) {
         try {
@@ -298,12 +344,13 @@
           });
           if (res.ok) {
             const data = await res.json();
-            if (data.url) {
-              mp4Url = data.url;
-              break;
-            } else if (data.picker && data.picker.length > 0 && data.picker[0].url) {
-              mp4Url = data.picker[0].url;
-              break;
+            const mp4Url = data.url || (data.picker && data.picker[0]?.url);
+            if (mp4Url) {
+              const videoRes = await fetch(mp4Url);
+              if (videoRes.ok) {
+                const blob = await videoRes.blob();
+                return { isRecipeObject: false, blob: blob };
+              }
             }
           }
         } catch (e) {
@@ -311,32 +358,20 @@
         }
       }
 
-      if (mp4Url) {
-        try {
-          const videoRes = await fetch(mp4Url);
-          if (videoRes.ok) {
-            const blob = await videoRes.blob();
-            return { isRecipeObject: false, blob: blob };
-          }
-        } catch (e) {
-          console.warn("Erro ao baixar blob do MP4:", e);
-        }
-      }
-
-      // Fallback: Se o download do MP4 for bloqueado, lê a legenda/texto do post
+      // TIER 4: Leitura de Metadados da Página (og:description / og:title via proxies)
       try {
         const pageText = await fetchCleanTextFromWebsite(url);
-        if (pageText && pageText.length > 50) {
+        if (pageText && pageText.length > 40) {
           const extractedRecipe = await extractRecipeFromText(pageText);
           if (extractedRecipe && extractedRecipe.title) {
             return { isRecipeObject: true, data: extractedRecipe };
           }
         }
       } catch (e) {
-        console.warn("Fallback de legenda falhou:", e);
+        console.warn("Fallback de texto da página falhou:", e);
       }
 
-      throw new Error("Não foi possível obter o vídeo das redes sociais automaticamente. Dica: você pode baixar o vídeo no seu dispositivo e enviá-lo na página 'Importar Foto ou PDF'!");
+      throw new Error("Não foi possível acessar o conteúdo deste link das redes sociais. Dica: você pode copiar o texto da legenda e colar na aba 'Site de Receitas', ou baixar o vídeo e enviá-lo na página 'Importar Foto ou PDF'!");
     }
 
     function blobToBase64(blob) {
