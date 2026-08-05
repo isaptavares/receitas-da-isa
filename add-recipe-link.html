@@ -325,6 +325,51 @@
       }
     }
 
+    // Extrai legenda do Instagram usando a página pública de Embed /embed/captioned/
+    async function extractInstagramCaptionFromEmbed(rawUrl) {
+      const cleanUrl = rawUrl.split('?')[0].replace(/\/$/, '');
+      const embedUrl = `${cleanUrl}/embed/captioned/`;
+
+      addLog(`Buscando legenda pública no Embed do Instagram: ${embedUrl}`, "info");
+
+      const proxies = [
+        async (u) => {
+          const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`);
+          if (!res.ok) throw new Error("AllOrigins proxy error");
+          const data = await res.json();
+          return data.contents || '';
+        },
+        async (u) => {
+          const res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`);
+          if (!res.ok) throw new Error("CodeTabs proxy error");
+          return await res.text();
+        }
+      ];
+
+      for (const proxyFn of proxies) {
+        try {
+          const html = await proxyFn(embedUrl);
+          if (html && html.length > 200) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            const captionEl = doc.querySelector('.Caption') || doc.querySelector('.CaptionComments') || doc.body;
+            let text = captionEl ? (captionEl.innerText || captionEl.textContent || '') : '';
+            text = text.replace(/\s+/g, ' ').trim();
+
+            if (text.length > 20) {
+              addLog(`Legenda lida com sucesso do Embed (${text.length} chars): "${text.substring(0, 50)}..."`, "success");
+              return text;
+            }
+          }
+        } catch (e) {
+          addLog(`Proxy do Embed falhou: ${e.message}`, "warn");
+        }
+      }
+
+      return null;
+    }
+
     // Helper robusto com 4 níveis de extração para Instagram e TikTok
     async function fetchVideoBlobOrText(url) {
       // TIER 1: TikTok Direct API (TikWM) - Obter MP4 ou Legenda
@@ -358,29 +403,21 @@
         }
       }
 
-      // TIER 2: Instagram oEmbed API via Proxy (Obter Legenda Oficial da Publicação)
+      // TIER 2: Instagram Embed Scraper (Obter Legenda Oficial da Publicação)
       if (url.includes('instagram.com')) {
-        addLog("Testando Nível 2: API Oficial oEmbed do Instagram...", "info");
+        addLog("Testando Nível 2: Leitura do Embed da Legenda Oficial do Instagram...", "info");
         try {
-          const oembedApi = `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.instagram.com/oembed/?url=' + url)}`;
-          const oembedRes = await fetch(oembedApi);
-          if (oembedRes.ok) {
-            const data = await oembedRes.json();
-            if (data.contents) {
-              const parsed = JSON.parse(data.contents);
-              if (parsed.title && parsed.title.length > 20) {
-                addLog(`Instagram oEmbed obteve a legenda oficial: "${parsed.title.substring(0, 45)}..."`, "info");
-                const extracted = await extractRecipeFromText(parsed.title);
-                if (extracted && extracted.title) {
-                  addLog("Nível 2 Sucesso: Legenda do Instagram convertida em receita!", "success");
-                  return { isRecipeObject: true, data: extracted };
-                }
-              }
+          const captionText = await extractInstagramCaptionFromEmbed(url);
+          if (captionText) {
+            addLog("Enviando legenda do Instagram para o Gemini extrair a receita...", "info");
+            const extracted = await extractRecipeFromText(captionText);
+            if (extracted && extracted.title) {
+              addLog("Nível 2 Sucesso: Receita gerada a partir da legenda do Instagram!", "success");
+              return { isRecipeObject: true, data: extracted };
             }
           }
-          addLog("Instagram oEmbed respondeu sem o conteúdo da legenda.", "warn");
         } catch (e) {
-          addLog(`Nível 2 (Instagram oEmbed) falhou: ${e.message}`, "warn");
+          addLog(`Nível 2 (Instagram Embed) falhou: ${e.message}`, "warn");
         }
       }
 
