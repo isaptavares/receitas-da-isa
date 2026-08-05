@@ -46,16 +46,16 @@
       <div id="import-card-container">
         <div class="link-cards-container">
           
-          <!-- SEÇÃO 1: VÍDEO DO YOUTUBE -->
+          <!-- SEÇÃO 1: VÍDEO (YOUTUBE, INSTAGRAM OU TIKTOK) -->
           <div class="link-card">
             <div class="link-card-header">
               <div class="link-card-icon">🎥</div>
-              <h2 class="link-card-title">Link do YouTube</h2>
+              <h2 class="link-card-title">Vídeo (YouTube, Instagram ou TikTok)</h2>
             </div>
-            <p class="link-card-desc">Cole a URL de um vídeo de receita do YouTube. A IA interpretará o áudio e as imagens do vídeo para recriar o passo a passo.</p>
+            <p class="link-card-desc">Cole a URL de um vídeo de receita do YouTube, Instagram Reels ou TikTok. A IA analisará o áudio e imagens do vídeo para criar a receita.</p>
             <div class="link-input-group">
               <label class="link-input-label" for="youtube-url">URL do Vídeo</label>
-              <input type="url" id="youtube-url" class="form-input" placeholder="https://www.youtube.com/watch?v=..." required>
+              <input type="url" id="youtube-url" class="form-input" placeholder="https://www.youtube.com/..., instagram.com/reel/..., tiktok.com/@..." required>
             </div>
             <button class="btn btn-primary" id="process-youtube-btn" style="margin-top: auto;">🤖 Importar Vídeo</button>
           </div>
@@ -100,7 +100,7 @@
   <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/recipes.js?v=7"></script>
   <script type="module">
-    import { extractRecipeFromYouTube, extractRecipeFromText, saveUserRecipe } from './js/user-recipes.js';
+    import { extractRecipeFromYouTube, extractRecipeFromText, extractRecipeFromFile, saveUserRecipe } from './js/user-recipes.js';
     import { getUser, authReady } from './js/auth.js';
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -110,7 +110,6 @@
       const user = getUser();
       if (!user) {
         showToast("🔒 Você precisa estar logado para usar a importação!", 4000);
-        // Exibe bloqueio visual na tela
         const container = document.getElementById('import-card-container');
         if (container) {
           container.innerHTML = `
@@ -134,28 +133,67 @@
       const youtubeInput = document.getElementById('youtube-url');
       const websiteInput = document.getElementById('website-url');
 
-      // ---- Importação de YouTube ----
+      // ---- Importação de Vídeo (YouTube, Instagram ou TikTok) ----
       youtubeBtn.addEventListener('click', async () => {
         const url = youtubeInput.value.trim();
         if (!url) {
-          showToast("⚠️ Por favor, insira o link do vídeo do YouTube.");
+          showToast("⚠️ Por favor, insira a URL de um vídeo (YouTube, Instagram ou TikTok).");
           return;
         }
 
         disableControls(true);
-        showLoading("Analisando vídeo no YouTube... 🎥", "O Gemini está assistindo e extraindo as instruções do vídeo...");
+
+        const isYouTube = url.includes('youtube.com') || url.includes('youtu.be');
+        const isInstagram = url.includes('instagram.com');
+        const isTikTok = url.includes('tiktok.com');
 
         try {
-          // Chama extrator
-          const extractedRecipe = await withTimeout(
-            extractRecipeFromYouTube(url),
-            40000,
-            'A IA demorou muito para responder sobre o vídeo.'
-          );
+          let extractedRecipe = null;
+
+          // IF 1: Processo Nativo do YouTube
+          if (isYouTube) {
+            showLoading("Analisando vídeo no YouTube... 🎥", "O Gemini está assistindo e extraindo a receita do vídeo...");
+            extractedRecipe = await withTimeout(
+              extractRecipeFromYouTube(url),
+              45000,
+              'A IA demorou muito para responder sobre o vídeo do YouTube.'
+            );
+          }
+          // IF 2: Instagram ou TikTok (Downloader + IA Assistindo ao MP4 / Legenda)
+          else if (isInstagram || isTikTok) {
+            const platform = isInstagram ? 'Instagram Reels 📸' : 'TikTok 🎵';
+            showLoading(`Obtendo vídeo do ${platform}...`, "Baixando o conteúdo para a IA analisar...");
+
+            const videoResult = await withTimeout(
+              fetchVideoBlobOrText(url),
+              45000,
+              'Não foi possível obter o vídeo das redes sociais.'
+            );
+
+            if (videoResult.isRecipeObject) {
+              extractedRecipe = videoResult.data;
+            } else {
+              showLoading("Analisando vídeo com Inteligência Artificial... 🤖", "O Gemini está assistindo ao vídeo e extraindo os ingredientes e o passo a passo...");
+              const base64Data = await blobToBase64(videoResult.blob);
+              extractedRecipe = await withTimeout(
+                extractRecipeFromFile(base64Data, 'video/mp4'),
+                55000,
+                'O Gemini demorou muito para analisar o arquivo de vídeo.'
+              );
+            }
+          }
+          // Fallback para outros links de vídeo
+          else {
+            showLoading("Analisando link de vídeo... 🎥", "O Gemini está interpretando o conteúdo...");
+            extractedRecipe = await withTimeout(
+              extractRecipeFromYouTube(url),
+              45000,
+              'Erro ao processar o link do vídeo.'
+            );
+          }
 
           showLoading("Criando receita no Firestore...", "Salvando a receita na sua conta...");
-          
-          extractedRecipe.image = "images/placeholder_recipe.png";
+          extractedRecipe.image = extractedRecipe.image || "images/placeholder_recipe.png";
           
           const savedId = await withTimeout(
             saveUserRecipe(extractedRecipe),
@@ -171,7 +209,7 @@
           }, 1500);
 
         } catch (err) {
-          console.error("Erro ao importar do YouTube:", err);
+          console.error("Erro ao importar vídeo:", err);
           hideLoading();
           disableControls(false);
           showToast(`❌ Falha ao importar vídeo: ${err.message || err}`);
@@ -236,6 +274,82 @@
         youtubeInput.disabled = disabled;
         websiteInput.disabled = disabled;
       }
+    }
+
+    // Helper para obter vídeo MP4 do Instagram/TikTok ou extrair legenda de fallback
+    async function fetchVideoBlobOrText(url) {
+      const cobaltEndpoints = [
+        'https://api.cobalt.tools/api/json',
+        'https://co.wuk.sh/api/json',
+        'https://cobalt.stream/api/json'
+      ];
+
+      let mp4Url = null;
+
+      for (const endpoint of cobaltEndpoints) {
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url: url })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.url) {
+              mp4Url = data.url;
+              break;
+            } else if (data.picker && data.picker.length > 0 && data.picker[0].url) {
+              mp4Url = data.picker[0].url;
+              break;
+            }
+          }
+        } catch (e) {
+          console.warn("Falha no endpoint Cobalt:", endpoint, e);
+        }
+      }
+
+      if (mp4Url) {
+        try {
+          const videoRes = await fetch(mp4Url);
+          if (videoRes.ok) {
+            const blob = await videoRes.blob();
+            return { isRecipeObject: false, blob: blob };
+          }
+        } catch (e) {
+          console.warn("Erro ao baixar blob do MP4:", e);
+        }
+      }
+
+      // Fallback: Se o download do MP4 for bloqueado, lê a legenda/texto do post
+      try {
+        const pageText = await fetchCleanTextFromWebsite(url);
+        if (pageText && pageText.length > 50) {
+          const extractedRecipe = await extractRecipeFromText(pageText);
+          if (extractedRecipe && extractedRecipe.title) {
+            return { isRecipeObject: true, data: extractedRecipe };
+          }
+        }
+      } catch (e) {
+        console.warn("Fallback de legenda falhou:", e);
+      }
+
+      throw new Error("Não foi possível obter o vídeo das redes sociais automaticamente. Dica: você pode baixar o vídeo no seu dispositivo e enviá-lo na página 'Importar Foto ou PDF'!");
+    }
+
+    function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result;
+          const base64 = result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
     }
 
     // Proxy CORS com mecanismo robusto de fallback (tentando múltiplos servidores se um falhar ou demorar)
