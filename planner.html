@@ -129,6 +129,7 @@
       <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
       <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
       <li><a class="nav-link" href="planner.html" id="nav-planner"><span class="nav-link-icon">📅</span> <span>Planejador</span></a></li>
+      <li><button class="nav-link nav-inbox-btn" onclick="openInboxModal(event)" type="button" id="nav-inbox" title="Receitas Recebidas"><span class="nav-link-icon">📩</span> <span>Recebidas</span> <span class="nav-inbox-badge" id="inbox-badge" style="display:none;">0</span></button></li>
       <li id="nav-auth-container">
         <button class="nav-login-btn" id="login-btn">
           <span>🔑</span> <span>Entrar</span>
@@ -653,5 +654,6 @@
     window.copyShoppingList = copyShoppingList;
     window.printShoppingList = printShoppingList;
   </script>
+  <script type="module" src="js/share.js?v=3"></script>
 </body>
 </html>

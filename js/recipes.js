@@ -290,6 +290,9 @@ export function renderRecipeCard(recipe, { featured = false, targetPage = 'recip
         </div>
 
         <div class="card-actions-wrapper" onclick="event.stopPropagation();">
+          <button class="card-action-btn" title="Compartilhar receita" onclick="openShareModal('${recipe.id}', '${(recipe.title || '').replace(/'/g, "\\'")}', '${recipe.image || ''}')">
+            📤
+          </button>
           <a href="add-recipe-manual.html?edit=${recipe.id}" class="card-action-btn" title="Editar receita">
             ✏️
           </a>

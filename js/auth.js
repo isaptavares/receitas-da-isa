@@ -49,14 +49,26 @@ function initAuth() {
 
 async function fetchUserData(uid) {
   try {
-    const userDoc = await getDoc(doc(db, 'users', uid));
+    const userRef = doc(db, 'users', uid);
+    const userDoc = await getDoc(userRef);
+    const profileData = {
+      uid: uid,
+      displayName: currentUser?.displayName || currentUser?.email || 'Amigo',
+      email: currentUser?.email || '',
+      photoURL: currentUser?.photoURL || '',
+      lastLogin: new Date().toISOString()
+    };
     if (userDoc.exists()) {
       const data = userDoc.data();
       userFavorites = data.favorites || [];
       userPlanner = data.planner || {};
+      await updateDoc(userRef, profileData);
     } else {
-      // Cria o documento do usuário se não existir
-      await setDoc(doc(db, 'users', uid), { favorites: [], planner: {} });
+      await setDoc(userRef, {
+        ...profileData,
+        favorites: [],
+        planner: {}
+      });
       userFavorites = [];
       userPlanner = {};
     }
@@ -178,6 +190,23 @@ export async function cloudClearPlanner() {
   } catch (err) {
     console.error("Erro ao limpar planner:", err);
     return false;
+  }
+}
+
+export async function getAllRegisteredUsers() {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'users'));
+    const users = [];
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.uid) {
+        users.push(data);
+      }
+    });
+    return users;
+  } catch (err) {
+    console.error("Erro ao listar usuários:", err);
+    return [];
   }
 }
 

@@ -303,6 +303,7 @@
       <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
       <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
       <li><a class="nav-link" href="planner.html" id="nav-planner"><span class="nav-link-icon">📅</span> <span>Planejador</span></a></li>
+      <li><button class="nav-link nav-inbox-btn" onclick="openInboxModal(event)" type="button" id="nav-inbox" title="Receitas Recebidas"><span class="nav-link-icon">📩</span> <span>Recebidas</span> <span class="nav-inbox-badge" id="inbox-badge" style="display:none;">0</span></button></li>
       <li id="nav-auth-container">
         <button class="nav-login-btn" id="login-btn">
           <span>🔑</span> <span>Entrar</span>
@@ -503,8 +504,8 @@
                         aria-label="Adicionar ao Planejador">
                   <span>📅</span> Adicionar ao Planejador
                 </button>
-                <button class="btn btn-outline share-btn" onclick="openShareModal()" id="share-btn" aria-label="Compartilhar receita">
-                  <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+                <button class="btn btn-outline" onclick="openShareModal('${recipe.id}', '${(recipe.title || '').replace(/'/g, "\\'")}', '${recipe.image || ''}')" id="share-btn" aria-label="Compartilhar receita">
+                  <span>📤</span> Compartilhar
                 </button>
                 <a href="add-recipe-manual.html?edit=${recipe.id}" class="btn btn-outline" id="detail-edit-btn" title="Editar Receita">
                   <span>✏️</span> Editar
@@ -561,20 +562,6 @@
 
           </div>
 
-          <!-- SHARE MODAL -->
-          <div class="share-modal-overlay" id="share-modal" onclick="closeShareModal(event)">
-            <div class="share-modal" onclick="event.stopPropagation()">
-              <h3 class="share-modal-title">O que compartilhar?</h3>
-              <button class="share-option" onclick="shareLink()">
-                <span class="share-option-icon">🔗</span>
-                Enviar link da receita
-              </button>
-              <button class="share-option" onclick="sharePDF()">
-                <span class="share-option-icon">📄</span>
-                Salvar ou enviar PDF
-              </button>
-            </div>
-          </div>
         </article>
       `;
     }
@@ -705,5 +692,6 @@
     window.shareLink = shareLink;
     window.sharePDF = sharePDF;
   </script>
+  <script type="module" src="js/share.js?v=3"></script>
 </body>
 </html>
