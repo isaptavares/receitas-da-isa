@@ -76,7 +76,18 @@
 
         </div>
 
-        <div style="display: flex; justify-content: center; margin-top: 2.5rem;">
+        <!-- CONSOLE DE LOGS DE DIAGNÓSTICO -->
+        <div id="debug-log-console" style="display:none; background: #0d0a07; border: 1.5px solid var(--clr-gold, #e8a838); border-radius: 16px; padding: 1.2rem; margin-top: 2rem; box-shadow: 0 8px 25px rgba(0,0,0,0.6);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem; border-bottom: 1px solid rgba(255,200,100,0.15); padding-bottom: 0.5rem;">
+            <div style="font-weight: 700; color: var(--clr-gold, #e8a838); font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span>🐞</span> Diagnóstico do Processamento (Logs em Tempo Real)
+            </div>
+            <button onclick="document.getElementById('debug-log-entries').innerHTML='';" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">Limpar Logs</button>
+          </div>
+          <div id="debug-log-entries" style="max-height: 280px; overflow-y: auto; font-family: monospace; font-size: 0.82rem; line-height: 1.5; padding-right: 4px;"></div>
+        </div>
+
+        <div style="display: flex; justify-content: center; margin-top: 2rem;">
           <a href="index.html" class="btn btn-outline">Cancelar</a>
         </div>
       </div>
@@ -127,6 +138,29 @@
       setupLinkImports();
     });
 
+    function addLog(msg, type = 'info') {
+      const consoleEl = document.getElementById('debug-log-console');
+      const entriesEl = document.getElementById('debug-log-entries');
+      if (!consoleEl || !entriesEl) return;
+
+      consoleEl.style.display = 'block';
+
+      const time = new Date().toLocaleTimeString();
+      const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warn' ? '⚠️' : 'ℹ️';
+      const color = type === 'error' ? '#ff6b6b' : type === 'success' ? '#51cf66' : type === 'warn' ? '#fcc419' : '#4dabf7';
+
+      const line = document.createElement('div');
+      line.style.cssText = `margin-bottom: 0.35rem; color: ${color}; word-break: break-all; border-left: 3px solid ${color}; padding-left: 0.5rem; background: rgba(0,0,0,0.2); padding-top: 2px; padding-bottom: 2px;`;
+      line.innerHTML = `<strong>[${time}] ${icon}</strong> ${escapeHtml(msg)}`;
+
+      entriesEl.appendChild(line);
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
     function setupLinkImports() {
       const youtubeBtn = document.getElementById('process-youtube-btn');
       const websiteBtn = document.getElementById('process-website-btn');
@@ -142,6 +176,7 @@
         }
 
         disableControls(true);
+        addLog(`--- Iniciando processo de importação de vídeo: ${url} ---`);
 
         const isYouTube = url.includes('youtube.com') || url.includes('youtu.be');
         const isInstagram = url.includes('instagram.com');
@@ -152,16 +187,19 @@
 
           // IF 1: Processo Nativo do YouTube
           if (isYouTube) {
+            addLog("Dominio reconhecido: YouTube (Processo Nativo)", "info");
             showLoading("Analisando vídeo no YouTube... 🎥", "O Gemini está assistindo e extraindo a receita do vídeo...");
             extractedRecipe = await withTimeout(
               extractRecipeFromYouTube(url),
               45000,
               'A IA demorou muito para responder sobre o vídeo do YouTube.'
             );
+            addLog("Extração nativa do YouTube concluída com sucesso!", "success");
           }
           // IF 2: Instagram ou TikTok (Downloader + IA Assistindo ao MP4 / Legenda)
           else if (isInstagram || isTikTok) {
-            const platform = isInstagram ? 'Instagram Reels 📸' : 'TikTok 🎵';
+            const platform = isInstagram ? 'Instagram Reels' : 'TikTok';
+            addLog(`Dominio reconhecido: ${platform}`, "info");
             showLoading(`Obtendo vídeo do ${platform}...`, "Baixando o conteúdo para a IA analisar...");
 
             const videoResult = await withTimeout(
@@ -171,8 +209,10 @@
             );
 
             if (videoResult.isRecipeObject) {
+              addLog("Receita extraída diretamente via texto/legenda!", "success");
               extractedRecipe = videoResult.data;
             } else {
+              addLog(`Arquivo MP4 obtido (${(videoResult.blob.size / 1024 / 1024).toFixed(2)} MB). Enviando para o Gemini assistir...`, "info");
               showLoading("Analisando vídeo com Inteligência Artificial... 🤖", "O Gemini está assistindo ao vídeo e extraindo os ingredientes e o passo a passo...");
               const base64Data = await blobToBase64(videoResult.blob);
               extractedRecipe = await withTimeout(
@@ -180,10 +220,12 @@
                 55000,
                 'O Gemini demorou muito para analisar o arquivo de vídeo.'
               );
+              addLog("O Gemini assistiu ao MP4 e gerou a receita com sucesso!", "success");
             }
           }
           // Fallback para outros links de vídeo
           else {
+            addLog("Dominio não reconhecido especificamente, tentando chamada padrão...", "warn");
             showLoading("Analisando link de vídeo... 🎥", "O Gemini está interpretando o conteúdo...");
             extractedRecipe = await withTimeout(
               extractRecipeFromYouTube(url),
@@ -195,12 +237,14 @@
           showLoading("Criando receita no Firestore...", "Salvando a receita na sua conta...");
           extractedRecipe.image = extractedRecipe.image || "images/placeholder_recipe.png";
           
+          addLog(`Salvando receita "${extractedRecipe.title}" no Firestore...`, "info");
           const savedId = await withTimeout(
             saveUserRecipe(extractedRecipe),
             20000,
             'Erro ao salvar a receita no Firestore.'
           );
 
+          addLog(`Receita salva com sucesso! ID: ${savedId}`, "success");
           showLoading("🎉 Vídeo Importado com Sucesso!", `A receita "${extractedRecipe.title}" foi extraída e salva com sucesso!`, false);
           showToast(`🎉 Receita "${extractedRecipe.title}" importada!`, 3000);
 
@@ -210,9 +254,10 @@
 
         } catch (err) {
           console.error("Erro ao importar vídeo:", err);
+          addLog(`FALHA CRÍTICA NO VÍDEO: ${err.message || err}`, "error");
           hideLoading();
           disableControls(false);
-          showToast(`❌ Falha ao importar vídeo: ${err.message || err}`);
+          showToast(`❌ Falha ao importar vídeo. Veja o Log abaixo!`);
         }
       });
 
@@ -225,16 +270,17 @@
         }
 
         disableControls(true);
+        addLog(`--- Iniciando processo de importação de site: ${url} ---`);
         showLoading("Lendo site de receitas... 🌐", "Obtendo o conteúdo da página de forma segura...");
 
         try {
-          // Obtém o texto limpo da receita usando múltiplos proxies em fallback
           const pageText = await withTimeout(
             fetchCleanTextFromWebsite(url),
             45000,
             'O carregamento do site demorou demais ou todos os proxies de conexão falharam.'
           );
 
+          addLog(`Conteúdo do site lido (${pageText.length} caracteres). Enviando para o Gemini...`, "info");
           showLoading("Analisando com Inteligência Artificial... 🤖", "O Gemini está interpretando os ingredientes e instruções do site...");
 
           const extractedRecipe = await withTimeout(
@@ -243,6 +289,7 @@
             'O Gemini demorou muito para interpretar o texto do site.'
           );
 
+          addLog(`Receita extraída do site: "${extractedRecipe.title}"`, "success");
           showLoading("Criando receita no Firestore...", "Salvando a receita na sua conta...");
 
           extractedRecipe.image = "images/placeholder_recipe.png";
@@ -253,6 +300,7 @@
             'Erro ao salvar a receita no Firestore.'
           );
 
+          addLog(`Receita do site salva no Firestore! ID: ${savedId}`, "success");
           showLoading("🎉 Site Importado com Sucesso!", `A receita "${extractedRecipe.title}" foi salva na sua conta!`, false);
           showToast(`🎉 Receita "${extractedRecipe.title}" importada!`, 3000);
 
@@ -262,9 +310,10 @@
 
         } catch (err) {
           console.error("Erro ao importar do site:", err);
+          addLog(`FALHA CRÍTICA NO SITE: ${err.message || err}`, "error");
           hideLoading();
           disableControls(false);
-          showToast(`❌ Falha ao importar do site: ${err.message || err}`);
+          showToast(`❌ Falha ao importar do site. Veja o Log abaixo!`);
         }
       });
 
@@ -280,31 +329,38 @@
     async function fetchVideoBlobOrText(url) {
       // TIER 1: TikTok Direct API (TikWM) - Obter MP4 ou Legenda
       if (url.includes('tiktok.com')) {
+        addLog("Testando Nível 1: TikWM API do TikTok...", "info");
         try {
           const tikRes = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
           if (tikRes.ok) {
             const tikData = await tikRes.json();
             if (tikData.data && tikData.data.play) {
+              addLog("TikWM encontrou link direto do vídeo MP4. Baixando...", "info");
               const videoRes = await fetch(tikData.data.play);
               if (videoRes.ok) {
                 const blob = await videoRes.blob();
+                addLog("Nível 1 Sucesso: MP4 do TikTok obtido com sucesso!", "success");
                 return { isRecipeObject: false, blob: blob };
               }
             }
             if (tikData.data && tikData.data.title && tikData.data.title.length > 25) {
+              addLog(`TikWM obteve legenda do TikTok: "${tikData.data.title.substring(0, 45)}..."`, "info");
               const extracted = await extractRecipeFromText(tikData.data.title);
               if (extracted && extracted.title) {
+                addLog("Nível 1 Sucesso: Legenda transcrita em receita!", "success");
                 return { isRecipeObject: true, data: extracted };
               }
             }
           }
+          addLog("TikWM respondeu mas não retornou vídeo/legenda válidos.", "warn");
         } catch (e) {
-          console.warn("TikWM falhou, tentando os próximos níveis...", e);
+          addLog(`TikWM Nível 1 falhou: ${e.message}`, "warn");
         }
       }
 
       // TIER 2: Instagram oEmbed API via Proxy (Obter Legenda Oficial da Publicação)
       if (url.includes('instagram.com')) {
+        addLog("Testando Nível 2: API Oficial oEmbed do Instagram...", "info");
         try {
           const oembedApi = `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.instagram.com/oembed/?url=' + url)}`;
           const oembedRes = await fetch(oembedApi);
@@ -313,19 +369,23 @@
             if (data.contents) {
               const parsed = JSON.parse(data.contents);
               if (parsed.title && parsed.title.length > 20) {
+                addLog(`Instagram oEmbed obteve a legenda oficial: "${parsed.title.substring(0, 45)}..."`, "info");
                 const extracted = await extractRecipeFromText(parsed.title);
                 if (extracted && extracted.title) {
+                  addLog("Nível 2 Sucesso: Legenda do Instagram convertida em receita!", "success");
                   return { isRecipeObject: true, data: extracted };
                 }
               }
             }
           }
+          addLog("Instagram oEmbed respondeu sem o conteúdo da legenda.", "warn");
         } catch (e) {
-          console.warn("Instagram oEmbed falhou, tentando Cobalt e proxies...", e);
+          addLog(`Nível 2 (Instagram oEmbed) falhou: ${e.message}`, "warn");
         }
       }
 
       // TIER 3: Cobalt API (Tentar obter o arquivo MP4 direto para a IA assistir)
+      addLog("Testando Nível 3: Servidores Cobalt API para baixar o MP4...", "info");
       const cobaltEndpoints = [
         'https://api.cobalt.tools/api/json',
         'https://co.wuk.sh/api/json',
@@ -334,6 +394,7 @@
 
       for (const endpoint of cobaltEndpoints) {
         try {
+          addLog(`Tentando endpoint Cobalt: ${endpoint}...`, "info");
           const res = await fetch(endpoint, {
             method: 'POST',
             headers: {
@@ -346,31 +407,37 @@
             const data = await res.json();
             const mp4Url = data.url || (data.picker && data.picker[0]?.url);
             if (mp4Url) {
+              addLog("Cobalt encontrou URL do MP4! Baixando arquivo...", "info");
               const videoRes = await fetch(mp4Url);
               if (videoRes.ok) {
                 const blob = await videoRes.blob();
+                addLog("Nível 3 Sucesso: MP4 baixado via Cobalt!", "success");
                 return { isRecipeObject: false, blob: blob };
               }
             }
           }
         } catch (e) {
-          console.warn("Falha no endpoint Cobalt:", endpoint, e);
+          addLog(`Cobalt (${endpoint}) erro: ${e.message}`, "warn");
         }
       }
 
       // TIER 4: Leitura de Metadados da Página (og:description / og:title via proxies)
+      addLog("Testando Nível 4: Leitura de Metadados da Página via Proxies...", "info");
       try {
         const pageText = await fetchCleanTextFromWebsite(url);
         if (pageText && pageText.length > 40) {
+          addLog(`Texto bruto extraído da página (${pageText.length} chars). Analisando com Gemini...`, "info");
           const extractedRecipe = await extractRecipeFromText(pageText);
           if (extractedRecipe && extractedRecipe.title) {
+            addLog("Nível 4 Sucesso: Receita gerada a partir dos metadados da página!", "success");
             return { isRecipeObject: true, data: extractedRecipe };
           }
         }
       } catch (e) {
-        console.warn("Fallback de texto da página falhou:", e);
+        addLog(`Nível 4 falhou: ${e.message}`, "warn");
       }
 
+      addLog("TODOS OS NÍVEIS DE EXTRAÇÃO AUTOMÁTICA FALHARAM.", "error");
       throw new Error("Não foi possível acessar o conteúdo deste link das redes sociais. Dica: você pode copiar o texto da legenda e colar na aba 'Site de Receitas', ou baixar o vídeo e enviá-lo na página 'Importar Foto ou PDF'!");
     }
 
