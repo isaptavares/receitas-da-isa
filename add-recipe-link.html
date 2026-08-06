@@ -182,6 +182,13 @@
         const isInstagram = url.includes('instagram.com');
         const isTikTok = url.includes('tiktok.com');
 
+        let longVideoTimer = setTimeout(() => {
+          const subtextEl = document.getElementById('loading-subtext');
+          if (subtextEl) {
+            subtextEl.innerHTML = '☕ Vimos que seu vídeo é longo, sua receita ficará pronta já já. Aproveita pra dar um passeio 🚶‍♀️✨';
+          }
+        }, 20000);
+
         try {
           let extractedRecipe = null;
 
@@ -191,8 +198,8 @@
             showLoading("Analisando vídeo no YouTube... 🎥", "O Gemini está assistindo e extraindo a receita do vídeo...");
             extractedRecipe = await withTimeout(
               extractRecipeFromYouTube(url),
-              120000,
-              'A IA demorou mais de 2 minutos para responder sobre o vídeo do YouTube.'
+              300000,
+              'A IA demorou mais de 5 minutos para responder sobre o vídeo do YouTube.'
             );
             addLog("Extração nativa do YouTube concluída com sucesso!", "success");
           }
@@ -203,7 +210,11 @@
             
             showLoading(`Analisando ${platform}... 🤖`, "O Gemini está interpretando o conteúdo e extraindo ingredientes, modo de preparo e foto de capa...");
 
-            extractedRecipe = await extractRecipeFromVercelServer(url);
+            extractedRecipe = await withTimeout(
+              extractRecipeFromVercelServer(url),
+              300000,
+              'A IA demorou mais de 5 minutos para responder.'
+            );
             addLog(`Extração via Vercel Backend concluída com sucesso!`, "success");
           }
 
@@ -232,7 +243,9 @@
           addLog(`FALHA CRÍTICA NO VÍDEO: ${err.message || err}`, "error");
           hideLoading();
           disableControls(false);
-          showToast(`❌ Falha ao importar vídeo. Veja o Log abaixo!`);
+          showToast(`❌ Falha ao processar vídeo: ${err.message}`, 6000);
+        } finally {
+          clearTimeout(longVideoTimer);
         }
       });
 
