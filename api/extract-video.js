@@ -90,19 +90,25 @@ Regras Estritas:
     }
 
     if (mediaData.videoBuffer && mediaData.mimeType) {
-      console.log(`[Vercel Serverless] Enviando vídeo (${mediaData.videoBuffer.length} bytes) para o Gemini...`);
-      const videoPart = {
-        inlineData: {
-          data: mediaData.videoBuffer.toString('base64'),
-          mimeType: mediaData.mimeType
-        }
-      };
+      try {
+        console.log(`[Vercel Serverless] Enviando vídeo (${mediaData.videoBuffer.length} bytes) para o Gemini...`);
+        const videoPart = {
+          inlineData: {
+            data: mediaData.videoBuffer.toString('base64'),
+            mimeType: mediaData.mimeType
+          }
+        };
 
-      const contentPrompt = `${systemPrompt}\n\nAnalise o vídeo anexado, o áudio do preparo e qualquer legenda adicional: "${mediaData.description || ''}".\nATENÇÃO: Se não for uma receita, responda com "title": "Não é uma receita".`;
-      result = await model.generateContent([contentPrompt, videoPart]);
+        const contentPrompt = `${systemPrompt}\n\nAnalise o vídeo anexado, o áudio do preparo e qualquer legenda adicional: "${mediaData.description || ''}".\nATENÇÃO: Se não for uma receita, responda com "title": "Não é uma receita".`;
+        result = await model.generateContent([contentPrompt, videoPart]);
+      } catch (videoErr) {
+        console.warn('[Vercel Serverless] Envio de vídeo em linha falhou/excedeu limite do Gemini. Tentando processar pela legenda:', videoErr.message);
+        const contentPrompt = `${systemPrompt}\n\nConteúdo extraído da postagem:\nTítulo/Legenda: ${mediaData.title || ''}\nDescrição Completa: ${mediaData.description || ''}\nURL do Post: ${url}`;
+        result = await model.generateContent(contentPrompt);
+      }
     } else {
       console.log(`[Vercel Serverless] Enviando metadados e legenda para o Gemini...`);
-      const contentPrompt = `${systemPrompt}\n\nConteúdo extraído da postagem:\nTítulo/Legenda: ${mediaData.title || ''}\nDescrição Completa: ${mediaData.description || ''}\nURL do Post: ${url}\nATENÇÃO: Extraia a receita ESTRITAMENTE da descrição/legenda acima. Se a descrição não contiver os ingredientes ou preparo da receita, NÃO invente um bolo de chocolate nem nenhuma receita genérica.`;
+      const contentPrompt = `${systemPrompt}\n\nConteúdo extraído da postagem:\nTítulo/Legenda: ${mediaData.title || ''}\nDescrição Completa: ${mediaData.description || ''}\nURL do Post: ${url}`;
       result = await model.generateContent(contentPrompt);
     }
 
@@ -153,6 +159,20 @@ Regras Estritas:
  * Tenta extrair metadados e links de vídeo de uma URL pública do Instagram ou TikTok
  */
 async function fetchMediaFromUrl(url) {
+  // 0. Resolver links curtos do TikTok (vt.tiktok.com / vm.tiktok.com)
+  if (url.includes('vt.tiktok.com') || url.includes('vm.tiktok.com')) {
+    try {
+      console.log(`[Vercel Serverless] Resolvendo URL curta do TikTok: ${url}`);
+      const shortRes = await fetch(url, { headers, redirect: 'follow' });
+      if (shortRes.url && shortRes.url.includes('tiktok.com')) {
+        url = shortRes.url;
+        console.log(`[Vercel Serverless] URL expandida com sucesso: ${url}`);
+      }
+    } catch (sErr) {
+      console.warn('[Vercel Serverless] Não foi possível expandir URL curta:', sErr.message);
+    }
+  }
+
   const isInstagram = url.includes('instagram.com');
   const isTikTok = url.includes('tiktok.com');
 
@@ -297,9 +317,11 @@ async function fetchMediaFromUrl(url) {
         if (vidRes.ok) {
           const arrayBuffer = await vidRes.arrayBuffer();
           const buffer = Buffer.from(arrayBuffer);
-          if (buffer.length <= 10 * 1024 * 1024) {
+          if (buffer.length <= 6 * 1024 * 1024) {
             result.videoBuffer = buffer;
             result.mimeType = vidRes.headers.get('content-type') || 'video/mp4';
+          } else {
+            console.log(`[Vercel Serverless] Vídeo muito grande (${(buffer.length/1024/1024).toFixed(1)}MB). Usando metadados/legenda para economizar payload.`);
           }
         }
       } catch (vidErr) {
