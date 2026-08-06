@@ -199,11 +199,28 @@ async function fetchMediaFromUrl(url) {
       }
     }
 
+    // 2. Suporte Especial Instagram (oEmbed API + Embed HTML)
+    if (isInstagram) {
+      try {
+        const instaOembedUrl = `https://www.instagram.com/oembed/?url=${encodeURIComponent(url)}`;
+        console.log(`[Vercel Serverless] Buscando Instagram oEmbed API: ${instaOembedUrl}`);
+        const oRes = await fetch(instaOembedUrl, { headers });
+        if (oRes.ok) {
+          const oJson = await oRes.json();
+          result.title = oJson.title || result.title;
+          result.description = oJson.title || result.description;
+          result.imageUrl = oJson.thumbnail_url || result.imageUrl;
+          console.log(`[Vercel Serverless] Instagram oEmbed capturado com sucesso! Legenda: "${result.description.substring(0, 60)}..."`);
+        }
+      } catch (iErr) {
+        console.warn('[Vercel Serverless] Erro oEmbed Instagram:', iErr.message);
+      }
+    }
+
     let targetUrls = [url];
     if (isInstagram) {
-      // Adicionar URL de embed público do Instagram (/embed/captioned/)
       const cleanUrl = url.split('?')[0].replace(/\/$/, '');
-      targetUrls.unshift(`${cleanUrl}/embed/captioned/`);
+      targetUrls.push(`${cleanUrl}/embed/captioned/`);
     }
 
     for (const targetUrl of targetUrls) {
@@ -215,7 +232,7 @@ async function fetchMediaFromUrl(url) {
         const title = extractMeta(html, 'og:title') || extractMeta(html, 'twitter:title') || '';
         let description = extractMeta(html, 'og:description') || extractMeta(html, 'twitter:description') || '';
 
-        // Tentar extrair a legenda direta do HTML de embed do Instagram se og:description não tiver tudo
+        // Tentar extrair a legenda do HTML de embed
         if (targetUrl.includes('/embed/captioned/')) {
           const captionMatch = html.match(/<div class="Caption"[^>]*>([\s\S]*?)<\/div>/i) || html.match(/<span class="CaptionComments"[^>]*>([\s\S]*?)<\/span>/i);
           if (captionMatch) {
@@ -223,6 +240,20 @@ async function fetchMediaFromUrl(url) {
             if (cleanCaption.length > description.length) {
               description = cleanCaption;
             }
+          }
+        }
+
+        // Tentar extrair texto de legenda dentro de JSON em scripts
+        const scriptMatches = html.match(/"text"\s*:\s*"([^"]{20,})"/g) || html.match(/"caption"\s*:\s*"([^"]{20,})"/g);
+        if (scriptMatches) {
+          for (const m of scriptMatches) {
+            try {
+              const rawVal = JSON.parse(`{${m}}`);
+              const val = Object.values(rawVal)[0];
+              if (val && typeof val === 'string' && val.length > description.length) {
+                description = val;
+              }
+            } catch (e) {}
           }
         }
 
@@ -236,7 +267,7 @@ async function fetchMediaFromUrl(url) {
           result.videoUrl = videoUrl || result.videoUrl;
         }
 
-        if (result.description.length > 30) break; // Já achamos uma descrição satisfatória
+        if (result.description.length > 30) break;
       } catch (e) {
         console.warn(`[Vercel Serverless] Erro ao buscar ${targetUrl}:`, e.message);
       }
