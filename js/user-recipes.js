@@ -59,16 +59,31 @@ Regras:
 // ---- Gemini AI ----
 
 export async function extractRecipeFromYouTube(youtubeUrl) {
+  let cleanUrl = youtubeUrl;
+  let videoId = '';
+  const match = youtubeUrl.match(/(?:shorts\/|v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+  if (match) {
+    videoId = match[1];
+    cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
+  }
+
   const body = {
     contents: [{
       parts: [
         { text: RECIPE_PROMPT },
-        { fileData: { mimeType: 'video/youtube', fileUri: youtubeUrl } }
+        { fileData: { mimeType: 'video/youtube', fileUri: cleanUrl } }
       ]
     }],
     generationConfig: { temperature: 0.1 }
   };
-  return callGemini(body);
+
+  const recipe = await callGemini(body);
+  if (videoId) {
+    const ytThumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+    recipe.imageUrl = recipe.imageUrl || ytThumb;
+    recipe.image = recipe.image || ytThumb;
+  }
+  return recipe;
 }
 
 export async function extractRecipeFromText(text) {
