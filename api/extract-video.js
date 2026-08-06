@@ -137,8 +137,16 @@ Regras Estritas:
       recipeData.tags = [];
     }
 
-    // Garantir valores padrão caso algum campo falhe
-    recipeData.imageUrl = recipeData.imageUrl || mediaData.imageUrl || 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=800&q=80';
+    // Garantir prioridade da foto real extraída sobre placeholders da IA
+    const isPlaceholder = (imgUrl) => !imgUrl || imgUrl.includes('placeholder') || imgUrl.includes('unsplash') || imgUrl.trim() === '';
+    
+    const finalCover = (!isPlaceholder(mediaData.imageUrl) ? mediaData.imageUrl : null) ||
+                       (!isPlaceholder(recipeData.imageUrl) ? recipeData.imageUrl : null) ||
+                       (!isPlaceholder(recipeData.image) ? recipeData.image : null) ||
+                       'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=800&q=80';
+
+    recipeData.imageUrl = finalCover;
+    recipeData.image = finalCover;
     recipeData.videoUrl = url;
 
     return res.status(200).json({

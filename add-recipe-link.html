@@ -219,7 +219,11 @@
           }
 
           showLoading("Criando receita no Firestore...", "Salvando a receita na sua conta...");
-          const recipeCover = extractedRecipe.imageUrl || extractedRecipe.image || "images/placeholder_recipe.png";
+          const isPlaceholder = (imgUrl) => !imgUrl || imgUrl.includes('placeholder') || imgUrl.trim() === '';
+          const recipeCover = (!isPlaceholder(extractedRecipe.imageUrl) ? extractedRecipe.imageUrl : null) ||
+                              (!isPlaceholder(extractedRecipe.image) ? extractedRecipe.image : null) ||
+                              "images/placeholder_recipe.png";
+
           extractedRecipe.image = recipeCover;
           extractedRecipe.imageUrl = recipeCover;
           

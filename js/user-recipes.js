@@ -61,7 +61,7 @@ Regras:
 export async function extractRecipeFromYouTube(youtubeUrl) {
   let cleanUrl = youtubeUrl;
   let videoId = '';
-  const match = youtubeUrl.match(/(?:shorts\/|v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+  const match = youtubeUrl.match(/(?:shorts\/|v=|youtu\.be\/|embed\/|\/v\/)([a-zA-Z0-9_-]{11})/);
   if (match) {
     videoId = match[1];
     cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
@@ -78,10 +78,17 @@ export async function extractRecipeFromYouTube(youtubeUrl) {
   };
 
   const recipe = await callGemini(body);
-  if (recipe && videoId) {
-    const ytThumb = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
-    recipe.imageUrl = recipe.imageUrl || ytThumb;
-    recipe.image = recipe.image || ytThumb;
+  if (recipe) {
+    const isPlaceholder = (imgUrl) => !imgUrl || imgUrl.includes('placeholder') || imgUrl.trim() === '';
+    const ytThumb = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '';
+
+    const finalImg = ytThumb ||
+                     (!isPlaceholder(recipe.imageUrl) ? recipe.imageUrl : null) ||
+                     (!isPlaceholder(recipe.image) ? recipe.image : null) ||
+                     'images/placeholder_recipe.png';
+
+    recipe.imageUrl = finalImg;
+    recipe.image = finalImg;
   }
   return recipe;
 }
