@@ -69,14 +69,15 @@ Retorne APENAS um objeto JSON válido (sem markdown, sem backticks) exatamente n
 }
 
 Regras Estritas:
-1. FIDELIDADE ABSOLUTA: Seja extremamente fiel ao vídeo/texto. NÃO invente receitas de bolo de chocolate ou qualquer outra se o post não contiver uma receita clara.
-2. SE NÃO FOR UMA RECEITA OU NÃO HOUVER INFORMAÇÕES SUFICIENTES: Retorne EXATAMENTE o JSON: {"error": "Não foi possível extrair os ingredientes e o modo de preparo desta publicação."}
-3. cuisine: use uma de: Brasileira, Italiana, Japonesa, Mexicana, Francesa, Tailandesa, Americana, Indiana, Espanhola, Grega, Saudável, Outras
-4. difficulty: Fácil, Médio ou Difícil
-5. categories: use APENAS uma ou mais de: Café da Manhã, Almoço, Lanche, Jantar, Sobremesa, Acompanhamento
-6. tags: use APENAS uma ou mais das seguintes tags permitidas: ["1 Panela", "Dia a Dia", "Falta Checar", "Fritura", "Gostosão", "Pouco Calórico", "Proteico", "Saudável"]. PROIBIDO criar ou inventar qualquer tag fora desta lista.
-7. ingrediente deve ter "item" (nome) e "amount" (quantidade) separados.
-8. Estime valores realistas de nutrição (calories, protein, carbs, fat) com base nos ingredientes.
+1. IDIOMA (OBRIGATÓRIO): Escreva TODOS os campos (título, subtítulo, ingredientes, passos, categorias, tags) EXCLUSIVAMENTE em Português do Brasil (pt-BR). Traduza qualquer termo que esteja em inglês.
+2. FIDELIDADE ABSOLUTA: Seja extremamente fiel ao vídeo/texto. NÃO invente receitas de bolo de chocolate ou qualquer outra se o post não contiver uma receita clara.
+3. SE NÃO FOR UMA RECEITA OU NÃO HOUVER INFORMAÇÕES SUFICIENTES: Retorne EXATAMENTE o JSON: {"error": "Não foi possível extrair os ingredientes e o modo de preparo desta publicação."}
+4. cuisine: use uma de: Brasileira, Italiana, Japonesa, Mexicana, Francesa, Tailandesa, Americana, Indiana, Espanhola, Grega, Saudável, Outras
+5. difficulty: Fácil, Médio ou Difícil
+6. categories: use APENAS uma ou mais de: Café da Manhã, Almoço, Lanche, Jantar, Sobremesa, Acompanhamento
+7. tags: use APENAS uma ou mais das seguintes tags permitidas: ["1 Panela", "Dia a Dia", "Falta Checar", "Fritura", "Gostosão", "Pouco Calórico", "Proteico", "Saudável"]. PROIBIDO criar ou inventar qualquer tag fora desta lista.
+8. ingrediente deve ter "item" (nome) e "amount" (quantidade) separados.
+9. Estime valores realistas de nutrição (calories, protein, carbs, fat) com base nos ingredientes.
 `;
 
     let result;
@@ -208,26 +209,6 @@ async function fetchMediaFromUrl(url) {
             result.imageUrl = oJson.thumbnail_url || result.imageUrl;
           }
         } catch (e) {}
-      }
-    }
-
-    // 2. Suporte Especial Instagram: Buscar a Capa Limpa via Instagram oEmbed API (Sem símbolo de play)
-    if (isInstagram) {
-      try {
-        const instaOembedUrl = `https://www.instagram.com/oembed/?url=${encodeURIComponent(url)}`;
-        console.log(`[Vercel Serverless] Buscando capa limpa do Instagram via oEmbed: ${instaOembedUrl}`);
-        const oRes = await fetch(instaOembedUrl, { headers });
-        if (oRes.ok) {
-          const oJson = await oRes.json();
-          result.title = result.title || oJson.title || '';
-          result.description = result.description || oJson.title || '';
-          if (oJson.thumbnail_url) {
-            result.imageUrl = oJson.thumbnail_url;
-            console.log(`[Vercel Serverless] Capa limpa do Instagram obtida com sucesso: ${result.imageUrl.substring(0, 60)}...`);
-          }
-        }
-      } catch (iErr) {
-        console.warn('[Vercel Serverless] Erro ao buscar oEmbed Instagram:', iErr.message);
       }
     }
 
