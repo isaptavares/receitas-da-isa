@@ -33,7 +33,7 @@ export default async function handler(req, res) {
 
     // Inicializar Gemini AI
     const genAI = new GoogleGenerativeAI(geminiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite' });
 
     const systemPrompt = `
 Você é um assistente culinário especialista. Sua tarefa é analisar as informações fornecidas (vídeo, imagem ou texto de postagem do Instagram/TikTok) e extrair a receita completa em formato JSON ESTRITO.
