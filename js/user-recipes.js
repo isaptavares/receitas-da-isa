@@ -81,8 +81,9 @@ export async function extractRecipeFromText(text) {
 }
 
 export async function extractRecipeFromVercelServer(videoUrl) {
-  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  const apiUrl = isLocal ? '/api/extract-video' : 'https://receitas-da-isa.vercel.app/api/extract-video';
+  // Se estiver no Vercel production/preview use caminho relativo, se estiver no localhost/python use a URL de produção na Vercel
+  const isVercelHost = window.location.hostname.includes('vercel.app');
+  const apiUrl = isVercelHost ? '/api/extract-video' : 'https://receitas-da-isa.vercel.app/api/extract-video';
 
   const response = await fetch(apiUrl, {
     method: 'POST',
