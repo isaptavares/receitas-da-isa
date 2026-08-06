@@ -61,6 +61,13 @@ Responda APENAS com um objeto JSON válido no seguinte esquema, sem marcação m
 
     let result;
 
+    if (!mediaData.videoBuffer && !mediaData.description && !mediaData.title) {
+      return res.status(400).json({
+        success: false,
+        error: 'Não foi possível ler as informações deste post. Verifique se o perfil é público e se o post contém texto/vídeo acessível.'
+      });
+    }
+
     if (mediaData.videoBuffer && mediaData.mimeType) {
       console.log(`[Vercel Serverless] Enviando vídeo (${mediaData.videoBuffer.length} bytes) para o Gemini...`);
       const videoPart = {
@@ -70,11 +77,11 @@ Responda APENAS com um objeto JSON válido no seguinte esquema, sem marcação m
         }
       };
 
-      const contentPrompt = `${systemPrompt}\n\nAnalise o vídeo anexado, o áudio do preparo e qualquer legenda adicional: "${mediaData.description || ''}".`;
+      const contentPrompt = `${systemPrompt}\n\nAnalise o vídeo anexado, o áudio do preparo e qualquer legenda adicional: "${mediaData.description || ''}".\nATENÇÃO: Se não for uma receita, responda com "title": "Não é uma receita".`;
       result = await model.generateContent([contentPrompt, videoPart]);
     } else {
       console.log(`[Vercel Serverless] Enviando metadados e legenda para o Gemini...`);
-      const contentPrompt = `${systemPrompt}\n\nConteúdo extraído da postagem:\nTítulo/Legenda: ${mediaData.title || ''}\nDescrição Completa: ${mediaData.description || ''}\nURL do Post: ${url}`;
+      const contentPrompt = `${systemPrompt}\n\nConteúdo extraído da postagem:\nTítulo/Legenda: ${mediaData.title || ''}\nDescrição Completa: ${mediaData.description || ''}\nURL do Post: ${url}\nATENÇÃO: Extraia a receita ESTRITAMENTE da descrição/legenda acima. Se a descrição não contiver os ingredientes ou preparo da receita, NÃO invente um bolo de chocolate nem nenhuma receita genérica.`;
       result = await model.generateContent(contentPrompt);
     }
 
@@ -87,6 +94,13 @@ Responda APENAS com um objeto JSON válido no seguinte esquema, sem marcação m
       cleanJson = jsonMatch[0];
     }
     const recipeData = JSON.parse(cleanJson);
+
+    if (recipeData.error || recipeData.title === "Não é uma receita") {
+      return res.status(400).json({
+        success: false,
+        error: recipeData.error || 'A legenda deste vídeo não contém a receita detalhada.'
+      });
+    }
 
     // Garantir valores padrão caso algum campo falhe
     recipeData.imageUrl = recipeData.imageUrl || mediaData.imageUrl || 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=800&q=80';
@@ -114,23 +128,63 @@ async function fetchMediaFromUrl(url) {
   const isTikTok = url.includes('tiktok.com');
 
   const headers = {
-    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7'
   };
 
   try {
-    const response = await fetch(url, { headers, redirect: 'follow' });
-    const html = await response.text();
+    let targetUrls = [url];
+    if (isInstagram) {
+      // Adicionar URL de embed público do Instagram (/embed/captioned/)
+      const cleanUrl = url.split('?')[0].replace(/\/$/, '');
+      targetUrls.unshift(`${cleanUrl}/embed/captioned/`);
+    }
 
-    const result = {
-      title: extractMeta(html, 'og:title') || extractMeta(html, 'twitter:title') || '',
-      description: extractMeta(html, 'og:description') || extractMeta(html, 'twitter:description') || '',
-      imageUrl: extractMeta(html, 'og:image') || extractMeta(html, 'twitter:image') || '',
-      videoUrl: extractMeta(html, 'og:video') || extractMeta(html, 'og:video:secure_url') || '',
+    let result = {
+      title: '',
+      description: '',
+      imageUrl: '',
+      videoUrl: '',
       videoBuffer: null,
       mimeType: null
     };
+
+    for (const targetUrl of targetUrls) {
+      try {
+        console.log(`[Vercel Serverless] Buscando HTML de: ${targetUrl}`);
+        const response = await fetch(targetUrl, { headers, redirect: 'follow' });
+        const html = await response.text();
+
+        const title = extractMeta(html, 'og:title') || extractMeta(html, 'twitter:title') || '';
+        let description = extractMeta(html, 'og:description') || extractMeta(html, 'twitter:description') || '';
+
+        // Tentar extrair a legenda direta do HTML de embed do Instagram se og:description não tiver tudo
+        if (targetUrl.includes('/embed/captioned/')) {
+          const captionMatch = html.match(/<div class="Caption"[^>]*>([\s\S]*?)<\/div>/i) || html.match(/<span class="CaptionComments"[^>]*>([\s\S]*?)<\/span>/i);
+          if (captionMatch) {
+            const cleanCaption = captionMatch[1].replace(/<[^>]+>/g, ' ').trim();
+            if (cleanCaption.length > description.length) {
+              description = cleanCaption;
+            }
+          }
+        }
+
+        const imageUrl = extractMeta(html, 'og:image') || extractMeta(html, 'twitter:image') || '';
+        const videoUrl = extractMeta(html, 'og:video') || extractMeta(html, 'og:video:secure_url') || '';
+
+        if (description || videoUrl || imageUrl) {
+          result.title = title || result.title;
+          result.description = description || result.description;
+          result.imageUrl = imageUrl || result.imageUrl;
+          result.videoUrl = videoUrl || result.videoUrl;
+        }
+
+        if (result.description.length > 30) break; // Já achamos uma descrição satisfatória
+      } catch (e) {
+        console.warn(`[Vercel Serverless] Erro ao buscar ${targetUrl}:`, e.message);
+      }
+    }
 
     // Se encontramos uma URL direta de MP4, tentamos baixar o buffer
     if (result.videoUrl) {
@@ -140,7 +194,6 @@ async function fetchMediaFromUrl(url) {
         if (vidRes.ok) {
           const arrayBuffer = await vidRes.arrayBuffer();
           const buffer = Buffer.from(arrayBuffer);
-          // Limitar a 10MB para não estourar o limite inline do Gemini Serverless
           if (buffer.length <= 10 * 1024 * 1024) {
             result.videoBuffer = buffer;
             result.mimeType = vidRes.headers.get('content-type') || 'video/mp4';
@@ -153,7 +206,7 @@ async function fetchMediaFromUrl(url) {
 
     return result;
   } catch (err) {
-    console.error('[Vercel Serverless] Erro ao buscar HTML da página:', err.message);
+    console.error('[Vercel Serverless] Erro ao buscar mídias:', err.message);
     return { title: '', description: '', imageUrl: '', videoUrl: '', videoBuffer: null, mimeType: null };
   }
 }
