@@ -145,21 +145,40 @@ async function fetchMediaFromUrl(url) {
       mimeType: null
     };
 
-    // 1. Suporte Especial TikTok (oEmbed API oficial)
+    // 1. Suporte Especial TikTok (Extrator de Vídeo MP4 sem marca d'água)
     if (isTikTok) {
       try {
-        const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
-        console.log(`[Vercel Serverless] Buscando TikTok oEmbed API: ${oembedUrl}`);
-        const oRes = await fetch(oembedUrl, { headers });
-        if (oRes.ok) {
-          const oJson = await oRes.json();
-          result.title = oJson.title || '';
-          result.description = oJson.title || '';
-          result.imageUrl = oJson.thumbnail_url || '';
-          console.log(`[Vercel Serverless] TikTok oEmbed capturado com sucesso! Legenda: "${result.description.substring(0, 60)}..."`);
+        const tikwmUrl = `https://tikwm.com/api/?url=${encodeURIComponent(url)}`;
+        console.log(`[Vercel Serverless] Extraindo vídeo MP4 do TikTok via TikWM: ${tikwmUrl}`);
+        const tikRes = await fetch(tikwmUrl, { headers });
+        if (tikRes.ok) {
+          const tikJson = await tikRes.json();
+          if (tikJson.code === 0 && tikJson.data) {
+            result.title = tikJson.data.title || '';
+            result.description = tikJson.data.title || '';
+            result.imageUrl = tikJson.data.cover || '';
+            if (tikJson.data.play) {
+              result.videoUrl = tikJson.data.play;
+              console.log(`[Vercel Serverless] Link direto do MP4 do TikTok capturado! ${result.videoUrl.substring(0, 60)}...`);
+            }
+          }
         }
       } catch (tErr) {
-        console.warn('[Vercel Serverless] Erro ao buscar oEmbed do TikTok:', tErr.message);
+        console.warn('[Vercel Serverless] Erro ao extrair MP4 do TikTok via TikWM:', tErr.message);
+      }
+
+      // Fallback oEmbed se TikWM não tiver retornado legenda
+      if (!result.description) {
+        try {
+          const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
+          const oRes = await fetch(oembedUrl, { headers });
+          if (oRes.ok) {
+            const oJson = await oRes.json();
+            result.title = oJson.title || result.title;
+            result.description = oJson.title || result.description;
+            result.imageUrl = oJson.thumbnail_url || result.imageUrl;
+          }
+        } catch (e) {}
       }
     }
 
