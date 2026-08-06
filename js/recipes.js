@@ -3,7 +3,7 @@
    ============================================= */
 
 import { getUser, getCloudFavorites, cloudToggleFavorite, getCloudPlanner, cloudUpdatePlanner, cloudRemoveFromPlanner, cloudClearPlanner, authReady } from './auth.js';
-import { getUserRecipes, getUserRecipeById } from './user-recipes.js';
+import { getUserRecipes, getUserRecipeById } from './user-recipes.js?v=8';
 
 const FAVORITES_KEY = 'receitas_isa_favorites';
 const PLANNER_KEY = 'receitas_isa_planner';

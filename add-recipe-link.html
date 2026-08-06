@@ -108,11 +108,11 @@
   </footer>
 
   <!-- Scripts -->
-  <script type="module" src="js/auth.js"></script>
-  <script type="module" src="js/recipes.js?v=7"></script>
+  <script type="module" src="js/auth.js?v=8"></script>
+  <script type="module" src="js/recipes.js?v=8"></script>
   <script type="module">
-    import { extractRecipeFromYouTube, extractRecipeFromText, extractRecipeFromFile, saveUserRecipe, extractRecipeFromVercelServer } from './js/user-recipes.js';
-    import { getUser, authReady } from './js/auth.js';
+    import { extractRecipeFromYouTube, extractRecipeFromText, extractRecipeFromFile, saveUserRecipe, extractRecipeFromVercelServer } from './js/user-recipes.js?v=8';
+    import { getUser, authReady } from './js/auth.js?v=8';
 
     document.addEventListener('DOMContentLoaded', async () => {
       initNavbar();
@@ -266,17 +266,17 @@
         showLoading("Lendo site de receitas... 🌐", "Obtendo o conteúdo da página de forma segura...");
 
         try {
-          const pageText = await withTimeout(
+          const pageData = await withTimeout(
             fetchCleanTextFromWebsite(url),
             45000,
             'O carregamento do site demorou demais ou todos os proxies de conexão falharam.'
           );
 
-          addLog(`Conteúdo do site lido (${pageText.length} caracteres). Enviando para o Gemini...`, "info");
+          addLog(`Conteúdo do site lido (${pageData.text.length} caracteres). Enviando para o Gemini...`, "info");
           showLoading("Analisando com Inteligência Artificial... 🤖", "O Gemini está interpretando os ingredientes e instruções do site...");
 
           const extractedRecipe = await withTimeout(
-            extractRecipeFromText(pageText),
+            extractRecipeFromText(pageData.text),
             35000,
             'O Gemini demorou muito para interpretar o texto do site.'
           );
@@ -284,7 +284,11 @@
           addLog(`Receita extraída do site: "${extractedRecipe.title}"`, "success");
           showLoading("Criando receita no Firestore...", "Salvando a receita na sua conta...");
 
-          extractedRecipe.image = "images/placeholder_recipe.png";
+          const isPlaceholder = (imgUrl) => !imgUrl || imgUrl.includes('placeholder') || imgUrl.includes('unsplash') || imgUrl.trim() === '';
+          const finalCover = (!isPlaceholder(pageData.imageUrl) ? pageData.imageUrl : null) || "images/placeholder_recipe.png";
+          
+          extractedRecipe.image = finalCover;
+          extractedRecipe.imageUrl = finalCover;
 
           const savedId = await withTimeout(
             saveUserRecipe(extractedRecipe),
@@ -453,12 +457,19 @@
       // TIER 4: Leitura de Metadados da Página (og:description / og:title via proxies)
       addLog("Testando Nível 4: Leitura de Metadados da Página via Proxies...", "info");
       try {
-        const pageText = await fetchCleanTextFromWebsite(url);
-        if (pageText && pageText.length > 40) {
-          addLog(`Texto bruto extraído da página (${pageText.length} chars). Analisando com Gemini...`, "info");
-          const extractedRecipe = await extractRecipeFromText(pageText);
+        const pageData = await fetchCleanTextFromWebsite(url);
+        if (pageData && pageData.text && pageData.text.length > 40) {
+          addLog(`Texto bruto extraído da página (${pageData.text.length} chars). Analisando com Gemini...`, "info");
+          const extractedRecipe = await extractRecipeFromText(pageData.text);
           if (extractedRecipe && extractedRecipe.title) {
             addLog("Nível 4 Sucesso: Receita gerada a partir dos metadados da página!", "success");
+            
+            const isPlaceholder = (imgUrl) => !imgUrl || imgUrl.includes('placeholder') || imgUrl.trim() === '';
+            if (isPlaceholder(extractedRecipe.imageUrl) && !isPlaceholder(pageData.imageUrl)) {
+               extractedRecipe.imageUrl = pageData.imageUrl;
+               extractedRecipe.image = pageData.imageUrl;
+            }
+            
             return { isRecipeObject: true, data: extractedRecipe };
           }
         }
@@ -537,6 +548,16 @@
       const parser = new DOMParser();
       const doc = parser.parseFromString(htmlContent, 'text/html');
       
+      // Extrai a imagem da receita antes de limpar as tags
+      let imageUrl = '';
+      const ogImage = doc.querySelector('meta[property="og:image"]');
+      if (ogImage) {
+        imageUrl = ogImage.getAttribute('content');
+      } else {
+        const twitterImage = doc.querySelector('meta[name="twitter:image"]') || doc.querySelector('meta[property="twitter:image"]');
+        if (twitterImage) imageUrl = twitterImage.getAttribute('content');
+      }
+      
       // Limpa tags desnecessárias para reduzir tokens e poluição
       doc.querySelectorAll('script, style, iframe, nav, footer, header, noscript, svg, img, video, form, button, link, meta').forEach(el => el.remove());
       
@@ -547,7 +568,7 @@
         throw new Error("O conteúdo extraído da página é muito curto ou inacessível.");
       }
       
-      return cleanText;
+      return { text: cleanText, imageUrl: imageUrl };
     }
 
     function showLoading(title, subtitle, showSpinner = true) {
