@@ -36,27 +36,29 @@ export default async function handler(req, res) {
     const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite' });
 
     const systemPrompt = `
-Você é um assistente culinário especialista. Sua tarefa é analisar as informações fornecidas (vídeo, imagem ou texto de postagem do Instagram/TikTok) e extrair a receita completa em formato JSON ESTRITO.
+Você é um assistente culinário especialista. Sua tarefa é analisar ESTRITAMENTE o conteúdo da legenda/texto/vídeo fornecido do Instagram ou TikTok e extrair a receita em formato JSON.
 
-Responda APENAS com um objeto JSON válido no seguinte esquema, sem marcação markdown como \`\`\`json:
+Responda APENAS com um objeto JSON válido no seguinte esquema:
 
 {
-  "title": "Nome da Receita",
+  "title": "Nome exato da receita",
   "category": "Sobremesas | Almoço & Jantar | Lanches & Salgados | Bebidas & Drinks | Saudável | Outros",
-  "prepTime": "Ex: 15 min",
-  "cookTime": "Ex: 30 min",
-  "servings": "Ex: 4 porções",
+  "prepTime": "15 min",
+  "cookTime": "30 min",
+  "servings": "4 porções",
   "ingredients": [
-    "1 xícara de açúcar",
-    "2 ovos"
+    "Ingrediente 1 extraído do texto",
+    "Ingrediente 2 extraído do texto"
   ],
   "steps": [
-    "Misture os ingredientes em uma tigela.",
-    "Leve ao forno a 180°C por 30 minutos."
+    "Passo 1 extraído do texto",
+    "Passo 2 extraído do texto"
   ],
   "imageUrl": "${mediaData.imageUrl || ''}",
   "videoUrl": "${url}"
 }
+
+REGRA DE SEGURANÇA ABSOLUTA: Extraia apenas os ingredientes e passos presentes no conteúdo fornecido. Nunca invente ingredientes de bolo de chocolate ou qualquer receita diferente se o texto fornecido não for sobre isso.
 `;
 
     let result;
@@ -134,13 +136,6 @@ async function fetchMediaFromUrl(url) {
   };
 
   try {
-    let targetUrls = [url];
-    if (isInstagram) {
-      // Adicionar URL de embed público do Instagram (/embed/captioned/)
-      const cleanUrl = url.split('?')[0].replace(/\/$/, '');
-      targetUrls.unshift(`${cleanUrl}/embed/captioned/`);
-    }
-
     let result = {
       title: '',
       description: '',
@@ -149,6 +144,31 @@ async function fetchMediaFromUrl(url) {
       videoBuffer: null,
       mimeType: null
     };
+
+    // 1. Suporte Especial TikTok (oEmbed API oficial)
+    if (isTikTok) {
+      try {
+        const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
+        console.log(`[Vercel Serverless] Buscando TikTok oEmbed API: ${oembedUrl}`);
+        const oRes = await fetch(oembedUrl, { headers });
+        if (oRes.ok) {
+          const oJson = await oRes.json();
+          result.title = oJson.title || '';
+          result.description = oJson.title || '';
+          result.imageUrl = oJson.thumbnail_url || '';
+          console.log(`[Vercel Serverless] TikTok oEmbed capturado com sucesso! Legenda: "${result.description.substring(0, 60)}..."`);
+        }
+      } catch (tErr) {
+        console.warn('[Vercel Serverless] Erro ao buscar oEmbed do TikTok:', tErr.message);
+      }
+    }
+
+    let targetUrls = [url];
+    if (isInstagram) {
+      // Adicionar URL de embed público do Instagram (/embed/captioned/)
+      const cleanUrl = url.split('?')[0].replace(/\/$/, '');
+      targetUrls.unshift(`${cleanUrl}/embed/captioned/`);
+    }
 
     for (const targetUrl of targetUrls) {
       try {
