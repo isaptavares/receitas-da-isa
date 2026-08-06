@@ -215,63 +215,63 @@ async function fetchMediaFromUrl(url) {
     let targetUrls = [];
     if (isInstagram) {
       const cleanUrl = url.split('?')[0].replace(/\/$/, '');
-      targetUrls.push(url);
-      targetUrls.push(`${cleanUrl}/embed/captioned/`);
+      targetUrls.push({ url: `${cleanUrl}/embed/captioned/`, ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1' });
+      targetUrls.push({ url: url, ua: 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)' });
     } else {
-      targetUrls.push(url);
+      targetUrls.push({ url: url, ua: headers['User-Agent'] });
     }
 
-    for (const targetUrl of targetUrls) {
+    for (const item of targetUrls) {
       try {
-        console.log(`[Vercel Serverless] Buscando HTML de vídeo em: ${targetUrl}`);
-        const response = await fetch(targetUrl, { headers, redirect: 'follow' });
+        console.log(`[Vercel Serverless] Buscando mídia de vídeo em: ${item.url}`);
+        const customHeaders = { ...headers, 'User-Agent': item.ua };
+        const response = await fetch(item.url, { headers: customHeaders, redirect: 'follow' });
         const html = await response.text();
 
         const title = extractMeta(html, 'og:title') || extractMeta(html, 'twitter:title') || '';
         let description = extractMeta(html, 'og:description') || extractMeta(html, 'twitter:description') || '';
 
-        // Tentar extrair a legenda do HTML de embed
-        if (targetUrl.includes('/embed/captioned/')) {
-          const captionMatch = html.match(/<div class="Caption"[^>]*>([\s\S]*?)<\/div>/i) || html.match(/<span class="CaptionComments"[^>]*>([\s\S]*?)<\/span>/i);
-          if (captionMatch) {
-            const cleanCaption = captionMatch[1].replace(/<[^>]+>/g, ' ').trim();
-            if (cleanCaption.length > description.length) {
-              description = cleanCaption;
+        // 1. Extração direta de vídeo MP4 do JSON do Instagram (video_url)
+        const videoUrlMatch = html.match(/"video_url"\s*:\s*"([^"]+)"/);
+        if (videoUrlMatch) {
+          const directVideo = videoUrlMatch[1].replace(/\\/g, '');
+          result.videoUrl = directVideo;
+          console.log(`[Vercel Serverless] URL do vídeo MP4 capturada do JSON do Instagram! ${directVideo.substring(0, 60)}...`);
+        } else {
+          const metaVid = extractMeta(html, 'og:video') || extractMeta(html, 'og:video:secure_url') || extractMeta(html, 'og:video:url') || '';
+          if (metaVid) result.videoUrl = metaVid;
+        }
+
+        // 2. Extração de imagem de capa limpa do JSON do Instagram (display_url / display_resources)
+        const displayUrlMatch = html.match(/"display_url"\s*:\s*"([^"]+)"/) || html.match(/"display_resources"\s*:\s*\[\s*\{\s*"src"\s*:\s*"([^"]+)"/);
+        if (displayUrlMatch) {
+          const cleanImg = (displayUrlMatch[1] || displayUrlMatch[2]).replace(/\\/g, '');
+          result.imageUrl = cleanImg;
+          console.log(`[Vercel Serverless] Capa limpa do Instagram capturada do JSON! ${cleanImg.substring(0, 60)}...`);
+        } else {
+          const metaImg = extractMeta(html, 'og:image') || extractMeta(html, 'twitter:image') || '';
+          if (metaImg && !result.imageUrl) result.imageUrl = metaImg;
+        }
+
+        // 3. Extração da legenda completa do JSON (edge_media_to_caption)
+        const textMatch = html.match(/"text"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+        if (textMatch) {
+          try {
+            const cleanText = JSON.parse(`"${textMatch[1]}"`);
+            if (cleanText && cleanText.length > description.length) {
+              description = cleanText;
             }
-          }
+          } catch (e) {}
         }
 
-        // Tentar extrair texto de legenda dentro de JSON em scripts
-        const scriptMatches = html.match(/"text"\s*:\s*"([^"]{20,})"/g) || html.match(/"caption"\s*:\s*"([^"]{20,})"/g);
-        if (scriptMatches) {
-          for (const m of scriptMatches) {
-            try {
-              const rawVal = JSON.parse(`{${m}}`);
-              const val = Object.values(rawVal)[0];
-              if (val && typeof val === 'string' && val.length > description.length) {
-                description = val;
-              }
-            } catch (e) {}
-          }
-        }
-
-        // Apenas buscar og:image da página se ainda não tivermos a capa limpa do oEmbed
-        const pageImageUrl = extractMeta(html, 'og:image') || extractMeta(html, 'twitter:image') || '';
-        const videoUrl = extractMeta(html, 'og:video') || extractMeta(html, 'og:video:secure_url') || extractMeta(html, 'og:video:url') || '';
-
-        if (description || videoUrl || pageImageUrl) {
+        if (description || title) {
           result.title = result.title || title;
-          result.description = result.description || description;
-          result.imageUrl = result.imageUrl || pageImageUrl;
-          if (!result.videoUrl && videoUrl) {
-            result.videoUrl = videoUrl;
-            console.log(`[Vercel Serverless] URL de vídeo MP4 do Instagram encontrada! ${videoUrl.substring(0, 60)}...`);
-          }
+          result.description = description || result.description;
         }
 
-        if (result.videoUrl) break; // Prioridade máxima: se achamos o vídeo MP4, pode parar!
+        if (result.videoUrl && result.description) break;
       } catch (e) {
-        console.warn(`[Vercel Serverless] Erro ao buscar ${targetUrl}:`, e.message);
+        console.warn(`[Vercel Serverless] Erro ao buscar ${item.url}:`, e.message);
       }
     }
 
