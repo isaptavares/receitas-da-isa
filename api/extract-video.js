@@ -81,7 +81,11 @@ Responda APENAS com um objeto JSON válido no seguinte esquema, sem marcação m
     const rawText = result.response.text();
     console.log(`[Vercel Serverless] Resposta bruta do Gemini:`, rawText);
 
-    const cleanJson = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+    let cleanJson = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+    const jsonMatch = cleanJson.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleanJson = jsonMatch[0];
+    }
     const recipeData = JSON.parse(cleanJson);
 
     // Garantir valores padrão caso algum campo falhe
