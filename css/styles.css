@@ -754,7 +754,7 @@ ul { list-style: none; }
 @media (max-width: 700px) {
   .recipe-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
 }
-.recipe-card.featured .card-image-wrap { height: 100%; min-height: 260px; }
+.recipe-card.featured .card-image-wrap { height: 260px; max-height: 260px; overflow: hidden; }
 .recipe-card.featured .card-body { padding: 2rem; display: flex; flex-direction: column; justify-content: center; }
 .recipe-card.featured .card-title { font-size: 1.6rem; }
 .recipe-card.featured .card-subtitle { -webkit-line-clamp: 3; }

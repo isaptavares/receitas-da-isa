@@ -196,25 +196,15 @@
             );
             addLog("Extração nativa do YouTube concluída com sucesso!", "success");
           }
-          // IF 2: Instagram ou TikTok (Vercel Serverless Backend)
-          else if (isInstagram || isTikTok) {
-            const platform = isInstagram ? 'Instagram Reels' : 'TikTok';
+          // IF 2: Instagram, TikTok ou Outros Sites de Receitas (Vercel Serverless Backend)
+          else {
+            const platform = isInstagram ? 'Instagram Reels' : (isTikTok ? 'TikTok' : 'Website de Receitas');
             addLog(`Dominio reconhecido: ${platform} (Vercel Serverless Backend)`, "info");
             
-            showLoading(`Analisando vídeo do ${platform}... 🤖`, "O Gemini está assistindo e extraindo os ingredientes, modo de preparo, tempo e valores nutricionais...");
+            showLoading(`Analisando ${platform}... 🤖`, "O Gemini está interpretando o conteúdo e extraindo ingredientes, modo de preparo e foto de capa...");
 
             extractedRecipe = await extractRecipeFromVercelServer(url);
             addLog(`Extração via Vercel Backend concluída com sucesso!`, "success");
-          }
-          // Fallback para outros links de vídeo
-          else {
-            addLog("Dominio não reconhecido especificamente, tentando chamada padrão...", "warn");
-            showLoading("Analisando link de vídeo... 🎥", "O Gemini está interpretando o conteúdo...");
-            extractedRecipe = await withTimeout(
-              extractRecipeFromYouTube(url),
-              45000,
-              'Erro ao processar o link do vídeo.'
-            );
           }
 
           showLoading("Criando receita no Firestore...", "Salvando a receita na sua conta...");

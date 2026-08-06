@@ -78,8 +78,8 @@ export async function extractRecipeFromYouTube(youtubeUrl) {
   };
 
   const recipe = await callGemini(body);
-  if (videoId) {
-    const ytThumb = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+  if (recipe && videoId) {
+    const ytThumb = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
     recipe.imageUrl = recipe.imageUrl || ytThumb;
     recipe.image = recipe.image || ytThumb;
   }

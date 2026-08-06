@@ -269,15 +269,22 @@ async function fetchMediaFromUrl(url) {
           if (metaVid) result.videoUrl = metaVid;
         }
 
-        // 2. Extração de imagem de capa limpa do JSON do Instagram (display_url / display_resources)
+        // 2. Extração de imagem de capa limpa (JSON do Instagram / oEmbed ou meta tags / Schema.org do site)
         const displayUrlMatch = html.match(/"display_url"\s*:\s*"([^"]+)"/) || html.match(/"display_resources"\s*:\s*\[\s*\{\s*"src"\s*:\s*"([^"]+)"/);
         if (displayUrlMatch) {
           const cleanImg = (displayUrlMatch[1] || displayUrlMatch[2]).replace(/\\/g, '');
           result.imageUrl = cleanImg;
           console.log(`[Vercel Serverless] Capa limpa do Instagram capturada do JSON! ${cleanImg.substring(0, 60)}...`);
-        } else {
-          const metaImg = extractMeta(html, 'og:image') || extractMeta(html, 'twitter:image') || '';
-          if (metaImg && !result.imageUrl) result.imageUrl = metaImg;
+        } else if (!result.imageUrl) {
+          let pageImg = extractMeta(html, 'og:image') || extractMeta(html, 'twitter:image') || extractMeta(html, 'image');
+          if (!pageImg) {
+            const jsonLdMatch = html.match(/"image"\s*:\s*\[?\s*"([^"]+\.(?:jpg|jpeg|png|webp)[^"]*)"/i) || html.match(/"image"\s*:\s*"([^"]+)"/i);
+            if (jsonLdMatch) pageImg = jsonLdMatch[1].replace(/\\/g, '');
+          }
+          if (pageImg) {
+            result.imageUrl = pageImg;
+            console.log(`[Vercel Serverless] Capa capturada do site da web: ${pageImg.substring(0, 60)}...`);
+          }
         }
 
         // 3. Extração da legenda completa do JSON (edge_media_to_caption)
