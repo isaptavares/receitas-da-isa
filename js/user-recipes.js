@@ -79,7 +79,7 @@ export async function extractRecipeFromYouTube(youtubeUrl) {
 
   const recipe = await callGemini(body);
   if (recipe) {
-    const isPlaceholder = (imgUrl) => !imgUrl || imgUrl.includes('placeholder') || imgUrl.trim() === '';
+    const isPlaceholder = (imgUrl) => !imgUrl || imgUrl.includes('placeholder') || imgUrl.includes('unsplash') || imgUrl.trim() === '';
     const ytThumb = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '';
 
     const finalImg = ytThumb ||
