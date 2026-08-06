@@ -163,10 +163,17 @@ async function fetchMediaFromUrl(url) {
   if (url.includes('vt.tiktok.com') || url.includes('vm.tiktok.com')) {
     try {
       console.log(`[Vercel Serverless] Resolvendo URL curta do TikTok: ${url}`);
-      const shortRes = await fetch(url, { headers, redirect: 'follow' });
-      if (shortRes.url && shortRes.url.includes('tiktok.com')) {
-        url = shortRes.url;
-        console.log(`[Vercel Serverless] URL expandida com sucesso: ${url}`);
+      const shortRes = await fetch(url, { method: 'GET', redirect: 'manual' });
+      const locHeader = shortRes.headers.get('location');
+      if (locHeader && locHeader.includes('tiktok.com')) {
+        url = locHeader.split('?')[0]; // URL limpa expandida
+        console.log(`[Vercel Serverless] URL expandida via Location header: ${url}`);
+      } else {
+        const followRes = await fetch(url, { redirect: 'follow' });
+        if (followRes.url && followRes.url.includes('/video/')) {
+          url = followRes.url;
+          console.log(`[Vercel Serverless] URL expandida via followRes: ${url}`);
+        }
       }
     } catch (sErr) {
       console.warn('[Vercel Serverless] Não foi possível expandir URL curta:', sErr.message);
@@ -317,7 +324,7 @@ async function fetchMediaFromUrl(url) {
         if (vidRes.ok) {
           const arrayBuffer = await vidRes.arrayBuffer();
           const buffer = Buffer.from(arrayBuffer);
-          if (buffer.length <= 6 * 1024 * 1024) {
+          if (buffer.length <= 18 * 1024 * 1024) {
             result.videoBuffer = buffer;
             result.mimeType = vidRes.headers.get('content-type') || 'video/mp4';
           } else {
