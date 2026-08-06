@@ -184,7 +184,8 @@ async function fetchMediaFromUrl(url) {
           if (tikJson.code === 0 && tikJson.data) {
             result.title = tikJson.data.title || '';
             result.description = tikJson.data.title || '';
-            result.imageUrl = tikJson.data.cover || '';
+            // origin_cover é a capa estática limpa sem ícones de player
+            result.imageUrl = tikJson.data.origin_cover || tikJson.data.cover || '';
             if (tikJson.data.play) {
               result.videoUrl = tikJson.data.play;
               console.log(`[Vercel Serverless] Link direto do MP4 do TikTok capturado! ${result.videoUrl.substring(0, 60)}...`);
@@ -195,26 +196,46 @@ async function fetchMediaFromUrl(url) {
         console.warn('[Vercel Serverless] Erro ao extrair MP4 do TikTok via TikWM:', tErr.message);
       }
 
-      // Fallback oEmbed se TikWM não tiver retornado legenda
-      if (!result.description) {
+      // Fallback oEmbed se TikWM não tiver retornado capa/legenda
+      if (!result.imageUrl || !result.description) {
         try {
           const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
           const oRes = await fetch(oembedUrl, { headers });
           if (oRes.ok) {
             const oJson = await oRes.json();
-            result.title = oJson.title || result.title;
-            result.description = oJson.title || result.description;
+            result.title = result.title || oJson.title || '';
+            result.description = result.description || oJson.title || '';
             result.imageUrl = oJson.thumbnail_url || result.imageUrl;
           }
         } catch (e) {}
       }
     }
 
+    // 2. Suporte Especial Instagram: Buscar a Capa Limpa via Instagram oEmbed API (Sem símbolo de play)
+    if (isInstagram) {
+      try {
+        const instaOembedUrl = `https://www.instagram.com/oembed/?url=${encodeURIComponent(url)}`;
+        console.log(`[Vercel Serverless] Buscando capa limpa do Instagram via oEmbed: ${instaOembedUrl}`);
+        const oRes = await fetch(instaOembedUrl, { headers });
+        if (oRes.ok) {
+          const oJson = await oRes.json();
+          result.title = result.title || oJson.title || '';
+          result.description = result.description || oJson.title || '';
+          if (oJson.thumbnail_url) {
+            result.imageUrl = oJson.thumbnail_url;
+            console.log(`[Vercel Serverless] Capa limpa do Instagram obtida com sucesso: ${result.imageUrl.substring(0, 60)}...`);
+          }
+        }
+      } catch (iErr) {
+        console.warn('[Vercel Serverless] Erro ao buscar oEmbed Instagram:', iErr.message);
+      }
+    }
+
     let targetUrls = [];
     if (isInstagram) {
       const cleanUrl = url.split('?')[0].replace(/\/$/, '');
-      targetUrls.push(`${cleanUrl}/embed/captioned/`);
       targetUrls.push(url);
+      targetUrls.push(`${cleanUrl}/embed/captioned/`);
     } else {
       targetUrls.push(url);
     }
@@ -253,13 +274,14 @@ async function fetchMediaFromUrl(url) {
           }
         }
 
-        const imageUrl = extractMeta(html, 'og:image') || extractMeta(html, 'twitter:image') || '';
+        // Apenas buscar og:image da página se ainda não tivermos a capa limpa do oEmbed
+        const pageImageUrl = extractMeta(html, 'og:image') || extractMeta(html, 'twitter:image') || '';
         const videoUrl = extractMeta(html, 'og:video') || extractMeta(html, 'og:video:secure_url') || extractMeta(html, 'og:video:url') || '';
 
-        if (description || videoUrl || imageUrl) {
+        if (description || videoUrl || pageImageUrl) {
           result.title = result.title || title;
           result.description = result.description || description;
-          result.imageUrl = result.imageUrl || imageUrl;
+          result.imageUrl = result.imageUrl || pageImageUrl;
           if (!result.videoUrl && videoUrl) {
             result.videoUrl = videoUrl;
             console.log(`[Vercel Serverless] URL de vídeo MP4 do Instagram encontrada! ${videoUrl.substring(0, 60)}...`);
