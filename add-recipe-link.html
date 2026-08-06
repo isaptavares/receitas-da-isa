@@ -218,7 +218,9 @@
           }
 
           showLoading("Criando receita no Firestore...", "Salvando a receita na sua conta...");
-          extractedRecipe.image = extractedRecipe.image || "images/placeholder_recipe.png";
+          const recipeCover = extractedRecipe.imageUrl || extractedRecipe.image || "images/placeholder_recipe.png";
+          extractedRecipe.image = recipeCover;
+          extractedRecipe.imageUrl = recipeCover;
           
           addLog(`Salvando receita "${extractedRecipe.title}" no Firestore...`, "info");
           const savedId = await withTimeout(

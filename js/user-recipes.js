@@ -159,6 +159,18 @@ export async function saveUserRecipe(recipeData) {
   return docRef.id;
 }
 
+const ALLOWED_TAGS = ['1 Panela', 'Dia a Dia', 'Falta Checar', 'Fritura', 'Gostosão', 'Pouco Calórico', 'Proteico', 'Saudável'];
+
+function sanitizeRecipeTags(recipe) {
+  if (!recipe) return recipe;
+  if (Array.isArray(recipe.tags)) {
+    recipe.tags = recipe.tags.filter(t => ALLOWED_TAGS.includes(t));
+  } else {
+    recipe.tags = [];
+  }
+  return recipe;
+}
+
 export async function getUserRecipes() {
   const user = getUser();
   if (!user) return [];
@@ -168,7 +180,7 @@ export async function getUserRecipes() {
     const snapshotPromise = getDocs(q);
     const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout Firestore')), 3000));
     const snapshot = await Promise.race([snapshotPromise, timeoutPromise]);
-    return snapshot.docs.map(d => ({
+    return snapshot.docs.map(d => sanitizeRecipeTags({
       ...d.data(),
       id: d.id,
       firestoreId: d.id,
@@ -214,12 +226,12 @@ export async function getUserRecipeById(id) {
   const docResult = await findUserRecipeDocRef(id);
   if (docResult && docResult.snap.exists()) {
     const data = docResult.snap.data();
-    return {
+    return sanitizeRecipeTags({
       ...data,
       id: docResult.snap.id,
       firestoreId: docResult.snap.id,
       isUserCreated: true
-    };
+    });
   }
   return null;
 }
