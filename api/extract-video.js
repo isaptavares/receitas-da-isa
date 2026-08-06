@@ -199,33 +199,18 @@ async function fetchMediaFromUrl(url) {
       }
     }
 
-    // 2. Suporte Especial Instagram (oEmbed API + Embed HTML)
-    if (isInstagram) {
-      try {
-        const instaOembedUrl = `https://www.instagram.com/oembed/?url=${encodeURIComponent(url)}`;
-        console.log(`[Vercel Serverless] Buscando Instagram oEmbed API: ${instaOembedUrl}`);
-        const oRes = await fetch(instaOembedUrl, { headers });
-        if (oRes.ok) {
-          const oJson = await oRes.json();
-          result.title = oJson.title || result.title;
-          result.description = oJson.title || result.description;
-          result.imageUrl = oJson.thumbnail_url || result.imageUrl;
-          console.log(`[Vercel Serverless] Instagram oEmbed capturado com sucesso! Legenda: "${result.description.substring(0, 60)}..."`);
-        }
-      } catch (iErr) {
-        console.warn('[Vercel Serverless] Erro oEmbed Instagram:', iErr.message);
-      }
-    }
-
-    let targetUrls = [url];
+    let targetUrls = [];
     if (isInstagram) {
       const cleanUrl = url.split('?')[0].replace(/\/$/, '');
       targetUrls.push(`${cleanUrl}/embed/captioned/`);
+      targetUrls.push(url);
+    } else {
+      targetUrls.push(url);
     }
 
     for (const targetUrl of targetUrls) {
       try {
-        console.log(`[Vercel Serverless] Buscando HTML de: ${targetUrl}`);
+        console.log(`[Vercel Serverless] Buscando HTML de vídeo em: ${targetUrl}`);
         const response = await fetch(targetUrl, { headers, redirect: 'follow' });
         const html = await response.text();
 
@@ -258,19 +243,36 @@ async function fetchMediaFromUrl(url) {
         }
 
         const imageUrl = extractMeta(html, 'og:image') || extractMeta(html, 'twitter:image') || '';
-        const videoUrl = extractMeta(html, 'og:video') || extractMeta(html, 'og:video:secure_url') || '';
+        const videoUrl = extractMeta(html, 'og:video') || extractMeta(html, 'og:video:secure_url') || extractMeta(html, 'og:video:url') || '';
 
         if (description || videoUrl || imageUrl) {
-          result.title = title || result.title;
-          result.description = description || result.description;
-          result.imageUrl = imageUrl || result.imageUrl;
-          result.videoUrl = videoUrl || result.videoUrl;
+          result.title = result.title || title;
+          result.description = result.description || description;
+          result.imageUrl = result.imageUrl || imageUrl;
+          if (!result.videoUrl && videoUrl) {
+            result.videoUrl = videoUrl;
+            console.log(`[Vercel Serverless] URL de vídeo MP4 do Instagram encontrada! ${videoUrl.substring(0, 60)}...`);
+          }
         }
 
-        if (result.description.length > 30) break;
+        if (result.videoUrl) break; // Prioridade máxima: se achamos o vídeo MP4, pode parar!
       } catch (e) {
         console.warn(`[Vercel Serverless] Erro ao buscar ${targetUrl}:`, e.message);
       }
+    }
+
+    // Fallback de texto se oEmbed puder complementar a legenda
+    if (isInstagram && !result.description) {
+      try {
+        const instaOembedUrl = `https://www.instagram.com/oembed/?url=${encodeURIComponent(url)}`;
+        const oRes = await fetch(instaOembedUrl, { headers });
+        if (oRes.ok) {
+          const oJson = await oRes.json();
+          result.title = result.title || oJson.title || '';
+          result.description = result.description || oJson.title || '';
+          result.imageUrl = result.imageUrl || oJson.thumbnail_url || '';
+        }
+      } catch (iErr) {}
     }
 
     // Se encontramos uma URL direta de MP4, tentamos baixar o buffer
