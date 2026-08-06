@@ -201,8 +201,7 @@
             const platform = isInstagram ? 'Instagram Reels' : 'TikTok';
             addLog(`Dominio reconhecido: ${platform} (Vercel Serverless Backend)`, "info");
             
-            showToast(`📲 Sua receita está sendo baixada, te enviaremos uma notificação quando estiver pronta!`, 6000);
-            showLoading(`📲 Processando ${platform}...`, "Sua receita está sendo baixada. Te enviaremos uma notificação assim que estiver pronta!", false);
+            showLoading(`Analisando vídeo do ${platform}... 🤖`, "O Gemini está assistindo e extraindo os ingredientes, modo de preparo, tempo e valores nutricionais...");
 
             extractedRecipe = await extractRecipeFromVercelServer(url);
             addLog(`Extração via Vercel Backend concluída com sucesso!`, "success");

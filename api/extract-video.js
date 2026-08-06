@@ -36,29 +36,46 @@ export default async function handler(req, res) {
     const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite' });
 
     const systemPrompt = `
-Você é um assistente culinário especialista. Sua tarefa é analisar ESTRITAMENTE o conteúdo da legenda/texto/vídeo fornecido do Instagram ou TikTok e extrair a receita em formato JSON.
+Você é um chef especialista e nutricionista. Analise ESTRITAMENTE o vídeo ou texto do Instagram/TikTok fornecido e extraia a receita completa com todos os detalhes.
 
-Responda APENAS com um objeto JSON válido no seguinte esquema:
+Retorne APENAS um objeto JSON válido (sem markdown, sem backticks) exatamente neste formato:
 
 {
   "title": "Nome exato da receita",
-  "category": "Sobremesas | Almoço & Jantar | Lanches & Salgados | Bebidas & Drinks | Saudável | Outros",
-  "prepTime": "15 min",
-  "cookTime": "30 min",
-  "servings": "4 porções",
+  "subtitle": "Descrição curta e apetitosa em uma linha",
+  "cuisine": "Brasileira",
+  "difficulty": "Médio",
+  "categories": ["Sobremesa"],
+  "tags": ["Doce"],
+  "prepTime": 15,
+  "cookTime": 30,
+  "totalTime": 45,
+  "servings": 4,
   "ingredients": [
-    "Ingrediente 1 extraído do texto",
-    "Ingrediente 2 extraído do texto"
+    {"item": "nome do ingrediente", "amount": "quantidade de medida"}
   ],
   "steps": [
-    "Passo 1 extraído do texto",
-    "Passo 2 extraído do texto"
+    "Descrição do primeiro passo...",
+    "Descrição do segundo passo..."
   ],
+  "nutrition": {
+    "calories": "350 kcal",
+    "protein": "28g",
+    "carbs": "30g",
+    "fat": "12g"
+  },
   "imageUrl": "${mediaData.imageUrl || ''}",
   "videoUrl": "${url}"
 }
 
-REGRA DE SEGURANÇA ABSOLUTA: Extraia apenas os ingredientes e passos presentes no conteúdo fornecido. Nunca invente ingredientes de bolo de chocolate ou qualquer receita diferente se o texto fornecido não for sobre isso.
+Regras Estritas:
+1. FIDELIDADE ABSOLUTA: Seja extremamente fiel ao vídeo/texto. NÃO invente receitas de bolo de chocolate ou qualquer outra se o post não contiver uma receita clara.
+2. SE NÃO FOR UMA RECEITA OU NÃO HOUVER INFORMAÇÕES SUFICIENTES: Retorne EXATAMENTE o JSON: {"error": "Não foi possível extrair os ingredientes e o modo de preparo desta publicação."}
+3. cuisine: use uma de: Brasileira, Italiana, Japonesa, Mexicana, Francesa, Tailandesa, Americana, Indiana, Espanhola, Grega, Saudável, Outras
+4. difficulty: Fácil, Médio ou Difícil
+5. categories: use uma ou mais de: Café da Manhã, Almoço, Lanche, Jantar, Sobremesa, Acompanhamento
+6. ingrediente deve ter "item" (nome) e "amount" (quantidade) separados.
+7. Estime valores realistas de nutrição (calories, protein, carbs, fat) com base nos ingredientes.
 `;
 
     let result;
