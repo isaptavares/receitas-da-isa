@@ -80,6 +80,28 @@ export async function extractRecipeFromText(text) {
   return callGemini(body);
 }
 
+export async function extractRecipeFromVercelServer(videoUrl) {
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const apiUrl = isLocal ? '/api/extract-video' : 'https://receitas-da-isa.vercel.app/api/extract-video';
+
+  const response = await fetch(apiUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      url: videoUrl,
+      apiKey: GEMINI_KEY
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.error || `Erro ${response.status} ao conectar à API Vercel`);
+  }
+
+  return data.recipe;
+}
+
 async function callGemini(body) {
   const response = await fetch(GEMINI_URL, {
     method: 'POST',

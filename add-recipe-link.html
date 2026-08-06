@@ -111,7 +111,7 @@
   <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/recipes.js?v=7"></script>
   <script type="module">
-    import { extractRecipeFromYouTube, extractRecipeFromText, extractRecipeFromFile, saveUserRecipe } from './js/user-recipes.js';
+    import { extractRecipeFromYouTube, extractRecipeFromText, extractRecipeFromFile, saveUserRecipe, extractRecipeFromVercelServer } from './js/user-recipes.js';
     import { getUser, authReady } from './js/auth.js';
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -196,32 +196,16 @@
             );
             addLog("Extração nativa do YouTube concluída com sucesso!", "success");
           }
-          // IF 2: Instagram ou TikTok (Downloader + IA Assistindo ao MP4 / Legenda)
+          // IF 2: Instagram ou TikTok (Vercel Serverless Backend)
           else if (isInstagram || isTikTok) {
             const platform = isInstagram ? 'Instagram Reels' : 'TikTok';
-            addLog(`Dominio reconhecido: ${platform}`, "info");
-            showLoading(`Obtendo vídeo do ${platform}...`, "Baixando o conteúdo para a IA analisar...");
+            addLog(`Dominio reconhecido: ${platform} (Vercel Serverless Backend)`, "info");
+            
+            showToast(`📲 Sua receita está sendo baixada, te enviaremos uma notificação quando estiver pronta!`, 6000);
+            showLoading(`📲 Processando ${platform}...`, "Sua receita está sendo baixada. Te enviaremos uma notificação assim que estiver pronta!", false);
 
-            const videoResult = await withTimeout(
-              fetchVideoBlobOrText(url),
-              45000,
-              'Não foi possível obter o vídeo das redes sociais.'
-            );
-
-            if (videoResult.isRecipeObject) {
-              addLog("Receita extraída diretamente via texto/legenda!", "success");
-              extractedRecipe = videoResult.data;
-            } else {
-              addLog(`Arquivo MP4 obtido (${(videoResult.blob.size / 1024 / 1024).toFixed(2)} MB). Enviando para o Gemini assistir...`, "info");
-              showLoading("Analisando vídeo com Inteligência Artificial... 🤖", "O Gemini está assistindo ao vídeo e extraindo os ingredientes e o passo a passo...");
-              const base64Data = await blobToBase64(videoResult.blob);
-              extractedRecipe = await withTimeout(
-                extractRecipeFromFile(base64Data, 'video/mp4'),
-                55000,
-                'O Gemini demorou muito para analisar o arquivo de vídeo.'
-              );
-              addLog("O Gemini assistiu ao MP4 e gerou a receita com sucesso!", "success");
-            }
+            extractedRecipe = await extractRecipeFromVercelServer(url);
+            addLog(`Extração via Vercel Backend concluída com sucesso!`, "success");
           }
           // Fallback para outros links de vídeo
           else {
