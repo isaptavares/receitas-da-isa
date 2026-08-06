@@ -107,8 +107,8 @@ Regras Estritas:
         result = await model.generateContent(contentPrompt);
       }
     } else {
-      console.log(`[Vercel Serverless] Enviando metadados e legenda para o Gemini...`);
-      const contentPrompt = `${systemPrompt}\n\nConteúdo extraído da postagem:\nTítulo/Legenda: ${mediaData.title || ''}\nDescrição Completa: ${mediaData.description || ''}\nURL do Post: ${url}`;
+      console.log(`[Vercel Serverless] Enviando metadados (e JSON-LD) para o Gemini...`);
+      const contentPrompt = `${systemPrompt}\n\nConteúdo extraído da postagem:\nTítulo/Legenda: ${mediaData.title || ''}\nDescrição Completa: ${mediaData.description || ''}\n\nDados Estruturados da Receita (JSON-LD):\n${mediaData.jsonLd || 'N/A'}\n\nTexto adicional extraído da página:\n${mediaData.rawParagraphs || 'N/A'}\n\nURL do Post: ${url}`;
       result = await model.generateContent(contentPrompt);
     }
 
@@ -265,6 +265,19 @@ async function fetchMediaFromUrl(url) {
 
         const title = extractMeta(html, 'og:title') || extractMeta(html, 'twitter:title') || '';
         let description = extractMeta(html, 'og:description') || extractMeta(html, 'twitter:description') || '';
+        
+        const ldMatches = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi);
+        if (ldMatches) {
+          result.jsonLd = ldMatches.map(m => {
+            const match = m.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i);
+            return match ? match[1].trim() : '';
+          }).join('\n\n');
+        }
+        
+        const pMatches = html.match(/<(p|li)[^>]*>([\s\S]*?)<\/\1>/gi);
+        if (pMatches) {
+          result.rawParagraphs = pMatches.map(m => m.replace(/<[^>]+>/g, '').trim()).join('\n').replace(/\s+/g, ' ').substring(0, 3000);
+        }
 
         // 1. Extração direta de vídeo MP4 do JSON do Instagram (video_url)
         const videoUrlMatch = html.match(/"video_url"\s*:\s*"([^"]+)"/);

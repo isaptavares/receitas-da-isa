@@ -256,39 +256,21 @@
       // ---- Importação de Site ----
       websiteBtn.addEventListener('click', async () => {
         const url = websiteInput.value.trim();
-        if (!url) {
-          showToast("⚠️ Por favor, insira o link do site de receitas.");
-          return;
-        }
+        if (!url) return showToast('Cole o link do site primeiro!');
+        if (!url.startsWith('http')) return showToast('Link inválido (deve começar com http ou https)');
 
-        disableControls(true);
-        addLog(`--- Iniciando processo de importação de site: ${url} ---`);
-        showLoading("Lendo site de receitas... 🌐", "Obtendo o conteúdo da página de forma segura...");
+        addLog(`Iniciando importação de site: ${url}`, "info");
+        showLoading("Lendo site de receitas... 🌐", "Extraindo metadados através do servidor...");
 
         try {
-          const pageData = await withTimeout(
-            fetchCleanTextFromWebsite(url),
-            45000,
-            'O carregamento do site demorou demais ou todos os proxies de conexão falharam.'
-          );
-
-          addLog(`Conteúdo do site lido (${pageData.text.length} caracteres). Enviando para o Gemini...`, "info");
-          showLoading("Analisando com Inteligência Artificial... 🤖", "O Gemini está interpretando os ingredientes e instruções do site...");
-
           const extractedRecipe = await withTimeout(
-            extractRecipeFromText(pageData.text),
-            35000,
-            'O Gemini demorou muito para interpretar o texto do site.'
+            extractRecipeFromVercelServer(url),
+            60000,
+            'O servidor demorou muito para responder ou não conseguiu extrair a receita.'
           );
 
           addLog(`Receita extraída do site: "${extractedRecipe.title}"`, "success");
           showLoading("Criando receita no Firestore...", "Salvando a receita na sua conta...");
-
-          const isPlaceholder = (imgUrl) => !imgUrl || imgUrl.includes('placeholder') || imgUrl.includes('unsplash') || imgUrl.trim() === '';
-          const finalCover = (!isPlaceholder(pageData.imageUrl) ? pageData.imageUrl : null) || "images/placeholder_recipe.png";
-          
-          extractedRecipe.image = finalCover;
-          extractedRecipe.imageUrl = finalCover;
 
           const savedId = await withTimeout(
             saveUserRecipe(extractedRecipe),
