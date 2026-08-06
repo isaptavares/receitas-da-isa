@@ -50,6 +50,7 @@ Regras:
 - cuisine: use uma de: Brasileira, Italiana, Japonesa, Mexicana, Francesa, Tailandesa, Americana, Indiana, Espanhola, Grega
 - difficulty: Fácil, Médio ou Difícil
 - categories: use uma ou mais de: Café da Manhã, Almoço, Lanche, Jantar, Sobremesa, Acompanhamento
+- tags: use APENAS uma ou mais das seguintes tags permitidas: "1 Panela", "Dia a Dia", "Falta Checar", "Fritura", "Gostosão", "Pouco Calórico", "Proteico", "Saudável". Proibido criar qualquer tag fora desta lista.
 - Transcreva fielmente as instruções originais do modo de preparo dividindo em passos claros
 - SEMPRE inclua estimativas de macronutrientes, estimando de forma realista apenas com base nos ingredientes fornecidos na receita
 - Os ingredientes devem ter item e amount separados

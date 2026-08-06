@@ -46,7 +46,7 @@ Retorne APENAS um objeto JSON válido (sem markdown, sem backticks) exatamente n
   "cuisine": "Brasileira",
   "difficulty": "Médio",
   "categories": ["Sobremesa"],
-  "tags": ["Doce"],
+  "tags": ["Saudável"],
   "prepTime": 15,
   "cookTime": 30,
   "totalTime": 45,
@@ -73,9 +73,10 @@ Regras Estritas:
 2. SE NÃO FOR UMA RECEITA OU NÃO HOUVER INFORMAÇÕES SUFICIENTES: Retorne EXATAMENTE o JSON: {"error": "Não foi possível extrair os ingredientes e o modo de preparo desta publicação."}
 3. cuisine: use uma de: Brasileira, Italiana, Japonesa, Mexicana, Francesa, Tailandesa, Americana, Indiana, Espanhola, Grega, Saudável, Outras
 4. difficulty: Fácil, Médio ou Difícil
-5. categories: use uma ou mais de: Café da Manhã, Almoço, Lanche, Jantar, Sobremesa, Acompanhamento
-6. ingrediente deve ter "item" (nome) e "amount" (quantidade) separados.
-7. Estime valores realistas de nutrição (calories, protein, carbs, fat) com base nos ingredientes.
+5. categories: use APENAS uma ou mais de: Café da Manhã, Almoço, Lanche, Jantar, Sobremesa, Acompanhamento
+6. tags: use APENAS uma ou mais das seguintes tags permitidas: ["1 Panela", "Dia a Dia", "Falta Checar", "Fritura", "Gostosão", "Pouco Calórico", "Proteico", "Saudável"]. PROIBIDO criar ou inventar qualquer tag fora desta lista.
+7. ingrediente deve ter "item" (nome) e "amount" (quantidade) separados.
+8. Estime valores realistas de nutrição (calories, protein, carbs, fat) com base nos ingredientes.
 `;
 
     let result;
@@ -119,6 +120,14 @@ Regras Estritas:
         success: false,
         error: recipeData.error || 'A legenda deste vídeo não contém a receita detalhada.'
       });
+    }
+
+    // Filtragem Estrita de Tags Permitidas
+    const ALLOWED_TAGS = ['1 Panela', 'Dia a Dia', 'Falta Checar', 'Fritura', 'Gostosão', 'Pouco Calórico', 'Proteico', 'Saudável'];
+    if (Array.isArray(recipeData.tags)) {
+      recipeData.tags = recipeData.tags.filter(t => ALLOWED_TAGS.includes(t));
+    } else {
+      recipeData.tags = [];
     }
 
     // Garantir valores padrão caso algum campo falhe
