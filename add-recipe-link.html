@@ -191,8 +191,8 @@
             showLoading("Analisando vídeo no YouTube... 🎥", "O Gemini está assistindo e extraindo a receita do vídeo...");
             extractedRecipe = await withTimeout(
               extractRecipeFromYouTube(url),
-              45000,
-              'A IA demorou muito para responder sobre o vídeo do YouTube.'
+              120000,
+              'A IA demorou mais de 2 minutos para responder sobre o vídeo do YouTube.'
             );
             addLog("Extração nativa do YouTube concluída com sucesso!", "success");
           }
