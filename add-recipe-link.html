@@ -217,7 +217,10 @@
 
       // ---- Importação de Vídeo (YouTube, Instagram ou TikTok) ----
       youtubeBtn.addEventListener('click', async () => {
-        const url = youtubeInput.value.trim();
+        let rawUrl = youtubeInput.value.trim();
+        let match = rawUrl.match(/https?:\/\/[^\s]+/);
+        const url = match ? match[0] : rawUrl;
+        
         if (!url) {
           showToast("⚠️ Por favor, insira a URL de um vídeo (YouTube, Instagram ou TikTok).");
           return;
@@ -312,7 +315,10 @@
 
       // ---- Importação de Site ----
       websiteBtn.addEventListener('click', async () => {
-        const url = websiteInput.value.trim();
+        let rawUrl = websiteInput.value.trim();
+        let match = rawUrl.match(/https?:\/\/[^\s]+/);
+        const url = match ? match[0] : rawUrl;
+        
         if (!url) return showToast('Cole o link do site primeiro!');
         if (!url.startsWith('http')) return showToast('Link inválido (deve começar com http ou https)');
 
