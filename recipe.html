@@ -291,45 +291,85 @@
 <body>
 
   <!-- ===== NAVBAR ===== -->
-  <nav class="navbar" id="navbar" aria-label="Navegação principal">
-    <a class="nav-logo" href="index.html" aria-label="Receitas da Isa - Início">
-      <span class="nav-logo-icon">🍴</span>
-      <span class="nav-logo-text">
-        Receitas da Isa
-        <em class="nav-logo-sub">sabores do mundo</em>
-      </span>
+  <header class="navbar" id="navbar" style="display:flex; align-items:center; gap:32px; padding:20px 48px; border-bottom:1px solid #f0ebe3; position:sticky; top:0; background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); z-index:20">
+    <a href="index.html" class="nav-logo" style="display:flex; align-items:center; gap:12px">
+      <div style="width:40px; height:40px; border-radius:13px; background:#ffbf00; display:flex; align-items:center; justify-content:center">
+        <div style="width:14px; height:14px; border-radius:50%; background:#14110d"></div>
+      </div>
+      <div style="display:flex; flex-direction:column; line-height:1">
+        <span style="font-size:19px; font-weight:800; letter-spacing:-0.02em; color:#14110d">Receitas da Isa</span>
+        <span style="font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:#a39a8c; margin-top:4px">sabores do mundo</span>
+      </div>
     </a>
-    <ul class="nav-links" role="list">
-      <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
-      <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
-      <li><a class="nav-link" href="planner.html" id="nav-planner"><span class="nav-link-icon">📅</span> <span>Planejador</span></a></li>
-      <li><button class="nav-link nav-inbox-btn" onclick="openInboxModal(event)" type="button" id="nav-inbox" title="Receitas Recebidas"><span class="nav-link-icon">📩</span> <span>Recebidas</span> <span class="nav-inbox-badge" id="inbox-badge" style="display:none;">0</span></button></li>
-      <li id="nav-auth-container">
-        <button class="nav-login-btn" id="login-btn">
-          <span>🔑</span> <span>Entrar</span>
-        </button>
-      </li>
+    <ul class="nav-links" role="list" style="display:flex; align-items:center; gap:28px; margin-left:16px; flex-shrink:0">
+      <li><a href="index.html" id="nav-home" style="font-size:15px; font-weight:600; color:#6b6459; text-decoration:none">Início</a></li>
+      <li><a href="favorites.html" id="nav-favs" style="font-size:15px; font-weight:600; color:#6b6459; text-decoration:none">Favoritas</a></li>
+      <li><a href="planner.html" id="nav-planner" style="font-size:15px; font-weight:600; color:#6b6459; text-decoration:none">Planejador</a></li>
+      <li><button class="nav-inbox-btn" onclick="openInboxModal(event)" id="nav-inbox" type="button" style="font-size:15px; font-weight:600; color:#6b6459; display:flex; align-items:center; gap:7px; cursor:pointer; background:none; border:none; padding:0; font-family:inherit;">Recebidas
+        <span class="nav-inbox-badge" id="inbox-badge" style="background:#f4efe6; color:#6b6459; font-size:12px; font-weight:700; border-radius:20px; padding:2px 8px; display:none;">0</span>
+      </button></li>
     </ul>
-  </nav>
+    <div style="flex:1"></div>
+    <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-shrink:1">
+      <div style="display:flex; align-items:center; gap:10px; background:#f7f4ee; border-radius:999px; padding:10px 18px; flex:0 1 260px; min-width:44px; overflow:hidden">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;"><circle cx="6.5" cy="6.5" r="4.5" stroke="#ffbf00" stroke-width="2.2"/><path d="M10 10L14 14" stroke="#ffbf00" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <input placeholder="Procurar receitas..." style="border:none; background:transparent; outline:none; font-family:inherit; font-size:14px; font-weight:500; width:100%; color:#14110d" onkeydown="if(event.key==='Enter'){ window.location='index.html?q='+encodeURIComponent(this.value); }" />
+      </div>
+      <div id="nav-auth-container">
+        <button class="nav-login-btn" id="login-btn" style="background:#14110d; color:#fff; font-size:14px; font-weight:700; padding:12px 22px; border-radius:999px; flex-shrink:0; cursor:pointer; border:none;">Entrar</button>
+      </div>
+    </div>
+  </header>
 
-  <!-- Main content injected below by JS -->
   <main id="recipe-main">
     <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;">
       <div class="loading-spinner" aria-label="Carregando receita..."></div>
     </div>
   </main>
 
+
   <!-- ===== FOOTER ===== -->
-  <footer>
-    <span class="footer-logo">🍴 Receitas da Isa</span>
-    <span class="footer-copy">Feito com <span>♥</span> e muito sabor • 2026</span>
+    <footer class="site-footer">
+    <div style="display:flex; align-items:center; gap:12px">
+      <div style="width:30px; height:30px; border-radius:10px; background:#ffbf00; display:flex; align-items:center; justify-content:center"><div style="width:10px; height:10px; border-radius:50%; background:#14110d"></div></div>
+      <span style="font-size:15px; font-weight:800; color:#14110d">Receitas da Isa</span>
+    </div>
+    <span style="font-size: 14px; color: #a39a8c; font-weight: 500;">Feito com <span style="color:#ffbf00">♥</span> e muito sabor • 2026</span>
   </footer>
 
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
   <script type="module" src="js/auth.js"></script>
-  <script type="module" src="js/recipes.js?v=7"></script>
+  <script type="module" src="js/recipes.js?v=11"></script>
+  <style>
+    .idv-step-item {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      border-radius: 20px;
+      border: 2px solid #ece5d9;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #fff;
+    }
+    .idv-step-item:hover {
+      border-color: #d1c8b8;
+    }
+    .idv-step-item.completed {
+      border-color: #2f8f7d;
+      background: rgba(47, 143, 125, 0.05);
+    }
+    .idv-step-item.completed .step-num {
+      background: #2f8f7d !important;
+      color: #fff !important;
+    }
+    .idv-step-item.completed p {
+      color: #6b6459 !important;
+      text-decoration: line-through;
+    }
+  </style>
   <script type="module">
+    
     // =============================================
     // RECIPE DETAIL PAGE CONTROLLER
     // =============================================
@@ -342,67 +382,10 @@
     let globalRecipe = null;
     let currentServings = 1;
 
-    function renderIngredientsList() {
-      if (!globalRecipe) return '';
-      
-      return globalRecipe.ingredients.map(ing => {
-        // Suporte para ingredientes como string simples (formato antigo) e objetos {item, amount}
-        const isObj = typeof ing === 'object' && ing !== null;
-        const name = isObj ? (ing.item || '') : ing;
-        const rawAmount = isObj ? (ing.amount || '') : '';
-
-        let scaledAmount = rawAmount;
-        
-        if (rawAmount) {
-          // Extract numbers at the beginning (ex: "200g", "2", "1.5 xícaras")
-          const match = rawAmount.match(/^([\d.,]+)\s*(.*)$/);
-          if (match) {
-             let numText = match[1].replace(',', '.');
-             let num = parseFloat(numText);
-             if (!isNaN(num)) {
-               let scaledNum = num * currentServings;
-               // Round to max 1 decimal place to avoid long fractions
-               scaledNum = Math.round(scaledNum * 10) / 10;
-               let scaledStr = scaledNum.toString().replace('.', ',');
-               scaledAmount = `${scaledStr} ${match[2]}`.trim();
-             }
-          }
-        }
-
-        return `
-        <li class="ingredient-item">
-          <span class="ingredient-name">${name}</span>
-          ${scaledAmount ? `<span class="ingredient-amount">${scaledAmount}</span>` : ''}
-        </li>`;
-      }).join('');
-    }
-
-    function updateServings(delta) {
-      if (!globalRecipe) return;
-      const newServings = currentServings + delta;
-      if (newServings < 1) return; // Minimum 1 serving
-      
-      currentServings = newServings;
-      
-      // Update DOM
-      document.getElementById('serving-count-display').textContent = currentServings;
-      document.getElementById('sig-ingredient-list').innerHTML = renderIngredientsList();
-      
-      // Dynamically update yield text if it exists
-      const yieldText = document.getElementById('yield-display');
-      if (yieldText) {
-        const totalYield = currentServings * globalRecipe.servings;
-        if (currentServings === 1) {
-          yieldText.textContent = `1 receita rende ${totalYield} porções`;
-        } else {
-          yieldText.textContent = `${currentServings} receitas rendem ${totalYield} porções`;
-        }
-      }
-    }
-
+    
     function renderRecipePage(recipe) {
       globalRecipe = recipe;
-      currentServings = 1; // Default to 1 recipe
+      currentServings = 1; // Default to 1 recipe multiplier
 
       const fav = isFavorite(recipe.id);
       const meta = getCuisineMeta(recipe.cuisine);
@@ -410,18 +393,18 @@
 
       // Update meta
       document.title = `${recipe.title} — Receitas da Isa`;
-      document.getElementById('meta-desc').setAttribute('content', recipe.subtitle);
+      document.getElementById('meta-desc').setAttribute('content', recipe.subtitle || '');
 
-      const tagsHtml = (recipe.tags || []).map(t =>
-        `<span class="recipe-detail-tag">${t}</span>`
+      const categoriesHtml = (recipe.categories || []).map(c =>
+        `<span style="background:#fff0f3; color:#c72a50; border-radius:999px; padding:7px 15px; font-size:12px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase">${c}</span>`
       ).join('');
 
-      // Steps
-      const stepsHtml = recipe.steps.map((step, i) => `
-        <li class="step-item" onclick="this.classList.toggle('completed')" style="cursor:pointer;">
-          <span class="step-number">${i + 1}</span>
-          <p class="step-text">${step}</p>
-        </li>`).join('');
+      const tagsHtml = (recipe.tags || []).map(t =>
+        `<span style="background:#e6f2ef; color:#1f6b5c; border-radius:999px; padding:7px 15px; font-size:12px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase">${t}</span>`
+      ).join('');
+      
+      const safeTitle = (recipe.title || '').replace(/'/g, "\'");
+      const safeImage = recipe.image || '';
 
       const n = recipe.nutrition || {
         calories: recipe.calories || 0,
@@ -429,154 +412,370 @@
         carbs: "0g",
         fat: "0g"
       };
-      
-      const calcVD = (val, max) => {
-        const num = parseFloat(String(val).replace(/[^0-9.]/g, '')) || 0;
-        return Math.round((num / max) * 100);
-      };
 
-      let nutritionHtml = `
-        <div class="nutrition-item">
-          <div class="nutrition-value">${n.calories}</div>
-          <div class="nutrition-label">Calorias</div>
-          <div class="nutrition-vd">${calcVD(n.calories, 2000)}% VD</div>
-        </div>
-        <div class="nutrition-item">
-          <div class="nutrition-value">${n.protein}</div>
-          <div class="nutrition-label">Proteína</div>
-          <div class="nutrition-vd">${calcVD(n.protein, 50)}% VD</div>
-        </div>
-        <div class="nutrition-item">
-          <div class="nutrition-value">${n.carbs}</div>
-          <div class="nutrition-label">Carboidratos</div>
-          <div class="nutrition-vd">${calcVD(n.carbs, 275)}% VD</div>
-        </div>
-        <div class="nutrition-item">
-          <div class="nutrition-value">${n.fat}</div>
-          <div class="nutrition-label">Gorduras</div>
-          <div class="nutrition-vd">${calcVD(n.fat, 78)}% VD</div>
-        </div>
-      `;
-      if (n.fiber) {
-        nutritionHtml += `
-        <div class="nutrition-item" style="grid-column: span 2;">
-          <div class="nutrition-value">${n.fiber}</div>
-          <div class="nutrition-label">Fibras</div>
-          <div class="nutrition-vd">${calcVD(n.fiber, 28)}% VD</div>
-        </div>`;
-      }
+      const rawCal = n.calories || recipe.calories || '0';
+      const cleanCalories = String(rawCal).replace(/kcal/gi, '').replace(/cal/gi, '').trim();
 
       const refPage = document.referrer && document.referrer.includes('favorites') ? 'favorites.html' : 'index.html';
-      const backLabel = document.referrer && document.referrer.includes('favorites') ? '← Voltar às favoritas' : '← Voltar às receitas';
 
       document.getElementById('recipe-main').innerHTML = `
         <article class="recipe-page" aria-label="${recipe.title}">
-
-          <!-- HERO -->
-          <div class="recipe-hero">
-            <img class="recipe-hero-img" src="${recipe.image}" alt="${recipe.title}">
-            <div class="recipe-hero-overlay" aria-hidden="true"></div>
-            <div class="recipe-hero-content">
-              <div class="recipe-detail-cuisine">
-                <span>${meta.flag}</span> ${recipe.cuisine}
-              </div>
-              <h1 class="recipe-detail-title">${recipe.title}</h1>
-              <p class="recipe-detail-subtitle">${recipe.subtitle}</p>
-
-              <div class="recipe-detail-meta">
-                ${recipe.prepTime ? `<span class="recipe-meta-pill">⏱ <strong>${recipe.prepTime} min</strong> preparo</span>` : ''}
-                ${recipe.cookTime ? `<span class="recipe-meta-pill">🔥 <strong>${recipe.cookTime} min</strong> cozimento</span>` : ''}
-                ${recipe.totalTime ? `<span class="recipe-meta-pill">⏳ <strong>${recipe.totalTime} min</strong> total</span>` : ''}
-                <span class="recipe-meta-pill">👤 <strong>${recipe.servings}</strong> porções</span>
-                <span class="recipe-meta-pill card-difficulty ${diffClass}" style="padding:0.3rem 0.8rem;">${recipe.difficulty}</span>
-              </div>
-
-              <div class="recipe-detail-tags">${tagsHtml}</div>
-
-              <div class="recipe-detail-actions">
-                <button class="btn btn-primary" id="detail-fav-btn"
-                        onclick="handleDetailFav('${recipe.id}')"
-                        aria-label="${fav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
-                  ${fav ? '♥ Nas suas favoritas' : '♡ Adicionar aos favoritos'}
-                </button>
-                <button class="btn btn-outline" id="detail-planner-btn"
-                        onclick="handleAddPlanner('${recipe.id}')"
-                        aria-label="Adicionar ao Planejador">
-                  <span>📅</span> Adicionar ao Planejador
-                </button>
-                <button class="btn btn-outline" onclick="openShareModal('${recipe.id}', '${(recipe.title || '').replace(/'/g, "\\'")}', '${recipe.image || ''}')" id="share-btn" aria-label="Compartilhar receita">
-                  <span>📤</span> Compartilhar
-                </button>
-                <a href="add-recipe-manual.html?edit=${recipe.id}" class="btn btn-outline" id="detail-edit-btn" title="Editar Receita">
-                  <span>✏️</span> Editar
-                </a>
-                <button class="btn btn-outline" id="detail-delete-btn" onclick="handleDetailDelete('${recipe.id}', '${(recipe.title || '').replace(/'/g, "\\'")}')" title="Excluir Receita" style="color: var(--clr-terracotta); border-color: rgba(192, 97, 74, 0.35);">
-                  <span>🗑️</span> Excluir
-                </button>
-              </div>
+          <section style="max-width:1280px; margin:0 auto; padding:40px 48px 0">
+            <div style="display:flex; align-items:center; gap:10px; font-size:13px; font-weight:600; color:#a39a8c; margin-bottom:26px">
+              <a href="index.html" style="color:#a39a8c; text-decoration:none">Início</a><span>/</span><span style="color:#14110d">${recipe.title}</span>
             </div>
-          </div>
 
-          <!-- BODY GRID -->
-          <div class="recipe-body">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start">
+              <div>
+                <div style="display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap">
+                  <span style="background:#fff6d9; color:#8a6a00; border-radius:999px; padding:7px 15px; font-size:12px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase">${recipe.cuisine || 'Geral'}</span>
+                  ${categoriesHtml}
+                  ${tagsHtml}
+                </div>
+                <h1 style="margin:0; font-size:58px; font-weight:800; letter-spacing:-0.035em; line-height:1.02; text-wrap:balance">${recipe.title}</h1>
+                <p style="margin:20px 0 0; font-size:18px; line-height:1.6; color:#6b6459; text-wrap:pretty">${recipe.subtitle || ''}</p>
 
-            <!-- COLUMN 1: Ingredients -->
-            <div class="recipe-col-ingredients">
-              <button class="back-btn" onclick="window.location='${refPage}'" id="back-btn">
-                ← Voltar
-              </button>
-
-              <div class="recipe-panel">
-                <div class="recipe-panel-title" style="display:flex; justify-content:space-between; align-items:center;">
-                  <div>🥄 Ingredientes</div>
-                  <div class="serving-controls" style="display:flex; align-items:center; gap:0.8rem; background: var(--clr-surface-2); padding: 0.2rem 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--clr-border);">
-                    <button onclick="updateServings(-1)" style="color:var(--clr-gold); font-size:1.2rem; cursor:pointer;" aria-label="Diminuir porções">−</button>
-                    <span id="serving-count-display" style="font-weight:700; color:var(--clr-text); min-width: 14px; text-align:center; font-family: var(--font-body); font-size: 0.9rem;">${currentServings}</span>
-                    <button onclick="updateServings(1)" style="color:var(--clr-gold); font-size:1.2rem; cursor:pointer;" aria-label="Aumentar porções">+</button>
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#f0ebe3; border:1px solid #f0ebe3; border-radius:20px; overflow:hidden; margin-top:32px">
+                  <div style="background:#fff; padding:20px 18px">
+                    <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Tempo</div>
+                    <div style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em">${recipe.totalTime || recipe.prepTime || '-'} min</div>
+                  </div>
+                  <div style="background:#fff; padding:20px 18px">
+                    <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Dificul.</div>
+                    <div style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em">${recipe.difficulty || '-'}</div>
+                  </div>
+                  <div style="background:#fff; padding:20px 18px">
+                    <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Rendim.</div>
+                    <div style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em" id="meta-rendimento">${currentServings * (parseInt(recipe.servings, 10) || 1)} porç.</div>
+                  </div>
+                  <div style="background:#fff; padding:20px 18px">
+                    <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Calorias</div>
+                    <div style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em">${cleanCalories ? cleanCalories + ' kcal' : '-'}</div>
                   </div>
                 </div>
-                <div id="yield-display" style="font-size: 0.8rem; color: var(--clr-text-dim); margin-top: 0.2rem; margin-bottom: 1rem; font-style: italic;">
-                  1 receita rende ${recipe.servings} porções
+
+                <div style="display:flex; gap:12px; margin-top:28px; flex-wrap:wrap">
+                  <button id="detail-fav-btn" data-fav="${fav?'true':'false'}" onclick="handleDetailFav('${recipe.id}')" style="background:${fav?'#ffbf00':'#fff'}; border:${fav?'2px solid #ffbf00':'2px solid #e5ded2'}; font-family:inherit; color:#14110d; font-size:15px; font-weight:${fav?'800':'700'}; padding:14px 26px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:10px; transition:all 0.3s" onmouseover="if(this.getAttribute('data-fav')!=='true') this.style.borderColor='#ffbf00'" onmouseout="if(this.getAttribute('data-fav')!=='true') this.style.borderColor='#e5ded2'">
+                    <svg width="17" height="17" viewBox="0 0 18 18" fill="${fav?'#14110d':'none'}" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 15S3 11.4 3 7.6A2.9 2.9 0 0 1 9 6a2.9 2.9 0 0 1 6 1.6C15 11.4 9 15 9 15Z"></path></svg>
+                    <span id="fav-text">${fav ? 'Favoritada' : 'Favoritar'}</span>
+                  </button>
+                  <a href="add-recipe-manual.html?edit=${recipe.id}" style="background:#fff; border:2px solid #e5ded2; color:#14110d; text-decoration:none; font-family:inherit; font-size:15px; font-weight:700; padding:14px 26px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:10px" onmouseover="this.style.borderColor='#ffbf00'" onmouseout="this.style.borderColor='#e5ded2'">
+                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M11.6 3.9l2.5 2.5M4 14h2.6l7.5-7.5-2.6-2.6L4 11.4V14Z"></path></svg>Editar
+                  </a>
+                  <button id="detail-delete-btn" onclick="handleDetailDelete('${recipe.id}', '${safeTitle}')" style="background:#fff; border:2px solid #e5ded2; font-family:inherit; font-size:15px; font-weight:700; color:#14110d; padding:14px 26px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:10px" onmouseover="this.style.borderColor='#ffbf00'" onmouseout="this.style.borderColor='#e5ded2'">
+                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.6 5.4h10.8M7.4 5.4V3.8h3.2v1.6M5.4 5.4l.7 8.4h5.8l.7-8.4"></path></svg>Apagar
+                  </button>
+                  <button id="detail-planner-btn" onclick="openPlannerModal('${recipe.id}')" style="background:#fff; border:2px solid #e5ded2; font-family:inherit; font-size:15px; font-weight:700; color:#14110d; padding:14px 26px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:10px" onmouseover="this.style.borderColor='#ffbf00'" onmouseout="this.style.borderColor='#e5ded2'">
+                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.4 5.4h11.2v9.2H3.4zM3.4 8h11.2M6.4 3.4v2M11.6 3.4v2M9 10v3M7.5 11.5h3"></path></svg>Planejador
+                  </button>
+                  <button onclick="openShareModal('${recipe.id}', '${safeTitle}', '${safeImage}')" style="background:#fff; border:2px solid #e5ded2; font-family:inherit; font-size:15px; font-weight:700; color:#14110d; padding:14px 26px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:10px" onmouseover="this.style.borderColor='#ffbf00'" onmouseout="this.style.borderColor='#e5ded2'">
+                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12V3.6M9 3.6 6.2 6.4M9 3.6l2.8 2.8M4.2 10.4v3.4a.8.8 0 0 0 .8.8h8a.8.8 0 0 0 .8-.8v-3.4"></path></svg>Compartilhar
+                  </button>
                 </div>
-                <ul class="ingredient-list" id="sig-ingredient-list">${renderIngredientsList()}</ul>
+              </div>
+
+              <div style="position:relative; padding:0 0 96px">
+                <div style="position:absolute; top:-32px; right:-24px; width:220px; height:220px; border-radius:50%; background:#6b7ef0; opacity:0.15; z-index:0"></div>
+                <div style="position:absolute; top:120px; left:-40px; width:140px; height:140px; border-radius:0 100% 0 0; background:#7b4bd1; opacity:0.16; z-index:0"></div>
+                <div style="position:absolute; bottom:20px; right:-20px; width:170px; height:170px; border-radius:50% 50% 0 50%; background:#ffbf00; opacity:0.28; z-index:0"></div>
+                <div style="position:relative; z-index:1; margin:32px 40px 0 24px; border-radius:28px; overflow:hidden; aspect-ratio:1/1; background:repeating-linear-gradient(135deg,#f4efe6 0 12px,#efe8dc 12px 24px); display:flex; align-items:center; justify-content:center; box-shadow:0 28px 64px rgba(20,17,13,0.16)">
+                  ${recipe.image && recipe.image !== 'images/placeholder_recipe.png' ? `<img src="${recipe.image}" alt="${recipe.title}" style="width:100%; height:100%; object-fit:cover;">` : `<span style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#a39a8c">sem foto</span>`}
+                </div>
+                <div style="position:absolute; bottom:0; left:-24px; z-index:2; background:#fff; border-radius:24px; padding:22px 24px; width:320px; box-shadow:0 22px 54px rgba(20,17,13,0.18)">
+                  <div style="font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#6b7ef0">Nutrição</div>
+                  <div style="font-size:12px; color:#a39a8c; font-weight:500; margin-top:3px">Por porção</div>
+                  <div style="display:flex; align-items:center; gap:22px; margin-top:18px">
+                    <div style="width:92px; height:92px; border-radius:50%; background:conic-gradient(#ffbf00 0 42%, #2f8f7d 42% 74%, #6b7ef0 74% 100%); display:flex; align-items:center; justify-content:center; flex-shrink:0">
+                      <div style="width:70px; height:70px; border-radius:50%; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center">
+                        <span style="font-size:22px; font-weight:800; line-height:1">${cleanCalories || '0'}</span>
+                        <span style="font-size:9px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#a39a8c">kcal</span>
+                      </div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:10px">
+                      <div style="display:flex; align-items:center; gap:9px; font-size:14px; font-weight:600; color:#6b6459"><span style="width:9px; height:9px; border-radius:50%; background:#ffbf00"></span>Proteína <strong style="color:#14110d">${n.protein || '0g'}</strong></div>
+                      <div style="display:flex; align-items:center; gap:9px; font-size:14px; font-weight:600; color:#6b6459"><span style="width:9px; height:9px; border-radius:50%; background:#2f8f7d"></span>Carbo <strong style="color:#14110d">${n.carbs || '0g'}</strong></div>
+                      <div style="display:flex; align-items:center; gap:9px; font-size:14px; font-weight:600; color:#6b6459"><span style="width:9px; height:9px; border-radius:50%; background:#6b7ef0"></span>Gordura <strong style="color:#14110d">${n.fat || '0g'}</strong></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+          </section>
 
-            <!-- COLUMN 2: Steps -->
-            <div class="recipe-col-steps">
-              <h2 class="recipe-section-title">👨‍🍳 Modo de Preparo</h2>
-              <ol class="steps-list">${stepsHtml}</ol>
-            </div>
+          <section style="max-width:1280px; margin:0 auto; padding:64px 48px 0">
+            <div style="display:grid; grid-template-columns:0.65fr 1.35fr; gap:56px; align-items:start">
+              <div>
+                <div style="background:#f7f4ee; border-radius:26px; padding:28px">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px">
+                    <h2 style="margin:0; font-size:24px; font-weight:800; letter-spacing:-0.02em">Ingredientes</h2>
+                    <div style="display:flex; align-items:center; gap:10px; background:#fff; border-radius:999px; padding:6px 8px">
+                      <button onclick="updateServings(-1)" style="width:28px; height:28px; border-radius:50%; border:none; background:#fff6d9; color:#8a6a00; font-family:inherit; font-size:16px; font-weight:800; cursor:pointer; line-height:1">−</button>
+                      <span id="serving-count-display" style="font-size:14px; font-weight:800; min-width:64px; text-align:center">${currentServings}</span>
+                      <button onclick="updateServings(1)" style="width:28px; height:28px; border-radius:50%; border:none; background:#ffbf00; color:#14110d; font-family:inherit; font-size:16px; font-weight:800; cursor:pointer; line-height:1">+</button>
+                    </div>
+                  </div>
+                  <div id="yield-display" style="font-size:14px; font-style:italic; color:#a39a8c; margin-bottom:22px; padding-left:2px">
+                    1 receita rende ${recipe.servings || 1} porções
+                  </div>
+                  <div style="display:flex; flex-direction:column" id="sig-ingredient-list">
+                    ${renderIngredientsList()}
+                  </div>
+                </div>
+              </div>
 
-            <!-- COLUMN 3: Nutrition -->
-            <div class="recipe-col-nutrition">
-              <h2 class="recipe-section-title desktop-spacer" aria-hidden="true">&nbsp;</h2>
-              <div class="recipe-panel">
-                <div class="recipe-panel-title">📊 Informação Nutricional</div>
-                <div class="nutrition-grid">${nutritionHtml}</div>
-                <p style="font-size:0.7rem;color:var(--clr-text-dim);margin-top:0.8rem;text-align:center;">
-                  * Nutrição por 1 porção
-                </p>
+              <div>
+                <h2 style="margin:0 0 26px; font-size:32px; font-weight:800; letter-spacing:-0.025em">Modo de preparo</h2>
+                <div style="display:flex; flex-direction:column; gap:16px">
+                  ${(() => {
+                    let mainStepIndex = 0;
+                    const parsedSteps = [];
+                    let currentGroup = null;
+
+                    (recipe.steps || []).forEach(rawStep => {
+                      const stepStr = (rawStep || '').toString();
+                      const isSub = stepStr.startsWith('\t') || 
+                                    stepStr.startsWith('  ') || 
+                                    /^\d+\.\d+[\s\.]/.test(stepStr) || 
+                                    /^[a-z][\.\)]\s/i.test(stepStr);
+
+                      let cleanText = stepStr
+                        .replace(/^[\t\s]+/, '')
+                        .replace(/^\d+\.\d+[\s\.]*/, '')
+                        .replace(/^[a-z][\.\)]\s*/i, '');
+
+                      if (isSub && currentGroup) {
+                        currentGroup.subs.push(cleanText);
+                      } else {
+                        mainStepIndex++;
+                        currentGroup = { index: mainStepIndex, main: cleanText, subs: [] };
+                        parsedSteps.push(currentGroup);
+                      }
+                    });
+
+                    return parsedSteps.map(group => {
+                      const mainHtml = `
+                        <div class="idv-step-item" onclick="this.classList.toggle('completed')" style="display:flex; align-items:center; gap:16px; background:#fff; border:2px solid #ece5d9; border-radius:22px; padding:18px 24px; cursor:pointer; transition:all 0.25s; box-shadow:0 2px 8px rgba(0,0,0,0.02); z-index:2; position:relative;">
+                          <div class="step-num" style="width:40px; height:40px; border-radius:12px; background:#fff6d9; color:#8a6a00; font-size:16px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.3s">${group.index}</div>
+                          <p style="margin:0; font-size:17px; line-height:1.5; color:#14110d; font-weight:600; text-wrap:pretty; transition:all 0.3s">${group.main}</p>
+                        </div>
+                      `;
+
+                      if (group.subs.length === 0) return mainHtml;
+
+                      const subsHtml = group.subs.map((subText, i) => {
+                        const letter = String.fromCharCode(97 + (i % 26)); // a, b, c...
+                        return `
+                          <div style="position:relative; display:flex; align-items:center;">
+                            <!-- Card do subitem -->
+                            <div class="idv-step-item sub-step" onclick="this.classList.toggle('completed')" style="flex:1; display:flex; align-items:center; gap:14px; background:#f7f4ee; border:1.5px solid #ece5d9; border-radius:18px; padding:14px 20px; cursor:pointer; transition:all 0.25s; box-shadow:0 2px 6px rgba(0,0,0,0.01);">
+                              <div class="step-num" style="width:32px; height:32px; border-radius:10px; background:#fff; border:1.5px solid #ece5d9; color:#8a6a00; font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">${letter}</div>
+                              <p style="margin:0; font-size:16px; line-height:1.5; color:#2b2620; font-weight:500; text-wrap:pretty;">${subText}</p>
+                            </div>
+                          </div>
+                        `;
+                      }).join('');
+
+                      // SVG unificado desenhado no container do grupo
+                      const subCount = group.subs.length;
+                      return `
+                        <div style="display:flex; flex-direction:column; gap:12px;">
+                          ${mainHtml}
+                          <!-- Wrapper dos subitens com SVG Unificado de Árvore (tronco + curvas em vetor único) -->
+                          <div style="position:relative; margin-left:36px; padding-left:24px; display:flex; flex-direction:column; gap:12px;">
+                            <!-- Overlay SVG Unificado -->
+                            <div style="position:absolute; left:0; top:-12px; bottom:0; width:24px; pointer-events:none;">
+                              <svg width="24" height="100%" style="width:100%; height:100%; overflow:visible;">
+                                <!-- 1. Tronco vertical UNICO e CONTINUO (altura exata ate o centro da ultima curva) -->
+                                <line x1="1" y1="0" x2="1" y2="${(subCount - 1) * 74 + 32}" stroke="#6b6459" stroke-width="2" stroke-linecap="square" />
+
+                                <!-- 2. Ramos em curva L para cada subitem alinhados no centro exato do card (cada card = 62px + gap 12px = 74px) -->
+                                ${group.subs.map((_, i) => {
+                                  const centerY = i * 74 + 42; // Centro exato em Y de cada sub-card
+                                  return `<path d="M 1 ${centerY - 10} Q 1 ${centerY} 12 ${centerY} L 22 ${centerY}" fill="none" stroke="#6b6459" stroke-width="2" stroke-linecap="round" />`;
+                                }).join('')}
+                              </svg>
+                            </div>
+                            ${subsHtml}
+                          </div>
+                        </div>
+                      `;
+                    }).join('');
+                  })()}
+                </div>
               </div>
             </div>
-
-          </div>
-
+          </section>
         </article>
       `;
     }
 
+    function renderIngredientsList() {
+      if (!globalRecipe) return '';
+      const cleanPrepMethods = (str) => {
+        if (!str) return '';
+        return String(str)
+          .replace(/\b(cortad[ao]s?(\s+ao\s+meio|\s+em\s+[^\s,]+|\s+ao\s+comprido)?)\b/gi, '')
+          .replace(/\b(picad[ao]s?(\s+finamente|\s+bem|\s+em\s+[^\s,]+)?)\b/gi, '')
+          .replace(/\b(ralad[ao]s?(\s+bem|\s+no\s+ralo\s+[^\s,]+)?)\b/gi, '')
+          .replace(/\b(fatiad[ao]s?)\b/gi, '')
+          .replace(/\b(amassad[ao]s?)\b/gi, '')
+          .replace(/\b(derretid[ao]s?)\b/gi, '')
+          .replace(/\b(cozid[ao]s?)\b/gi, '')
+          .replace(/\b(desfiad[ao]s?)\b/gi, '')
+          .replace(/\b(moíd[ao]s?|moid[ao]s?)\b/gi, '')
+          .replace(/\b(grelhad[ao]s?)\b/gi, '')
+          .replace(/\b(descascad[ao]s?)\b/gi, '')
+          .replace(/\b(triturad[ao]s?)\b/gi, '')
+          .replace(/\b(refogad[ao]s?)\b/gi, '')
+          .replace(/\b(assad[ao]s?)\b/gi, '')
+          .replace(/\b(peneirad[ao]s?)\b/gi, '')
+          .replace(/\b(polvilhad[ao]s?)\b/gi, '')
+          .replace(/\b(pincelad[ao]s?)\b/gi, '')
+          .replace(/\b(em\s+cubos?|em\s+rodelas?|em\s+tiras?|em\s+lascas?|em\s+pedaços?|em\s+gomos?|em\s+quadrados?|em\s+fatias?|em\s+ramos?)\b/gi, '')
+          .replace(/^[\s,.\-–—]+|[\s,.\-–—]+$/g, '')
+          .replace(/\s+/g, ' ')
+          .trim();
+      };
+
+      return globalRecipe.ingredients.map(ing => {
+        if (!ing) return '';
+        const isObj = typeof ing === 'object' && ing !== null;
+
+        let rawName = isObj ? (ing.item || ing.name || ing.title || '') : String(ing);
+        const upper = rawName.trim().toUpperCase();
+
+        // Verificar se é um cabeçalho / separador de seção (tanto novos quanto receitas antigas)
+        const isHeader = (isObj && (ing.isHeader || ing.header || ing.section || ing.type === 'section'))
+          || upper.startsWith('PARA ')
+          || upper.startsWith('MOLHO')
+          || upper.startsWith('MASSA')
+          || upper.startsWith('RECHEIO')
+          || upper.startsWith('COBERTURA')
+          || rawName.trim().endsWith(':')
+          || (isObj && (!ing.amount || ing.amount.trim() === '') && (upper.includes('PARA O') || upper.includes('PARA A') || upper.includes('PARA AS') || upper.includes('PARA OS')));
+
+        if (isHeader) {
+          const headerTitle = isObj ? (ing.title || ing.section || ing.header || ing.item || '') : ing;
+          const cleanTitle = headerTitle.replace(/^[\s:]+|[\s:]+$/g, '');
+          return `
+            <div style="font-size:12px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#6b7ef0; margin:22px 0 10px 0; padding-top:14px; border-top:2px dashed #ece5d9;">
+              ${cleanTitle}
+            </div>`;
+        }
+
+        let name = isObj ? (ing.item || '') : ing;
+        let rawAmount = isObj ? (ing.amount || '') : '';
+        
+        name = cleanPrepMethods(name);
+        rawAmount = cleanPrepMethods(rawAmount);
+
+        if (!isObj && name) {
+          const m = name.match(/^([\d.,]+(?:[/][\d.,]+)?)\s*(.*)$/);
+          if (m) {
+            rawAmount = m[1];
+            name = m[2];
+          }
+        }
+
+        let scaledAmount = rawAmount;
+        if (rawAmount) {
+          const match = rawAmount.match(/^([\d.,]+(?:[/][\d.,]+)?)\s*(.*)$/);
+          if (match) {
+             let numText = match[1].replace(',', '.');
+             let num = 0;
+             if (numText.includes('/')) {
+                const parts = numText.split('/');
+                num = parseFloat(parts[0]) / parseFloat(parts[1]);
+             } else {
+                num = parseFloat(numText);
+             }
+             
+             if (!isNaN(num)) {
+               let scaledNum = num * currentServings;
+               if (scaledNum % 1 !== 0) {
+                 scaledNum = Math.round(scaledNum * 10) / 10;
+               }
+               let scaledStr = scaledNum.toString().replace('.', ',');
+               scaledAmount = `${scaledStr} ${match[2]}`.trim();
+             }
+          }
+        }
+        
+        scaledAmount = cleanPrepMethods(scaledAmount);
+
+        return `
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-top:1px solid #ece5d9">
+            <div style="display:flex; align-items:center; gap:14px">
+              <span style="width:9px; height:9px; border-radius:50%; background:#ffbf00; flex-shrink:0"></span>
+              <span style="font-size:16px; font-weight:500; color:#14110d">${name}</span>
+            </div>
+            ${scaledAmount ? `<span style="font-size:16px; font-weight:800; color:#8a6a00; white-space:nowrap; text-align:right">${scaledAmount}</span>` : ''}
+          </div>`;
+      }).join('');
+    }
+
+    function updateServings(delta) {
+      if (!globalRecipe) return;
+      const newServings = currentServings + delta;
+      if (newServings < 1) return; // Minimum 1 recipe multiplier
+      currentServings = newServings;
+      
+      const baseServings = parseInt(globalRecipe.servings, 10) || 1;
+      const totalYield = currentServings * baseServings;
+      
+      const scDisplay = document.getElementById('serving-count-display');
+      if (scDisplay) scDisplay.textContent = currentServings;
+      
+      const rendimento = document.getElementById('meta-rendimento');
+      if (rendimento) rendimento.textContent = totalYield + " porç.";
+      
+      const yieldText = document.getElementById('yield-display');
+      if (yieldText) {
+        if (currentServings === 1) {
+          yieldText.textContent = `1 receita rende ${totalYield} porções`;
+        } else {
+          yieldText.textContent = `${currentServings} receitas rendem ${totalYield} porções`;
+        }
+      }
+
+      document.getElementById('sig-ingredient-list').innerHTML = renderIngredientsList();
+    }
+
     async function handleDetailFav(id) {
-      const nowFav = await window.handleFavToggle(id);
+      await window.handleFavToggle(id);
+      const nowFav = window.isFavorite(id);
+      
       const btn = document.getElementById('detail-fav-btn');
       if (btn) {
-        btn.innerHTML = nowFav ? '♥ Nas suas favoritas' : '♡ Adicionar aos favoritos';
+        btn.setAttribute('data-fav', nowFav ? 'true' : 'false');
         btn.setAttribute('aria-label', nowFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos');
+        
+        btn.style.background = nowFav ? '#ffbf00' : '#fff';
+        btn.style.border = nowFav ? '2px solid #ffbf00' : '2px solid #e5ded2';
+        btn.style.fontWeight = nowFav ? '800' : '700';
+        
+        const svg = btn.querySelector('svg');
+        if (svg) svg.setAttribute('fill', nowFav ? '#14110d' : 'none');
+        
+        const txt = btn.querySelector('#fav-text');
+        if (txt) txt.textContent = nowFav ? 'Favoritada' : 'Favoritar';
       }
     }
 
     async function handleDetailDelete(id, title) {
       if (confirm(`Tem certeza que deseja excluir a receita "${title}"?`)) {
+        const btn = document.getElementById('detail-delete-btn');
+        const originalHtml = btn ? btn.innerHTML : '';
+        if (btn) {
+          btn.disabled = true;
+          btn.style.opacity = '0.5';
+          btn.style.cursor = 'wait';
+          btn.innerHTML = '⏳ Apagando...';
+        }
+        
+        // Força a atualização visual do botão antes da operação pesada
+        await new Promise(r => setTimeout(r, 50));
+
         try {
           if (window.deleteUserRecipe) {
             await window.deleteUserRecipe(id);
@@ -591,6 +790,12 @@
           }, 500);
         } catch (err) {
           console.error("Erro ao excluir receita:", err);
+          if (btn) {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+            btn.innerHTML = originalHtml;
+          }
           showToast("❌ Erro ao excluir receita.");
         }
       }
@@ -623,6 +828,9 @@
       try {
         const recipe = await loadRecipe(id);
         renderRecipePage(recipe);
+        if (window.recordRecipeView) {
+          window.recordRecipeView(id);
+        }
         
         if (window.getPlanner) {
           const planner = window.getPlanner();
@@ -642,56 +850,19 @@
       }
     }
 
-    function openShareModal() {
-      const modal = document.getElementById('share-modal');
-      if (modal) modal.classList.add('active');
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
     }
-    
-    function closeShareModal(e) {
-      const modal = document.getElementById('share-modal');
-      if (modal) modal.classList.remove('active');
-    }
-
-    async function shareLink() {
-      closeShareModal();
-      if (!globalRecipe) return;
-      const shareData = {
-        title: globalRecipe.title,
-        text: `Confira esta receita de ${globalRecipe.title}!`,
-        url: window.location.href
-      };
-      
-      if (navigator.share) {
-        try {
-          await navigator.share(shareData);
-        } catch (err) {
-          console.log('Erro ao compartilhar:', err);
-        }
-      } else {
-        // Fallback
-        navigator.clipboard.writeText(window.location.href);
-        alert('Link copiado para a área de transferência!');
-      }
-    }
-
-    function sharePDF() {
-      closeShareModal();
-      // Print dialog is the native way to "Save as PDF"
-      window.print();
-    }
-
-    document.addEventListener('DOMContentLoaded', init);
 
     // Expor funções usadas em onclick dinâmicos
     window.updateServings = updateServings;
     window.handleDetailFav = handleDetailFav;
     window.handleDetailDelete = handleDetailDelete;
     window.handleAddPlanner = handleAddPlanner;
-    window.openShareModal = openShareModal;
-    window.closeShareModal = closeShareModal;
-    window.shareLink = shareLink;
-    window.sharePDF = sharePDF;
   </script>
-  <script type="module" src="js/share.js?v=3"></script>
+  <script type="module" src="js/share.js?v=4"></script>
+  <script src="js/quick-search.js"></script>
 </body>
 </html>

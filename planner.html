@@ -21,166 +21,479 @@
       flex-wrap: wrap;
     }
     
-    /* Shopping List Modal */
-    .shopping-modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-      padding: 1rem;
-    }
-    .shopping-modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .shopping-modal {
-      background: var(--clr-surface);
-      border-radius: var(--radius-md);
-      padding: 2rem;
-      width: 100%;
-      max-width: 600px;
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-      border: 1px solid var(--clr-border);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      transform: translateY(20px);
-      transition: transform 0.2s ease;
-    }
-    .shopping-modal-overlay.active .shopping-modal {
-      transform: translateY(0);
-    }
-    .shopping-modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--clr-border);
-      padding-bottom: 1rem;
-    }
-    .shopping-modal-title {
-      font-family: var(--font-display);
-      font-size: 1.5rem;
-      color: var(--clr-text);
-      margin: 0;
-    }
-    .close-modal-btn {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      color: var(--clr-text-muted);
-      cursor: pointer;
-    }
-    .shopping-list-content {
-      overflow-y: auto;
-      flex-grow: 1;
-      margin-bottom: 1.5rem;
-      font-family: var(--font-body);
-    }
-    .shopping-list-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.5rem 0;
-      border-bottom: 1px dashed var(--clr-border);
-    }
-    .shopping-list-item:last-child {
-      border-bottom: none;
-    }
-    .shopping-modal-actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: flex-end;
-      border-top: 1px solid var(--clr-border);
-      padding-top: 1rem;
-    }
-
-    /* Print Styles for Shopping List */
     @media print {
-      body * { visibility: hidden; }
-      #shopping-print-area, #shopping-print-area * { visibility: visible; }
-      #shopping-print-area {
-        position: absolute;
-        left: 0; top: 0; width: 100%;
+      /* Configuração da página em PDF */
+      @page {
+        size: A4 portrait;
+        margin: 0;
       }
-      .shopping-modal-overlay { background: none; position: static; }
-      .shopping-modal { box-shadow: none; border: none; padding: 0; max-height: none; }
-      .shopping-modal-actions, .close-modal-btn { display: none !important; }
+
+      /* Ocultar navegadores, cabeçalho da página e controles no PDF */
+      .planner-header-section,
+      header.navbar,
+      footer.site-footer,
+      .toast-container,
+      #dd-export,
+      .week-nav-container,
+      .planner-banner-title,
+      #planner-banner-desc,
+      .planner-actions,
+      .badge-hoje,
+      .no-print,
+      button,
+      select,
+      .custom-dropdown {
+        display: none !important;
+      }
+
+      body {
+        background: #fff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        color: #14110d !important;
+      }
+
+      section[style*="max-width:1440px"]:not(.planner-header-section) {
+        padding: 12mm 15mm !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Ocultar a coluna da lista de compras no PDF se não marcada */
+      .hide-on-print {
+        display: none !important;
+      }
+
+      div[style*="grid-template-columns:minmax(0,1fr) minmax(300px,420px)"] {
+        display: block !important;
+      }
+
+      #days-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+        width: 100% !important;
+      }
+
+      /* Card equilibrado de cada dia da semana na impressão normal (Essa semana) */
+      #days-container > div {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        background: #f7f4ee !important;
+        border: 1.5px solid #ece5d9 !important;
+        border-radius: 14px !important;
+        padding: 8px 14px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Título do dia */
+      #days-container > div > div[style*="margin-bottom:16px"] {
+        margin-bottom: 6px !important;
+      }
+
+      /* Grid dos slots de Almoço e Jantar em 2 colunas */
+      #days-container > div > div[style*="display:grid"] {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+      }
+
+      /* Slot vazio */
+      #days-container div[style*="dashed #ece5d9"] {
+        padding: 8px 12px !important;
+        border-radius: 12px !important;
+        margin: auto 0 !important;
+      }
+
+      /* Card individual de cada receita */
+      #days-container div[onclick*="openRecipePreview"] {
+        border: 1.5px solid #ece5d9 !important;
+        background: #fff !important;
+        border-radius: 12px !important;
+        padding: 8px 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Imagem da receita */
+      #days-container img {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 8px !important;
+      }
+
+      /* Ocultar botões de remover dentro do slot durante a impressão */
+      #days-container button[title="Remover"],
+      #days-container button[onclick*="openRecipePicker"],
+      .print-week-block button {
+        display: none !important;
+      }
+
+      /* Bloco de cada semana no PDF (Tudo que estiver preenchido - 1 página por semana exata) */
+      .print-week-block {
+        page-break-after: always;
+        break-after: page;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+      }
+      .print-week-block:last-child {
+        page-break-after: avoid;
+        break-after: avoid;
+      }
+
+      .print-week-block > div > div {
+        background: #f7f4ee !important;
+        border: 1.5px solid #ece5d9 !important;
+        border-radius: 14px !important;
+        padding: 10px 16px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      .print-week-block div[style*="margin-bottom:16px"] {
+        margin-bottom: 8px !important;
+      }
+
+      .print-week-block div[style*="display:grid"] {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+      }
+
+      .print-week-block div[style*="dashed #ece5d9"] {
+        padding: 8px 14px !important;
+        border-radius: 12px !important;
+        margin: auto 0 !important;
+      }
+
+      .print-week-block div[onclick*="openRecipePreview"] {
+        border: 1.5px solid #ece5d9 !important;
+        background: #fff !important;
+        border-radius: 12px !important;
+        padding: 8px 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      .print-week-block img {
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 9px !important;
+      }
+
+      .print-week-header {
+        display: block !important;
+        font-size: 16px !important;
+        font-weight: 800 !important;
+        color: #14110d !important;
+        margin: 0 auto 10px !important;
+        text-align: center !important;
+        background: #fff6d9 !important;
+        border: 1.5px solid #ffbf00 !important;
+        border-radius: 999px !important;
+        padding: 6px 18px !important;
+        width: fit-content !important;
+      }
+
+      /* Quando a Lista de Compras for impressa, ela fica SEMPRE em página dedicada ao final */
+      #shopping-card-container:not(.hide-on-print) {
+        position: static !important;
+        display: block !important;
+        page-break-before: always !important;
+        break-before: page !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+        border: none !important;
+        background: transparent !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Conteúdo da lista em 2 colunas contínuas no PDF */
+      #shopping-card-container #shopping-list-content {
+        max-height: none !important;
+        overflow: visible !important;
+        columns: 2 !important;
+        column-gap: 20px !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        display: block !important;
+      }
+
+      /* Cada grupo de categoria no PDF (estilo card otimizado) */
+      #shopping-card-container #shopping-list-content > div {
+        margin-bottom: 16px !important;
+        border: 1px solid #eae5dc !important;
+        border-radius: 6px !important;
+        background: #fff !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      /* Cabeçalho da Categoria */
+      #shopping-card-container #shopping-list-content > div > div:first-child {
+        background: transparent !important;
+        padding: 12px 14px 8px !important;
+      }
+      /* Remove o pontinho amarelo */
+      #shopping-card-container #shopping-list-content > div > div:first-child > div:first-child > span:first-child {
+        display: none !important;
+      }
+      /* Título da Categoria */
+      #shopping-card-container #shopping-list-content > div > div:first-child > div:first-child > span:last-child {
+        color: #556054 !important; /* Verde acinzentado do mockup */
+        font-size: 10px !important;
+        letter-spacing: 0.12em !important;
+      }
+      /* Remove a seta */
+      #shopping-card-container #shopping-list-content > div > div:first-child .cat-arrow {
+        display: none !important;
+      }
+      /* Quantidade da categoria */
+      #shopping-card-container #shopping-list-content > div > div:first-child .cat-count {
+        font-size: 9px !important;
+        color: #999 !important;
+      }
+
+      /* Lista de itens */
+      #shopping-card-container #shopping-list-content > div > div.cat-items-list {
+        padding-bottom: 6px !important;
+      }
+      #shopping-card-container #shopping-list-content > div > div.cat-items-list > div {
+        border-bottom: none !important; /* Sem linha entre itens */
+        padding: 3px 14px !important;
+        gap: 10px !important;
+      }
+      /* Checkbox (quadradinho pequeno) */
+      #shopping-card-container .shop-checkbox {
+        width: 10px !important;
+        height: 10px !important;
+        border-radius: 2px !important;
+        border: 1px solid #ccc !important;
+      }
+      /* Nome do item */
+      #shopping-card-container #shopping-list-content > div > div.cat-items-list > div > div > div {
+        font-size: 10px !important;
+        font-weight: 500 !important;
+        color: #555 !important;
+      }
+      /* Valor/Quantidade */
+      #shopping-card-container #shopping-list-content > div > div.cat-items-list > div > span:last-child {
+        background: transparent !important;
+        padding: 0 !important;
+        font-size: 9px !important;
+        font-weight: 500 !important;
+        color: #888 !important;
+      }
+
+      /* Ocultar contador 'X de Y comprados' no PDF */
+      #purchased-counter {
+        display: none !important;
+      }
     }
-  </style>
+    </style>
 </head>
 <body>
 
-  <!-- ===== NAVBAR ===== -->
-  <nav class="navbar" id="navbar" aria-label="Navegação principal">
-    <a class="nav-logo" href="index.html" aria-label="Receitas da Isa - Início">
-      <span class="nav-logo-icon">🍴</span>
-      <span class="nav-logo-text">
-        Receitas da Isa
-        <em class="nav-logo-sub">sabores do mundo</em>
-      </span>
+    <!-- ===== NAVBAR ===== -->
+  <header class="navbar" id="navbar" style="display:flex; align-items:center; gap:32px; padding:20px 48px; border-bottom:1px solid #f0ebe3; position:sticky; top:0; background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); z-index:20">
+    <a href="index.html" class="nav-logo" style="display:flex; align-items:center; gap:12px; flex-shrink:0; text-decoration:none">
+      <div style="width:40px; height:40px; border-radius:13px; background:#ffbf00; display:flex; align-items:center; justify-content:center"><div style="width:14px; height:14px; border-radius:50%; background:#14110d"></div></div>
+      <div style="display:flex; flex-direction:column; line-height:1">
+        <span style="font-size:19px; font-weight:800; letter-spacing:-0.02em; color:#14110d">Receitas da Isa</span>
+        <span style="font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:#a39a8c; margin-top:4px">sabores do mundo</span>
+      </div>
     </a>
-    <ul class="nav-links" role="list">
-      <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
-      <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
-      <li><a class="nav-link" href="planner.html" id="nav-planner"><span class="nav-link-icon">📅</span> <span>Planejador</span></a></li>
-      <li><button class="nav-link nav-inbox-btn" onclick="openInboxModal(event)" type="button" id="nav-inbox" title="Receitas Recebidas"><span class="nav-link-icon">📩</span> <span>Recebidas</span> <span class="nav-inbox-badge" id="inbox-badge" style="display:none;">0</span></button></li>
-      <li id="nav-auth-container">
-        <button class="nav-login-btn" id="login-btn">
-          <span>🔑</span> <span>Entrar</span>
+    <nav style="display:flex; align-items:center; gap:28px; margin-left:16px; min-width:0">
+      <a href="index.html" style="font-size:15px; font-weight:600; color:#6b6459; text-decoration:none">Início</a>
+      <a href="favorites.html" style="font-size:15px; font-weight:600; color:#6b6459; text-decoration:none">Favoritas</a>
+      <a href="planner.html" style="font-size:15px; font-weight:700; padding-bottom:2px; border-bottom:2px solid #ffbf00; color:#14110d; text-decoration:none">Planejador</a>
+    </nav>
+    <div style="flex:1"></div>
+    <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-shrink:1">
+      <div style="display:flex; align-items:center; gap:10px; background:#f7f4ee; border-radius:999px; padding:10px 18px; flex:0 1 240px; min-width:44px; overflow:hidden">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;"><circle cx="6.5" cy="6.5" r="4.5" stroke="#ffbf00" stroke-width="2.2"/><path d="M10 10L14 14" stroke="#ffbf00" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <input placeholder="Procurar receitas..." style="border:none; background:transparent; outline:none; font-family:inherit; font-size:14px; font-weight:500; width:100%; color:#14110d" />
+      </div>
+      <div id="nav-auth-container" style="display:flex; align-items:center; gap:10px">
+        <button class="nav-login-btn" id="login-btn" style="background:#14110d; color:#fff; font-size:14px; font-weight:700; padding:12px 22px; border-radius:999px; flex-shrink:0; cursor:pointer; border:none; display:flex; align-items:center; gap:6px">
+          <span>🔑</span> Entrar
         </button>
-      </li>
-    </ul>
-  </nav>
-
-  <!-- ===== BANNER ===== -->
-  <header class="planner-banner">
-    <div style="color: var(--clr-gold); font-size: 0.9rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.8rem;">📅 Menu da Semana</div>
-    <h1 style="font-family: var(--font-display); font-size: 3rem; margin-bottom: 1rem;">Meu <em>Planejador</em></h1>
-    <p id="planner-banner-desc" style="color: var(--clr-text-muted); max-width: 600px; margin: 0 auto; line-height: 1.6;">Planeje suas refeições e gere sua lista de compras automaticamente.</p>
+      </div>
+    </div>
   </header>
 
-  <!-- ===== CONTENT ===== -->
-  <section class="section" id="planner-section">
-    <div class="planner-actions" id="planner-actions" style="display: none;">
-      <button class="btn btn-outline" onclick="window.handleClear()">🗑 Nova Semana (Limpar)</button>
-      <button class="btn btn-primary" onclick="openShoppingList()">🛒 Gerar Lista de Compras</button>
-    </div>
+  <section style="max-width:1440px; margin:0 auto; padding:44px 48px 0" class="planner-header-section">
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:32px; flex-wrap:wrap">
+      <div>
+        <div class="planner-banner-badge" style="display:inline-flex; align-items:center; gap:9px; background:#fff6d9; border-radius:999px; padding:8px 16px; margin-bottom:20px">
+          <div style="width:8px; height:8px; border-radius:50%; background:#ffbf00"></div>
+          <span style="font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#8a6a00">Menu da semana</span>
+        </div>
+        <h1 class="planner-banner-title" style="margin:0; font-size:60px; font-weight:800; letter-spacing:-0.035em; line-height:1">Meu <em style="color:#2f8f7d; font-weight:700">planejador</em></h1>
+        <p id="planner-banner-desc" style="margin:16px 0 0; font-size:18px; color:#6b6459">Planeje suas refeições e gere sua lista de compras automaticamente.</p>
 
-    <div class="recipe-grid" id="recipe-grid" role="list" aria-label="Receitas planejadas">
-      <div class="loading-spinner" aria-label="Carregando planejador..."></div>
+        <!-- AÇÕES DA SEMANA -->
+        <div style="display:flex; align-items:center; gap:12px; margin-top:24px; flex-wrap:wrap;">
+          <div class="week-nav-container" style="display:inline-flex; align-items:center; gap:12px; background:#fff; border:2px solid #ece5d9; border-radius:999px; padding:6px 16px; height:38px; box-sizing:border-box;">
+            <button type="button" onclick="changeWeek(-1)" style="background:none; border:none; cursor:pointer; font-size:16px; font-weight:800; color:#14110d; display:flex; align-items:center; padding:4px;">‹</button>
+            <span id="week-label" style="font-size:14px; font-weight:800; color:#14110d; min-width:110px; text-align:center;">10 – 16 ago</span>
+            <button type="button" onclick="changeWeek(1)" style="background:none; border:none; cursor:pointer; font-size:16px; font-weight:800; color:#14110d; display:flex; align-items:center; padding:4px;">›</button>
+          </div>
+
+          <button type="button" onclick="window.handleClearThisWeek()" style="background:#fff; border:2px solid #ece5d9; border-radius:999px; padding:6px 16px; height:38px; box-sizing:border-box; font-family:inherit; font-size:14px; font-weight:800; color:#14110d; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.15s;" onmouseover="this.style.borderColor='#ff4d4d'; this.style.color='#d93838'" onmouseout="this.style.borderColor='#ece5d9'; this.style.color='#14110d'">
+            <span>🗑</span> Limpar essa semana
+          </button>
+        </div>
+
+        <div class="planner-actions" id="planner-actions" style="display:none; margin-top:22px">
+          <button style="background:#fff; border:2px solid #e5ded2; font-family:inherit; font-size:14px; font-weight:700; padding:10px 20px; border-radius:999px; cursor:pointer; color:#14110d" onclick="window.handleClear()" onmouseover="this.style.borderColor='#ffbf00'" onmouseout="this.style.borderColor='#e5ded2'">🗑 Limpar Planejador</button>
+        </div>
+      </div>
+
+      <!-- BOTÃO DE EXPORTAR -->
+      <div style="position:relative;" class="custom-dropdown" id="dd-export">
+        <button type="button" onclick="toggleExportDropdown()" style="background:#fff; border:3px solid #ffbf00; border-radius:999px; padding:12px 24px; height:46px; font-family:inherit; font-size:15px; font-weight:800; color:#14110d; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s; box-sizing:border-box;" onmouseover="this.style.background='#fff8e1'" onmouseout="this.style.background='#fff'">
+          <span>📤 Exportar</span>
+          <svg id="dd-export-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" style="flex-shrink:0; transition:transform 0.2s"><path d="M1 1L5 5L9 1" stroke="#14110d" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+
+        <div id="dd-export-panel" style="display:none; position:absolute; top:calc(100% + 8px); right:0; width:280px; background:#fff; border-radius:20px; box-shadow:0 12px 40px rgba(20,17,13,0.18); z-index:200; padding:12px;">
+          <div style="font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#a39a8c; padding:4px 8px 8px;">Período para exportar</div>
+          
+          <button type="button" onclick="selectExportOption('current', 'Planejador da semana')" id="ddopt-export-current" style="display:flex; align-items:center; justify-content:space-between; width:100%; padding:10px 12px; border-radius:12px; border:none; background:#fff8e1; font-family:inherit; font-size:13px; font-weight:800; color:#14110d; cursor:pointer; text-align:left; transition:background 0.15s; margin-bottom:4px;">
+            <span>Planejador da semana</span>
+            <span class="export-check" style="font-size:14px; color:#ffbf00;">✓</span>
+          </button>
+          
+          <button type="button" onclick="selectExportOption('all', 'Tudo que estiver preenchido')" id="ddopt-export-all" style="display:flex; align-items:center; justify-content:space-between; width:100%; padding:10px 12px; border-radius:12px; border:none; background:transparent; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; text-align:left; transition:background 0.15s; margin-bottom:8px;">
+            <span>Tudo que estiver preenchido</span>
+            <span class="export-check" style="font-size:14px; color:#ffbf00; display:none;">✓</span>
+          </button>
+
+          <div style="border-top:1px solid #f0ebe3; padding-top:10px; margin-top:4px;">
+            <label style="display:flex; align-items:center; justify-content:space-between; padding:6px 8px; cursor:pointer; font-size:13px; font-weight:700; color:#14110d;">
+              <span>Incluir lista de compras</span>
+              <input type="checkbox" id="export-include-shopping" checked style="width:18px; height:18px; accent-color:#2f8f7d; cursor:pointer;">
+            </label>
+          </div>
+
+          <button type="button" onclick="executeExportAction()" style="width:100%; margin-top:12px; background:#14110d; border:none; border-radius:12px; padding:12px; font-family:inherit; font-size:13px; font-weight:800; color:#fff; cursor:pointer; text-align:center;">
+            Exportar PDF / Imprimir
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- ===== SHOPPING LIST MODAL ===== -->
-  <div class="shopping-modal-overlay" id="shopping-modal" onclick="closeShoppingList(event)">
-    <div class="shopping-modal" id="shopping-print-area" onclick="event.stopPropagation()">
-      <div class="shopping-modal-header">
-        <h3 class="shopping-modal-title">🛒 Lista de Compras</h3>
-        <button class="close-modal-btn" onclick="closeShoppingList()">✕</button>
+  <section style="max-width:1440px; margin:0 auto; padding:40px 48px 0">
+    <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(300px,420px); gap:28px; align-items:start">
+      <div style="display:flex; flex-direction:column; gap:18px; min-width:0" id="days-container">
+        <!-- Render dos dias da semana (Segunda a Domingo) -->
       </div>
-      <div class="shopping-list-content" id="shopping-list-content">
-        <!-- List will be injected here -->
+
+      <div id="shopping-card-container" class="shopping-card-container" style="position:sticky; top:104px; border:2px solid #f0ebe3; border-radius:26px; overflow:hidden; background:#fff">
+        <div style="padding:22px 24px; border-bottom:2px solid #f0ebe3; background:#ffbf00">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <h2 style="margin:0; font-size:22px; font-weight:800; letter-spacing:-0.02em; color:#14110d">Lista de compras</h2>
+            <span id="purchased-counter" style="font-size:12px; font-weight:700; color:#14110d; opacity:0.85">0 de 0 comprados</span>
+          </div>
+          
+          <div style="margin-top:14px; display:flex; gap:10px;">
+            <div style="flex:1; position:relative;" class="custom-dropdown" id="dd-scope">
+              <button type="button" id="dd-scope-btn" onclick="toggleScopeDropdown()" style="width:100%; display:flex; align-items:center; justify-content:space-between; height:42px; padding:0 14px; border-radius:14px; background:#fff; border:none; font-family:inherit; font-size:13px; font-weight:800; color:#14110d; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                <span id="dd-scope-label">Somente essa semana</span>
+                <svg id="dd-scope-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" style="flex-shrink:0; transition:transform 0.2s"><path d="M1 1L5 5L9 1" stroke="#14110d" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+              <div id="dd-scope-panel" style="display:none; position:absolute; top:calc(100% + 6px); left:0; right:0; background:#fff; border-radius:16px; box-shadow:0 8px 32px rgba(20,17,13,0.15); z-index:100; overflow:hidden; padding:6px;">
+                <button type="button" onclick="selectScopeOption('current', 'Somente essa semana')" id="ddopt-scope-current" style="display:flex; align-items:center; justify-content:space-between; width:100%; padding:10px 14px; border-radius:10px; border:none; background:#fff8e1; font-family:inherit; font-size:13px; font-weight:800; color:#14110d; cursor:pointer; text-align:left; transition:background 0.15s;">
+                  <span>Somente essa semana</span>
+                  <span class="scope-check" style="font-size:14px; color:#ffbf00;">✓</span>
+                </button>
+                <button type="button" onclick="selectScopeOption('all', 'Todas as semanas')" id="ddopt-scope-all" style="display:flex; align-items:center; justify-content:space-between; width:100%; padding:10px 14px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; text-align:left; transition:background 0.15s;">
+                  <span>Todas as semanas</span>
+                  <span class="scope-check" style="font-size:14px; color:#ffbf00; display:none;">✓</span>
+                </button>
+              </div>
+            </div>
+
+            <button onclick="copyShoppingList()" style="border:none; background:#fff; font-family:inherit; font-size:13px; font-weight:800; padding:0 18px; height:42px; border-radius:14px; cursor:pointer; color:#14110d; box-shadow:0 2px 8px rgba(0,0,0,0.04); flex-shrink:0;">Copiar texto</button>
+          </div>
+        </div>
+        <div style="max-height:640px; overflow-y:auto" id="shopping-list-content">
+          <!-- Shopping List Injected Here with Categories -->
+          <div style="padding:24px; text-align:center; color:#6b6459; font-size:14px">Carregando ingredientes...</div>
+        </div>
       </div>
-      <div class="shopping-modal-actions">
-        <button class="btn btn-outline" onclick="copyShoppingList()">📋 Copiar Texto</button>
-        <button class="btn btn-primary" onclick="printShoppingList()">📄 Salvar PDF</button>
+    </div>
+  </section>
+
+    <footer class="site-footer">
+    <div style="display:flex; align-items:center; gap:12px">
+      <div style="width:30px; height:30px; border-radius:10px; background:#ffbf00; display:flex; align-items:center; justify-content:center"><div style="width:10px; height:10px; border-radius:50%; background:#14110d"></div></div>
+      <span style="font-size:15px; font-weight:800; color:#14110d">Receitas da Isa</span>
+    </div>
+    <span style="font-size: 14px; color: #a39a8c; font-weight: 500;">Feito com <span style="color:#ffbf00">♥</span> e muito sabor • 2026</span>
+  </footer>
+
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- MODAL: Seletor de Receita para o Planejador -->
+  <div id="recipe-picker-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9000; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:28px; width:min(620px,94vw); max-height:82vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 80px rgba(0,0,0,0.22);">
+      <!-- Header -->
+      <div style="padding:22px 28px 16px; border-bottom:2px solid #f0ebe3; flex-shrink:0;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+          <h3 style="margin:0; font-size:20px; font-weight:800; color:#14110d;">Escolher receita</h3>
+          <button type="button" onclick="closeRecipePicker()" style="background:none; border:none; cursor:pointer; font-size:22px; color:#a39a8c; line-height:1; padding:4px;">✕</button>
+        </div>
+
+        <!-- Navegador / Filtro de Categorias -->
+        <div id="recipe-picker-categories" style="display:flex; gap:8px; overflow-x:auto; padding-bottom:12px; margin-bottom:12px; scrollbar-width:none;">
+          <button type="button" class="picker-cat-btn active" onclick="selectPickerCategory('all', this)" style="padding:8px 16px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:800; border:2px solid #ffbf00; background:#ffbf00; color:#14110d; cursor:pointer; white-space:nowrap; transition:all 0.15s; flex-shrink:0;">✨ Todas</button>
+          <button type="button" class="picker-cat-btn" onclick="selectPickerCategory('almoco', this)" style="padding:8px 16px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; border:2px solid #ece5d9; background:#fff; color:#6b6459; cursor:pointer; white-space:nowrap; transition:all 0.15s; flex-shrink:0;">☀️ Almoço</button>
+          <button type="button" class="picker-cat-btn" onclick="selectPickerCategory('jantar', this)" style="padding:8px 16px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; border:2px solid #ece5d9; background:#fff; color:#6b6459; cursor:pointer; white-space:nowrap; transition:all 0.15s; flex-shrink:0;">🌙 Jantar</button>
+          <button type="button" class="picker-cat-btn" onclick="selectPickerCategory('cafe-da-manha', this)" style="padding:8px 16px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; border:2px solid #ece5d9; background:#fff; color:#6b6459; cursor:pointer; white-space:nowrap; transition:all 0.15s; flex-shrink:0;">☕ Café da Manhã</button>
+          <button type="button" class="picker-cat-btn" onclick="selectPickerCategory('lanche', this)" style="padding:8px 16px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; border:2px solid #ece5d9; background:#fff; color:#6b6459; cursor:pointer; white-space:nowrap; transition:all 0.15s; flex-shrink:0;">🥪 Lanche</button>
+          <button type="button" class="picker-cat-btn" onclick="selectPickerCategory('sobremesa', this)" style="padding:8px 16px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; border:2px solid #ece5d9; background:#fff; color:#6b6459; cursor:pointer; white-space:nowrap; transition:all 0.15s; flex-shrink:0;">🍰 Sobremesa</button>
+          <button type="button" class="picker-cat-btn" onclick="selectPickerCategory('acompanhamento', this)" style="padding:8px 16px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; border:2px solid #ece5d9; background:#fff; color:#6b6459; cursor:pointer; white-space:nowrap; transition:all 0.15s; flex-shrink:0;">🥗 Acompanhamento</button>
+        </div>
+
+        <input id="recipe-picker-search" type="text" placeholder="Buscar receita..." oninput="filterPickerRecipes()" style="width:100%; box-sizing:border-box; border:2px solid #ece5d9; border-radius:14px; padding:13px 16px; font-family:inherit; font-size:15px; font-weight:600; outline:none; color:#14110d;">
+      </div>
+      <!-- Lista de receitas -->
+      <div id="recipe-picker-list" style="overflow-y:auto; flex:1; padding:12px 16px; display:flex; flex-direction:column; gap:8px;"></div>
+      <!-- Footer -->
+      <div style="padding:16px 28px; border-top:2px solid #f0ebe3; display:flex; gap:12px; align-items:center; flex-shrink:0;">
+        <span id="recipe-picker-selected-label" style="flex:1; font-size:13px; font-weight:700; color:#a39a8c;">Nenhuma receita selecionada</span>
+        <button type="button" onclick="closeRecipePicker()" style="background:#fff; border:2px solid #e5ded2; font-family:inherit; font-size:14px; font-weight:700; padding:12px 22px; border-radius:999px; cursor:pointer; color:#14110d;">Cancelar</button>
+        <button type="button" id="recipe-picker-confirm-btn" onclick="confirmRecipePicker()" disabled style="background:#e5ded2; border:none; font-family:inherit; font-size:14px; font-weight:800; padding:12px 26px; border-radius:999px; cursor:not-allowed; color:#a39a8c;">Adicionar</button>
       </div>
     </div>
   </div>
 
-  <!-- ===== FOOTER ===== -->
-  <footer>
-    <span class="footer-logo">🍴 Receitas da Isa</span>
-    <span class="footer-copy">Feito com <span>♥</span> e muito sabor • 2026</span>
-  </footer>
-
-  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+  <!-- MODAL: Preview da Receita -->
+  <div id="recipe-preview-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9100; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:28px; width:min(1100px,96vw); height:90vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 32px 100px rgba(0,0,0,0.28); position:relative;">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 24px; border-bottom:2px solid #f0ebe3; flex-shrink:0;">
+        <span style="font-size:13px; font-weight:700; color:#a39a8c;">Receita</span>
+        <button type="button" onclick="closeRecipePreview()" style="background:#f0ebe3; border:none; cursor:pointer; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#14110d; font-size:16px; font-weight:800;">✕</button>
+      </div>
+      <iframe id="recipe-preview-iframe" src="" style="flex:1; border:none; width:100%;" loading="lazy"></iframe>
+    </div>
+  </div>
 
   <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/recipes.js?v=7"></script>
@@ -188,6 +501,132 @@
     let allRecipes = [];
     let plannerRecipes = [];
     let currentPlanner = {};
+    let weekOffset = 0; // 0 = Semana atual, -1 = Semana passada, +1 = Próxima semana
+
+    // DAYS é calculado dinamicamente conforme a semana atual + offset
+    function getWeekDays() {
+      const dayNames = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+      const now = new Date();
+      const todayDow = now.getDay() || 7; // 1=Seg ... 7=Dom
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - (todayDow - 1) + (weekOffset * 7));
+
+      return dayNames.map((name, i) => {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const isToday = weekOffset === 0 && d.getDate() === now.getDate() &&
+                        d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+        return { name, dateStr: `${dd}.${mm}`, isToday, date: d };
+      });
+    }
+
+    // Categorias de supermercado para agrupar ingredientes (ordem importa: primeiro match ganha)
+    const INGREDIENT_CATEGORIES = {
+      'FRUTAS & LEGUMES': [
+        'cebola', 'alho', 'manjericão', 'agrião', 'espinafre', 'abóbora', 'gengibre',
+        'tomate', 'batata', 'cenoura', 'abobrinha', 'pepino', 'alface', 'rúcula',
+        'cebolinha', 'salsa', 'salsinha', 'coentro', 'pimentão', 'cogumelo', 'funghi',
+        'banana', 'limão', 'abacaxi', 'abacate', 'manga', 'maçã', 'pera', 'morango',
+        'laranja', 'maracujá', 'uva', 'framboesa', 'mirtilo', 'beterraba', 'chuchu',
+        'vagem', 'ervilha', 'milho', 'brócolis', 'couve', 'repolho', 'alcachofra', 'aspargo'
+      ],
+      'CARNES & PROTEÍNAS': [
+        'salmão', 'bacon', 'ovo', 'ovos', 'frango', 'carne', 'moída', 'bife', 'presunto',
+        'pancetta', 'guanciale', 'camarão', 'peixe', 'linguiça', 'calabresa', 'atum',
+        'sardinha', 'tilápia', 'lagostim', 'lula', 'polvo', 'peru', 'pato'
+      ],
+      'LEGUMINOSAS & GRÃOS': [
+        'feijão', 'grão', 'lentilha', 'ervilha seca', 'grão-de-bico', 'soja',
+        'arroz', 'quinoa', 'aveia', 'cuscuz', 'polenta'
+      ],
+      'LATICÍNIOS': [
+        'leite', 'manteiga', 'queijo', 'parmesão', 'pecorino', 'creme de leite',
+        'requeijão', 'iogurte', 'cream cheese', 'ricota', 'mussarela', 'gorgonzola',
+        'mascarpone', 'brie', 'chantilly', 'nata', 'creme fresco'
+      ],
+      'PADARIA & MASSAS': [
+        'pão', 'massa', 'spaghetti', 'macarrão', 'farinha', 'fermento',
+        'biscoito', 'torrada', 'brioche', 'focaccia'
+      ]
+    };
+    const CATEGORY_ORDER = ['FRUTAS & LEGUMES', 'CARNES & PROTEÍNAS', 'LEGUMINOSAS & GRÃOS', 'LATICÍNIOS', 'PADARIA & MASSAS', 'TEMPEROS & OUTROS'];
+
+    function getIngredientCategory(name) {
+      const lower = name.toLowerCase();
+      for (const [cat, keywords] of Object.entries(INGREDIENT_CATEGORIES)) {
+        if (keywords.some(k => lower.includes(k))) {
+          return cat;
+        }
+      }
+      return 'TEMPEROS & OUTROS';
+    }
+
+    // ---- Schedule Storage (Slots Fixos) ----
+    // Chave: "YYYY-MM-DD_dayIndex_meal" (ex: "2026-08-10_0_lunch")
+    const SCHEDULE_KEY = 'receitas_isa_planner_schedule';
+
+    function getMondayKey() {
+      const now = new Date();
+      const todayDow = now.getDay() || 7;
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - (todayDow - 1) + (weekOffset * 7));
+      return monday.toISOString().slice(0, 10); // "YYYY-MM-DD"
+    }
+
+    function getSchedule() {
+      let localSchedule = {};
+      try { localSchedule = JSON.parse(localStorage.getItem(SCHEDULE_KEY)) || {}; } catch { }
+      
+      if (window.getCloudSchedule && window.getUser && window.getUser()) {
+        const cloudSchedule = window.getCloudSchedule() || {};
+        return { ...cloudSchedule, ...localSchedule };
+      }
+      return localSchedule;
+    }
+
+    async function saveSchedule(schedule) {
+      localStorage.setItem(SCHEDULE_KEY, JSON.stringify(schedule));
+      if (window.cloudUpdateSchedule && window.getUser && window.getUser()) {
+        await window.cloudUpdateSchedule(schedule);
+      }
+    }
+
+    function getSlotRecipes(dayIndex, meal) {
+      const schedule = getSchedule();
+      const val = schedule[`${getMondayKey()}_${dayIndex}_${meal}`];
+      if (!val) return [];
+      const ids = Array.isArray(val) ? val : [val];
+      return ids.map(id => allRecipes.find(r => r.id === id)).filter(Boolean);
+    }
+
+    async function addScheduleSlot(dayIndex, meal, recipeId) {
+      const schedule = getSchedule();
+      const key = `${getMondayKey()}_${dayIndex}_${meal}`;
+      let currentVal = schedule[key];
+      let ids = Array.isArray(currentVal) ? [...currentVal] : (currentVal ? [currentVal] : []);
+      
+      // Evita duplicar a mesma receita no mesmo slot
+      if (!ids.includes(recipeId)) {
+        if (ids.length >= 2) ids[1] = recipeId; // Se já tiver 2, substitui a segunda
+        else ids.push(recipeId);
+      }
+      schedule[key] = ids;
+      await saveSchedule(schedule);
+    }
+
+    async function removeScheduleSlotById(dayIndex, meal, recipeId) {
+      const schedule = getSchedule();
+      const key = `${getMondayKey()}_${dayIndex}_${meal}`;
+      let currentVal = schedule[key];
+      if (!currentVal) return;
+      let ids = Array.isArray(currentVal) ? [...currentVal] : [currentVal];
+      ids = ids.filter(id => id !== recipeId);
+      if (ids.length === 0) delete schedule[key];
+      else schedule[key] = ids;
+      await saveSchedule(schedule);
+    }
 
     async function init() {
       initNavbar();
@@ -198,7 +637,7 @@
         
         loadPlannerData();
       } catch (e) {
-        document.getElementById('recipe-grid').innerHTML = `
+        document.getElementById('days-container').innerHTML = `
           <div class="empty-state">
             <div class="empty-state-icon">😕</div>
             <h3 class="empty-state-title">Erro ao carregar</h3>
@@ -207,53 +646,724 @@
       }
     }
 
-    function loadPlannerData() {
-      currentPlanner = getPlanner(); // { recipeId: servings_multiplier }
-      
-      const plannerIds = Object.keys(currentPlanner);
-      plannerRecipes = allRecipes.filter(r => plannerIds.includes(r.id));
-      
-      renderGrid();
+    window.changeWeek = function(delta) {
+      weekOffset += delta;
+      updateWeekLabel();
+      loadPlannerData();
+    };
+
+    function updateWeekLabel() {
+      const now = new Date();
+      // Ajusta para o primeiro dia da semana (Segunda-feira)
+      const dayOfWeek = now.getDay() || 7;
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - (dayOfWeek - 1) + (weekOffset * 7));
+
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+
+      const months = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+      const labelStr = `${monday.getDate()} – ${sunday.getDate()} ${months[sunday.getMonth()]}`;
+      const labelEl = document.getElementById('week-label');
+      if (labelEl) labelEl.textContent = labelStr;
     }
 
-    function renderGrid() {
-      const grid = document.getElementById('recipe-grid');
-      const actions = document.getElementById('planner-actions');
-      const desc = document.getElementById('planner-banner-desc');
+    let selectedScope = 'current'; // 'current' | 'all'
 
-      if (plannerRecipes.length === 0) {
-        actions.style.display = 'none';
-        desc.textContent = 'Você ainda não tem receitas no planejador. Explore as receitas e adicione as que deseja fazer!';
-        grid.innerHTML = `
-          <div class="empty-state">
-            <span style="font-size: 4rem; display: block; margin-bottom: 1rem;">🍽️</span>
-            <h3 class="empty-state-title">Planejador Vazio</h3>
-            <p class="empty-state-text">Explore as receitas e clique em "Adicionar ao Planejador".</p>
-            <a href="index.html" class="btn btn-primary" style="margin-top: 1.5rem;">
-              Explorar receitas
-            </a>
-          </div>`;
-        return;
+    function getTargetPlannerRecipes() {
+      const schedule = getSchedule();
+      const scheduledIds = new Set();
+
+      const now = new Date();
+      const todayDow = now.getDay() || 7;
+      const thisMonday = new Date(now);
+      thisMonday.setDate(now.getDate() - (todayDow - 1));
+      const currentMondayStr = thisMonday.toISOString().slice(0, 10);
+
+      for (const [k, v] of Object.entries(schedule)) {
+        if (!v) continue;
+        const parts = k.split('_');
+        const keyMonday = parts[0];
+
+        let isTargetKey = false;
+        if (selectedScope === 'current') {
+          isTargetKey = k.startsWith(getMondayKey() + '_');
+        } else if (selectedScope === 'all') {
+          // Apenas semana atual e semanas futuras (exclui semanas passadas)
+          isTargetKey = keyMonday >= currentMondayStr;
+        }
+
+        if (isTargetKey) {
+          if (Array.isArray(v)) {
+            v.forEach(id => { if (id) scheduledIds.add(id); });
+          } else {
+            scheduledIds.add(v);
+          }
+        }
+      }
+      return allRecipes.filter(r => scheduledIds.has(r.id));
+    }
+
+    window.toggleScopeDropdown = function() {
+      const panel = document.getElementById('dd-scope-panel');
+      const arrow = document.getElementById('dd-scope-arrow');
+      if (!panel) return;
+      const isOpen = panel.style.display === 'block';
+      panel.style.display = isOpen ? 'none' : 'block';
+      if (arrow) arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    };
+
+    window.selectScopeOption = function(value, label) {
+      selectedScope = value;
+      const labelEl = document.getElementById('dd-scope-label');
+      if (labelEl) labelEl.textContent = label;
+
+      // Atualiza destaques nas opções
+      const currentOpt = document.getElementById('ddopt-scope-current');
+      const allOpt = document.getElementById('ddopt-scope-all');
+      
+      if (currentOpt && allOpt) {
+        if (value === 'current') {
+          currentOpt.style.background = '#fff8e1';
+          currentOpt.style.fontWeight = '800';
+          currentOpt.style.color = '#14110d';
+          currentOpt.querySelector('.scope-check').style.display = 'inline';
+
+          allOpt.style.background = 'transparent';
+          allOpt.style.fontWeight = '700';
+          allOpt.style.color = '#6b6459';
+          allOpt.querySelector('.scope-check').style.display = 'none';
+        } else {
+          allOpt.style.background = '#fff8e1';
+          allOpt.style.fontWeight = '800';
+          allOpt.style.color = '#14110d';
+          allOpt.querySelector('.scope-check').style.display = 'inline';
+
+          currentOpt.style.background = 'transparent';
+          currentOpt.style.fontWeight = '700';
+          currentOpt.style.color = '#6b6459';
+          currentOpt.querySelector('.scope-check').style.display = 'none';
+        }
       }
 
-      actions.style.display = 'flex';
-      desc.textContent = `${plannerRecipes.length} receita(s) planejada(s) para esta semana.`;
+      window.toggleScopeDropdown();
       
-      // We pass the planner servings multiplier to renderRecipeCard so it shows the badge
-      grid.innerHTML = plannerRecipes.map((r, i) =>
-        renderRecipeCard(r, { 
-          featured: false, 
-          plannerServings: currentPlanner[r.id]
-        })
-).join('');
+      plannerRecipes = getTargetPlannerRecipes();
+      if (plannerRecipes.length > 0) autoGenerateShoppingList();
+      else document.getElementById('shopping-list-content').innerHTML = '<div style="padding:24px; text-align:center; color:#6b6459; font-size:14px">Adicione receitas para gerar a lista.</div>';
+    };
+
+    // ---- DROPDOWN DE EXPORTAR ----
+    let selectedExportScope = 'current'; // 'current' | 'all'
+
+    window.toggleExportDropdown = function() {
+      const panel = document.getElementById('dd-export-panel');
+      const arrow = document.getElementById('dd-export-arrow');
+      if (!panel) return;
+      const isOpen = panel.style.display === 'block';
+      panel.style.display = isOpen ? 'none' : 'block';
+      if (arrow) arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    };
+
+    window.selectExportOption = function(value, label) {
+      selectedExportScope = value;
+      const currentOpt = document.getElementById('ddopt-export-current');
+      const allOpt = document.getElementById('ddopt-export-all');
+
+      if (currentOpt && allOpt) {
+        if (value === 'current') {
+          currentOpt.style.background = '#fff8e1';
+          currentOpt.style.fontWeight = '800';
+          currentOpt.style.color = '#14110d';
+          currentOpt.querySelector('.export-check').style.display = 'inline';
+
+          allOpt.style.background = 'transparent';
+          allOpt.style.fontWeight = '700';
+          allOpt.style.color = '#6b6459';
+          allOpt.querySelector('.export-check').style.display = 'none';
+        } else {
+          allOpt.style.background = '#fff8e1';
+          allOpt.style.fontWeight = '800';
+          allOpt.style.color = '#14110d';
+          allOpt.querySelector('.export-check').style.display = 'inline';
+
+          currentOpt.style.background = 'transparent';
+          currentOpt.style.fontWeight = '700';
+          currentOpt.style.color = '#6b6459';
+          currentOpt.querySelector('.export-check').style.display = 'none';
+        }
+      }
+    };
+
+    window.executeExportAction = function() {
+      const includeShopping = document.getElementById('export-include-shopping')?.checked ?? false;
+      const shoppingContainer = document.getElementById('shopping-card-container');
+      const daysContainer = document.getElementById('days-container');
+
+      if (shoppingContainer) {
+        if (!includeShopping) {
+          shoppingContainer.classList.add('hide-on-print');
+        } else {
+          shoppingContainer.classList.remove('hide-on-print');
+        }
+      }
+
+      // Se for selecionado 'Tudo que estiver preenchido' (todas as semanas)
+      const originalGridHtml = daysContainer.innerHTML;
+
+      if (selectedExportScope === 'all') {
+        const schedule = getSchedule();
+        const mondayKeys = new Set();
+
+        const now = new Date();
+        const todayDow = now.getDay() || 7;
+        const thisMonday = new Date(now);
+        thisMonday.setDate(now.getDate() - (todayDow - 1));
+        const currentMondayStr = thisMonday.toISOString().slice(0, 10);
+
+        for (const k of Object.keys(schedule)) {
+          if (schedule[k]) {
+            const parts = k.split('_');
+            // Apenas semanas da atual em diante (exclui receitas de semanas passadas)
+            if (parts[0] && parts[0] >= currentMondayStr) {
+              mondayKeys.add(parts[0]);
+            }
+          }
+        }
+        const sortedMondayKeys = Array.from(mondayKeys).sort();
+
+        if (sortedMondayKeys.length > 0) {
+          const dayNames = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+          const months = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+
+          let fullExportHtml = '';
+
+          sortedMondayKeys.forEach(mondayStr => {
+            const mParts = mondayStr.split('-');
+            const mondayDate = new Date(parseInt(mParts[0]), parseInt(mParts[1]) - 1, parseInt(mParts[2]));
+            const sundayDate = new Date(mondayDate);
+            sundayDate.setDate(mondayDate.getDate() + 6);
+            const weekTitle = `${mondayDate.getDate()} – ${sundayDate.getDate()} ${months[sundayDate.getMonth()]}`;
+
+            const weekDays = dayNames.map((name, i) => {
+              const d = new Date(mondayDate);
+              d.setDate(mondayDate.getDate() + i);
+              const dd = String(d.getDate()).padStart(2, '0');
+              const mm = String(d.getMonth() + 1).padStart(2, '0');
+              return { name, dateStr: `${dd}.${mm}` };
+            });
+
+            const daysHtml = weekDays.map((day, dayIndex) => {
+              const valLunch = schedule[`${mondayStr}_${dayIndex}_lunch`];
+              const valDinner = schedule[`${mondayStr}_${dayIndex}_dinner`];
+
+              const idsLunch = Array.isArray(valLunch) ? valLunch : (valLunch ? [valLunch] : []);
+              const idsDinner = Array.isArray(valDinner) ? valDinner : (valDinner ? [valDinner] : []);
+
+              const recipesLunch = idsLunch.map(id => allRecipes.find(r => r.id === id)).filter(Boolean);
+              const recipesDinner = idsDinner.map(id => allRecipes.find(r => r.id === id)).filter(Boolean);
+
+              const renderMealSection = (label, recipes) => {
+                if (recipes.length === 0) {
+                  return `
+                    <div style="background:#fff; border:2px dashed #ece5d9; border-radius:18px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:14px; box-sizing:border-box;">
+                      <div style="font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#c8bfb2;">${label}</div>
+                    </div>
+                  `;
+                }
+                return recipes.map((recipe, rIdx) => `
+                  <div style="background:#fff; border:2px solid #ece5d9; border-radius:16px; padding:10px 14px; display:flex; align-items:center; gap:12px; flex:1; min-width:0; width:100%; box-sizing:border-box;">
+                    <div style="width:40px; height:40px; border-radius:10px; overflow:hidden; background:#f7f4ee; flex-shrink:0;">
+                      <img src="${recipe.image || 'images/placeholder_recipe.png'}" alt="${recipe.title}" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div style="flex:1; min-width:0;">
+                      <div style="font-size:10px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#a39a8c;">${label} ${recipes.length > 1 ? `#${rIdx + 1}` : ''}</div>
+                      <div style="font-size:13.5px; font-weight:800; color:#14110d; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${recipe.title}</div>
+                    </div>
+                  </div>
+                `).join('');
+              };
+
+              return `
+                <div style="background:#f7f4ee; border:2px solid #ece5d9; border-radius:22px; padding:20px 24px;">
+                  <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+                    <span style="font-size:17px; font-weight:800; color:#14110d;">${day.name}</span>
+                    <span style="font-family:'JetBrains Mono', monospace; font-size:13px; color:#a39a8c; font-weight:600;">${day.dateStr}</span>
+                  </div>
+                  <div style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; align-items:start;">
+                    <div style="display:flex; flex-direction:column; gap:8px; min-width:0;">${renderMealSection('ALMOÇO', recipesLunch)}</div>
+                    <div style="display:flex; flex-direction:column; gap:8px; min-width:0;">${renderMealSection('JANTAR', recipesDinner)}</div>
+                  </div>
+                </div>
+              `;
+            }).join('');
+
+            fullExportHtml += `
+              <div class="print-week-block">
+                <div class="print-week-header">📅 Semana de ${weekTitle}</div>
+                <div style="display:flex; flex-direction:column; gap:6px;">${daysHtml}</div>
+              </div>
+            `;
+          });
+
+          daysContainer.innerHTML = fullExportHtml;
+        }
+      }
+
+      // Adicionar classes específicas no BODY conforme escopo e lista de compras
+      document.body.classList.remove('print-with-shopping-side', 'print-with-shopping-page');
+      if (includeShopping) {
+        if (selectedExportScope === 'current') {
+          document.body.classList.add('print-with-shopping-side');
+        } else {
+          document.body.classList.add('print-with-shopping-page');
+        }
+      }
+      
+      window.toggleExportDropdown();
+      window.print();
+
+      // Restaura layout normal da tela após print
+      setTimeout(() => {
+        document.body.classList.remove('print-with-shopping-side', 'print-with-shopping-page');
+        daysContainer.innerHTML = originalGridHtml;
+        if (shoppingContainer) shoppingContainer.classList.remove('hide-on-print');
+      }, 1000);
+    };
+
+    // Fechar os dropdowns de escopo e exportar ao clicar fora
+    document.addEventListener('click', function(e) {
+      const ddScope = document.getElementById('dd-scope');
+      if (ddScope && !ddScope.contains(e.target)) {
+        const panel = document.getElementById('dd-scope-panel');
+        const arrow = document.getElementById('dd-scope-arrow');
+        if (panel && panel.style.display === 'block') {
+          panel.style.display = 'none';
+          if (arrow) arrow.style.transform = 'rotate(0deg)';
+        }
+      }
+
+      const ddExport = document.getElementById('dd-export');
+      if (ddExport && !ddExport.contains(e.target)) {
+        const panel = document.getElementById('dd-export-panel');
+        const arrow = document.getElementById('dd-export-arrow');
+        if (panel && panel.style.display === 'block') {
+          panel.style.display = 'none';
+          if (arrow) arrow.style.transform = 'rotate(0deg)';
+        }
+      }
+    });
+
+    function loadPlannerData() {
+      updateWeekLabel();
+      currentPlanner = getPlanner();
+
+      // Renderiza os dias da semana na tela
+      renderGrid();
+      
+      // Atualiza as receitas do filtro selecionado
+      plannerRecipes = getTargetPlannerRecipes();
+      autoGenerateShoppingList();
+    }
+
+    window.handleShoppingListScopeChange = function() {
+      plannerRecipes = getTargetPlannerRecipes();
+      autoGenerateShoppingList();
+    };
+
+    function renderGrid() {
+      const daysContainer = document.getElementById('days-container');
+      const DAYS = getWeekDays();
+
+      daysContainer.innerHTML = DAYS.map((day, dayIndex) => {
+        const almocos = getSlotRecipes(dayIndex, 'lunch');
+        const jantares = getSlotRecipes(dayIndex, 'dinner');
+
+        const renderMealSection = (label, meal, recipes) => {
+          const count = recipes.length;
+          
+          if (count === 0) {
+            return `
+              <div style="background:#fff; border:2px dashed #ece5d9; border-radius:18px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:14px; box-sizing:border-box;">
+                <div style="font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#c8bfb2;">${label}</div>
+                <button type="button" onclick="openRecipePicker(${dayIndex}, '${meal}')" title="Adicionar receita" style="width:28px; height:28px; border-radius:50%; border:1.5px solid #ddd6cc; background:#f0ebe3; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; padding:0;">
+                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                    <line x1="5.5" y1="1" x2="5.5" y2="10" stroke="#6b6459" stroke-width="1.8" stroke-linecap="round"/>
+                    <line x1="1" y1="5.5" x2="10" y2="5.5" stroke="#6b6459" stroke-width="1.8" stroke-linecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            `;
+          }
+
+          const recipeCardsHtml = recipes.map((recipe, rIdx) => `
+            <div onclick="openRecipePreview('${recipe.id}')" style="background:#fff; border:2px solid #ece5d9; border-radius:16px; padding:10px 14px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:border-color 0.15s; flex:1; min-width:0; width:100%; box-sizing:border-box;" onmouseenter="this.style.borderColor='#ffbf00'" onmouseleave="this.style.borderColor='#ece5d9'">
+              <div style="width:40px; height:40px; border-radius:10px; overflow:hidden; background:#f7f4ee; flex-shrink:0;">
+                <img src="${recipe.image || 'images/placeholder_recipe.png'}" alt="${recipe.title}" style="width:100%; height:100%; object-fit:cover;">
+              </div>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:10px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#a39a8c;">${label} ${count > 1 ? `#${rIdx + 1}` : ''}</div>
+                <div style="font-size:13.5px; font-weight:800; color:#14110d; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${recipe.title}</div>
+              </div>
+              <button type="button" onclick="event.stopPropagation(); handleRemoveSlotRecipe(${dayIndex}, '${meal}', '${recipe.id}')" title="Remover" style="width:26px; height:26px; border-radius:50%; border:1.5px solid #ddd6cc; background:#f0ebe3; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; padding:0;">
+                <svg width="10" height="10" viewBox="0 0 11 11" fill="none" style="transform:rotate(45deg);">
+                  <line x1="5.5" y1="1" x2="5.5" y2="10" stroke="#6b6459" stroke-width="1.8" stroke-linecap="round"/>
+                  <line x1="1" y1="5.5" x2="10" y2="5.5" stroke="#6b6459" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          `).join('');
+
+          const addButtonHtml = count < 2 ? `
+            <button type="button" onclick="openRecipePicker(${dayIndex}, '${meal}')" title="Adicionar 2ª receita ao ${label.toLowerCase()}" style="padding:6px 12px; border-radius:999px; border:1.5px dashed #ddd6cc; background:#fff; font-family:inherit; font-size:11px; font-weight:800; color:#6b6459; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:all 0.15s; align-self:flex-start;" onmouseover="this.style.borderColor='#ffbf00'; this.style.color='#14110d'" onmouseout="this.style.borderColor='#ddd6cc'; this.style.color='#6b6459'">
+              <span>+ Adicionar prato</span>
+            </button>
+          ` : '';
+
+          return `
+            <div style="display:flex; flex-direction:column; gap:8px; min-width:0;">
+              ${recipeCardsHtml}
+              ${addButtonHtml}
+            </div>
+          `;
+        };
+
+        return `
+          <div style="background:#f7f4ee; border:2px solid #ece5d9; border-radius:22px; padding:20px 24px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+              <span style="font-size:17px; font-weight:800; color:#14110d;">${day.name}</span>
+              <span style="font-family:'JetBrains Mono', monospace; font-size:13px; color:#a39a8c; font-weight:600;">${day.dateStr}</span>
+              ${day.isToday ? `<span class="badge-hoje" style="background:#ffbf00; color:#14110d; border-radius:999px; padding:3px 10px; font-size:11px; font-weight:800; letter-spacing:0.06em;">HOJE</span>` : ''}
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; align-items:start;">
+              ${renderMealSection('ALMOÇO', 'lunch', almocos)}
+              ${renderMealSection('JANTAR', 'dinner', jantares)}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    async function autoGenerateShoppingList() {
+      try {
+        const list = await compileShoppingList();
+        const content = document.getElementById('shopping-list-content');
+        
+        if (list.length === 0) {
+          const counterEl = document.getElementById('purchased-counter');
+          if (counterEl) counterEl.textContent = '0 de 0 comprados';
+          content.innerHTML = '<div style="padding:24px; text-align:center; color:#6b6459; font-size:14px">Adicione receitas para gerar a lista.</div>';
+          return;
+        }
+
+        // Agrupa por categoria
+        const grouped = {};
+        list.forEach(item => {
+          const cat = getIngredientCategory(item.name);
+          if (!grouped[cat]) grouped[cat] = [];
+          grouped[cat].push(item);
+        });
+
+        let totalItems = list.length;
+        let purchasedCount = 0;
+
+        const counterEl = document.getElementById('purchased-counter');
+        if (counterEl) counterEl.textContent = `${purchasedCount} de ${totalItems} comprados`;
+
+        // Ordena as categorias conforme CATEGORY_ORDER (coloca TEMPEROS & OUTROS por último)
+        const sortedEntries = Object.entries(grouped).sort(([a], [b]) => {
+          const iA = CATEGORY_ORDER.indexOf(a);
+          const iB = CATEGORY_ORDER.indexOf(b);
+          const posA = iA === -1 ? CATEGORY_ORDER.length : iA;
+          const posB = iB === -1 ? CATEGORY_ORDER.length : iB;
+          return posA - posB;
+        });
+
+        content.innerHTML = sortedEntries.map(([catName, items], index) => `
+          <div style="border-bottom:1px solid #f7f4ee;">
+            <div onclick="toggleCategorySection(this)" style="display:flex; align-items:center; justify-content:space-between; padding:12px 24px; background:#faf7f2; cursor:pointer; user-select:none;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="width:7px; height:7px; border-radius:50%; background:#ffbf00;"></span>
+                <span style="font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#8a6a00;">${catName}</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span class="cat-count" style="font-size:11px; font-weight:700; color:#a39a8c;">${items.length}</span>
+                <span class="cat-arrow" style="font-size:10px; color:#a39a8c; font-weight:800; transition:transform 0.2s ease; display:inline-block; transform:rotate(180deg);">▲</span>
+              </div>
+            </div>
+
+            <div class="cat-items-list">
+              ${items.map(item => `
+                <div style="display:flex; align-items:center; gap:14px; padding:14px 24px; border-bottom:1px solid #f7f4ee;">
+                  <span class="shop-checkbox" style="width:20px; height:20px; border-radius:6px; border:2px solid #e5ded2; flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center;" onclick="toggleShopItem(this)"></span>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:14px; font-weight:700; color:#14110d;">${item.name}</div>
+                  </div>
+                  <span style="background:#f7f4ee; border-radius:999px; padding:4px 10px; font-family:'JetBrains Mono', monospace; font-size:11px; font-weight:700; color:#6b6459; flex-shrink:0;">${formatAmount(item.totalValue, item.unit)}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+
+        window.toggleCategorySection = function(headerEl) {
+          const itemsList = headerEl.nextElementSibling;
+          const arrow = headerEl.querySelector('.cat-arrow');
+          if (itemsList.style.display === 'none') {
+            itemsList.style.display = 'block';
+            if (arrow) arrow.style.transform = 'rotate(180deg)';
+          } else {
+            itemsList.style.display = 'none';
+            if (arrow) arrow.style.transform = 'rotate(0deg)';
+          }
+        };
+
+        window.toggleShopItem = function(el) {
+          const isChecked = el.classList.toggle('checked');
+          if (isChecked) {
+            el.style.background = '#2f8f7d';
+            el.style.borderColor = '#2f8f7d';
+            el.innerHTML = '<span style="color:#fff; font-size:12px; font-weight:900;">✓</span>';
+            el.nextElementSibling.querySelector('div').style.textDecoration = 'line-through';
+            el.nextElementSibling.querySelector('div').style.opacity = '0.5';
+            purchasedCount++;
+          } else {
+            el.style.background = '#fff';
+            el.style.borderColor = '#e5ded2';
+            el.innerHTML = '';
+            el.nextElementSibling.querySelector('div').style.textDecoration = 'none';
+            el.nextElementSibling.querySelector('div').style.opacity = '1';
+            purchasedCount--;
+          }
+          if (counterEl) counterEl.textContent = `${purchasedCount} de ${totalItems} comprados`;
+        };
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+
+    async function handleClearThisWeek() {
+      if (confirm('Tem certeza que deseja limpar as refeições da semana atual? As demais semanas continuarão salvas.')) {
+        const schedule = getSchedule();
+        const mondayKey = getMondayKey();
+        for (const k of Object.keys(schedule)) {
+          if (k.startsWith(mondayKey + '_')) delete schedule[k];
+        }
+        localStorage.setItem(SCHEDULE_KEY, JSON.stringify(schedule));
+        loadPlannerData();
+        if (typeof showToast === 'function') {
+          showToast('🗑 Refeições desta semana foram limpas.');
+        }
+      }
     }
 
     async function handleClear() {
       if (confirm('Tem certeza que deseja limpar o planejador? Isso não afetará suas receitas favoritas.')) {
-        await window.clearPlanner();
+        // Limpa o schedule da semana atual
+        const schedule = getSchedule();
+        const mondayKey = getMondayKey();
+        for (const k of Object.keys(schedule)) {
+          if (k.startsWith(mondayKey + '_')) delete schedule[k];
+        }
+        localStorage.setItem(SCHEDULE_KEY, JSON.stringify(schedule));
         loadPlannerData();
       }
     }
+
+    // Remove slot específico (não afeta outros slots)
+    function handleRemoveSlot(dayIndex, meal) {
+      removeScheduleSlot(dayIndex, meal);
+      loadPlannerData();
+    }
+    window.handleRemoveSlot = handleRemoveSlot;
+
+    // ---- Recipe Picker Popup ----
+    let pickerSlot = null; // { dayIndex, meal }
+    let pickerSelectedId = null;
+    let pickerSelectedCategory = 'all';
+
+    window.openRecipePicker = function(dayIndex, meal) {
+      pickerSlot = { dayIndex, meal };
+      pickerSelectedId = null;
+      pickerSelectedCategory = 'all';
+      
+      // Resetar os botões de categoria
+      const catBtns = document.querySelectorAll('.picker-cat-btn');
+      catBtns.forEach(b => {
+        b.style.background = '#fff';
+        b.style.borderColor = '#ece5d9';
+        b.style.color = '#6b6459';
+        b.style.fontWeight = '700';
+      });
+      if (catBtns[0]) {
+        catBtns[0].style.background = '#ffbf00';
+        catBtns[0].style.borderColor = '#ffbf00';
+        catBtns[0].style.color = '#14110d';
+        catBtns[0].style.fontWeight = '800';
+      }
+
+      document.getElementById('recipe-picker-search').value = '';
+      document.getElementById('recipe-picker-selected-label').textContent = 'Nenhuma receita selecionada';
+      const btn = document.getElementById('recipe-picker-confirm-btn');
+      btn.disabled = true;
+      btn.style.background = '#e5ded2';
+      btn.style.color = '#a39a8c';
+      btn.style.cursor = 'not-allowed';
+      filterPickerRecipes();
+      const overlay = document.getElementById('recipe-picker-overlay');
+      overlay.style.display = 'flex';
+    };
+
+    window.selectPickerCategory = function(cat, btnEl) {
+      pickerSelectedCategory = cat;
+      const catBtns = document.querySelectorAll('.picker-cat-btn');
+      catBtns.forEach(b => {
+        b.style.background = '#fff';
+        b.style.borderColor = '#ece5d9';
+        b.style.color = '#6b6459';
+        b.style.fontWeight = '700';
+      });
+      if (btnEl) {
+        btnEl.style.background = '#ffbf00';
+        btnEl.style.borderColor = '#ffbf00';
+        btnEl.style.color = '#14110d';
+        btnEl.style.fontWeight = '800';
+      }
+      filterPickerRecipes();
+    };
+
+    window.closeRecipePicker = function() {
+      document.getElementById('recipe-picker-overlay').style.display = 'none';
+      pickerSlot = null;
+      pickerSelectedId = null;
+    };
+
+    window.filterPickerRecipes = function() {
+      const query = (document.getElementById('recipe-picker-search').value || '').toLowerCase().trim();
+      const normalizeStr = str => (str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+
+      const filtered = allRecipes.filter(r => {
+        const matchesQuery = !query || normalizeStr(r.title).includes(normalizeStr(query));
+        let matchesCat = true;
+
+        if (pickerSelectedCategory !== 'all') {
+          const targetCat = normalizeStr(pickerSelectedCategory);
+          let recipeCats = [];
+          if (Array.isArray(r.categories)) {
+            recipeCats = r.categories.map(c => normalizeStr(c));
+          } else if (r.category) {
+            recipeCats = [normalizeStr(r.category)];
+          }
+          matchesCat = recipeCats.some(c => c.includes(targetCat) || targetCat.includes(c));
+        }
+
+        return matchesQuery && matchesCat;
+      });
+      const list = document.getElementById('recipe-picker-list');
+      if (filtered.length === 0) {
+        list.innerHTML = '<div style="padding:24px; text-align:center; color:#a39a8c; font-size:14px;">Nenhuma receita encontrada.</div>';
+        return;
+      }
+      list.innerHTML = filtered.map(r => {
+        const isSelected = pickerSelectedId === r.id;
+        const meta = [];
+        if (r.totalTime) meta.push(`⏱ ${r.totalTime}min`);
+        if (r.difficulty) meta.push(`${r.difficulty}`);
+        if (Array.isArray(r.tags) && r.tags.length) meta.push(...r.tags.slice(0, 2));
+        return `
+          <div style="display:flex; align-items:center; gap:14px; padding:12px 14px; border-radius:16px; cursor:pointer; border:2px solid ${isSelected ? '#ffbf00' : '#f0ebe3'}; background:${isSelected ? '#fff8e1' : '#fff'}; transition:all 0.15s;" onclick="selectPickerRecipe('${r.id}')">
+            <div style="width:46px; height:46px; border-radius:12px; overflow:hidden; background:#f7f4ee; flex-shrink:0;">
+              <img src="${r.image || 'images/placeholder_recipe.png'}" alt="${r.title}" style="width:100%; height:100%; object-fit:cover;" loading="lazy">
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-size:14px; font-weight:800; color:#14110d; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${r.title}</div>
+              <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:4px;">
+                ${meta.map(m => `<span style="font-size:10px; font-weight:700; background:#f0ebe3; border-radius:999px; padding:2px 8px; color:#6b6459;">${m}</span>`).join('')}
+              </div>
+            </div>
+            <div style="width:20px; height:20px; border-radius:50%; border:2px solid ${isSelected ? '#ffbf00' : '#e5ded2'}; background:${isSelected ? '#ffbf00' : '#fff'}; flex-shrink:0;"></div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.selectPickerRecipe = function(recipeId) {
+      // Toggle: clicar na receita já selecionada a desseleciona
+      if (pickerSelectedId === recipeId) {
+        pickerSelectedId = null;
+        document.getElementById('recipe-picker-selected-label').textContent = 'Nenhuma receita selecionada';
+        const btn = document.getElementById('recipe-picker-confirm-btn');
+        btn.disabled = true;
+        btn.style.background = '#e5ded2';
+        btn.style.color = '#a39a8c';
+        btn.style.cursor = 'not-allowed';
+      } else {
+        pickerSelectedId = recipeId;
+        const recipe = allRecipes.find(r => r.id === recipeId);
+        document.getElementById('recipe-picker-selected-label').textContent = recipe ? recipe.title : '';
+        const btn = document.getElementById('recipe-picker-confirm-btn');
+        btn.disabled = false;
+        btn.style.background = '#ffbf00';
+        btn.style.color = '#14110d';
+        btn.style.cursor = 'pointer';
+      }
+      filterPickerRecipes(); // re-render to update highlight
+    };
+
+    window.confirmRecipePicker = function() {
+      if (!pickerSelectedId || !pickerSlot) return;
+      addScheduleSlot(pickerSlot.dayIndex, pickerSlot.meal, pickerSelectedId);
+      closeRecipePicker();
+      loadPlannerData();
+    };
+
+    function handleRemoveSlotRecipe(dayIndex, meal, recipeId) {
+      removeScheduleSlotById(dayIndex, meal, recipeId);
+      loadPlannerData();
+    }
+    window.handleRemoveSlotRecipe = handleRemoveSlotRecipe;
+
+    // Fechar ao clicar fora do modal picker
+    document.getElementById('recipe-picker-overlay').addEventListener('click', function(e) {
+      if (e.target === this) closeRecipePicker();
+    });
+
+    // ---- Recipe Preview Modal ----
+    window.openRecipePreview = function(recipeId) {
+      const iframe = document.getElementById('recipe-preview-iframe');
+      // Manipular DOM diretamente após carregar (same-origin)
+      iframe.onload = function() {
+        try {
+          const doc = iframe.contentDocument || iframe.contentWindow.document;
+          // Esconder links de nav e auth
+          doc.querySelectorAll('.nav-links, #nav-auth-container').forEach(el => el.style.setProperty('display', 'none', 'important'));
+          // Esconder a barra de busca: último div filho do header (container de busca + auth)
+          const header = doc.querySelector('header');
+          if (header) {
+            // Pega todos os divs filhos diretos e esconde o último (que contém busca e botão de perfil)
+            const divChildren = Array.from(header.children).filter(el => el.tagName === 'DIV');
+            const rightContainer = divChildren[divChildren.length - 1];
+            if (rightContainer) rightContainer.style.setProperty('display', 'none', 'important');
+          }
+        } catch(e) { /* cross-origin fallback */ }
+      };
+      iframe.src = `recipe.html?id=${recipeId}`;
+      document.getElementById('recipe-preview-overlay').style.display = 'flex';
+    };
+
+    window.closeRecipePreview = function() {
+      document.getElementById('recipe-preview-overlay').style.display = 'none';
+      document.getElementById('recipe-preview-iframe').src = '';
+    };
+
+    document.getElementById('recipe-preview-overlay').addEventListener('click', function(e) {
+      if (e.target === this) closeRecipePreview();
+    });
+
+    // Manter compatibilidade com o botão antigo handleRemoveMeal (agora não é mais usado)
+    window.handleRemoveMeal = function(id) { handleRemoveSlot(0, 'lunch'); };
 
     // --- Ingrediente Logic ---
 
@@ -527,17 +1637,32 @@
       );
 
       fullRecipes.forEach(recipe => {
+        if (!recipe) return;
         const servingsMultiplier = currentPlanner[recipe.id] || 1;
+        const ingredients = recipe.ingredients || [];
         
-        (recipe.ingredients || []).forEach(ing => {
-          const name = ing.item.trim();
-          const amountStr = ing.amount || '';
+        ingredients.forEach(ing => {
+          if (!ing) return;
+          const isObj = typeof ing === 'object' && ing !== null;
+          if (isObj && (ing.isHeader || ing.header || ing.section || ing.type === 'section')) return;
+          let name = '';
+          let amountStr = '';
           
+          if (typeof ing === 'string') {
+            if (ing.toUpperCase().startsWith('PARA ') || ing.trim().endsWith(':')) return;
+            name = ing;
+          } else {
+            name = ing.item || ing.name || '';
+            amountStr = ing.amount || ing.quantity || '';
+          }
+          
+          if (!name.trim()) return;
+
           // Normalização e conversão inteligente
           const standardized = parseAndStandardize(name, amountStr);
           
           const key = `${standardized.name}|${standardized.unit}`;
-          const addedValue = standardized.value * servingsMultiplier;
+          const addedValue = (standardized.value || 0) * (servingsMultiplier || 1);
 
           if (itemsMap.has(key)) {
             itemsMap.set(key, itemsMap.get(key) + addedValue);
@@ -564,37 +1689,9 @@
       return list;
     }
 
-    async function openShoppingList() {
-      const btn = document.querySelector('.planner-actions .btn-primary');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '🛒 Carregando ingredientes...';
-      
-      try {
-        const list = await compileShoppingList();
-        const content = document.getElementById('shopping-list-content');
-        
-        if (list.length === 0) {
-        content.innerHTML = '<p>Nenhum ingrediente encontrado.</p>';
-      } else {
-        content.innerHTML = list.map(item => `
-          <div class="shopping-list-item">
-            <span style="font-weight: 500;">${item.name}</span>
-            <span style="color: var(--clr-text-muted);">${formatAmount(item.totalValue, item.unit)}</span>
-          </div>
-        `).join('');
-      }
+    
 
-        const modal = document.getElementById('shopping-modal');
-        modal.classList.add('active');
-      } finally {
-        btn.innerHTML = originalText;
-      }
-    }
-
-    function closeShoppingList(e) {
-      const modal = document.getElementById('shopping-modal');
-      modal.classList.remove('active');
-    }
+    
 
     async function copyShoppingList() {
       const list = await compileShoppingList();
@@ -648,12 +1745,14 @@
       });
     });
 
+    window.handleClearThisWeek = handleClearThisWeek;
     window.handleClear = handleClear;
-    window.openShoppingList = openShoppingList;
-    window.closeShoppingList = closeShoppingList;
+    
+    
     window.copyShoppingList = copyShoppingList;
     window.printShoppingList = printShoppingList;
   </script>
   <script type="module" src="js/share.js?v=3"></script>
+  <script src="js/quick-search.js"></script>
 </body>
 </html>

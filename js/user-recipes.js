@@ -29,8 +29,8 @@ Retorne APENAS um objeto JSON válido (sem markdown, sem backticks, sem texto ad
   "totalTime": 45,
   "servings": 4,
   "ingredients": [
-    {"item": "frango", "amount": "500g"},
-    {"item": "azeite de oliva", "amount": "2 colheres de sopa"}
+    {"item": "Peito de frango", "amount": "500g"},
+    {"item": "Azeite", "amount": "2 colheres de sopa"}
   ],
   "steps": [
     "Descrição detalhada do primeiro passo...",
@@ -45,16 +45,74 @@ Retorne APENAS um objeto JSON válido (sem markdown, sem backticks, sem texto ad
 }
 
 Regras:
-- REGRA CRUCIAL DE FIDELIDADE: Seja extremamente fiel e literal à receita fornecida na fonte (imagem, PDF, vídeo ou texto). NÃO invente ingredientes, NÃO altere as quantidades ou medidas fornecidas, e NÃO crie nem modifique os passos do modo de preparo. Não faça improvisos.
-- Dica para sites como TudoGostoso: o número de rendimento/porções (servings) geralmente vem indicado no cabeçalho ou título da seção de ingredientes (ex: "Ingredientes (8 porções)", "Ingredientes - 8 porções" ou similar). Fique atento a essa informação no texto para preencher o campo "servings" corretamente.
+- REGRA CRUCIAL DE FIDELIDADE ABSOLUTA: Seja 100% fiel e literal ao texto fornecido. NUNCA invente ou altere dados se já estiverem escritos. Se a receita trouxer uma medida exata de sal/tempero (ex: "½ colher (chá) de sal"), use obrigatoriamente "1/2 colher de chá". Se a receita trouxer apenas "sal" (sem medida especificada), aí sim use "a gosto" (ex: {"item": "Sal", "amount": "a gosto"}).
+- RENDIMENTO E PORÇÕES (servings): O campo "servings" deve conter o número inteiro exato de porções/rendimento indicado na receita (ex: "Serve 2 pessoas", "Rendimento: 4 porções" -> servings: 2). PROIBIDO inventar ou adivinhar o rendimento se ele já estiver informado no texto!
+- PRESERVAÇÃO E SUPORTE DE FRAÇÕES (CRÍTICO):
+  Mantenha sempre a fração numérica pura (1/2, 1/3, 1/4, 3/4, ½, ⅓, ¾) no campo "amount".
+  - EXEMPLO: "½ cebola" -> {"item": "Cebola", "amount": "1/2 unidade"} ✅
+  - EXEMPLO: "raspas de ½ limão" -> {"item": "Raspas de limão", "amount": "1/2 unidade"} ✅
+  - EXEMPLO: "¾ de xícara (chá) de risoni" -> {"item": "Macarrão", "amount": "3/4 xícaras de chá"} ✅
+  - PROIBIDO reescrever frações em prosa (ex: NUNCA use "1 unidade dividida em duas metades", "metade de um limão"). Use sempre a fração numérica no amount (ex: "1/2 unidade").
 - cuisine: use uma de: Brasileira, Italiana, Japonesa, Mexicana, Francesa, Tailandesa, Americana, Indiana, Espanhola, Grega
 - difficulty: Fácil, Médio ou Difícil
 - categories: use uma ou mais de: Café da Manhã, Almoço, Lanche, Jantar, Sobremesa, Acompanhamento
 - tags: use APENAS uma ou mais das seguintes tags permitidas: "1 Panela", "Dia a Dia", "Falta Checar", "Fritura", "Gostosão", "Pouco Calórico", "Proteico", "Saudável". Proibido criar qualquer tag fora desta lista.
 - Transcreva fielmente as instruções originais do modo de preparo dividindo em passos claros
-- SEMPRE inclua estimativas de macronutrientes, estimando de forma realista apenas com base nos ingredientes fornecidos na receita
-- Os ingredientes devem ter item e amount separados
-- totalTime = prepTime + cookTime`;
+
+*** REGRA DE OURO ABSOLUTA DOS INGREDIENTES ***
+1. O campo "item" deve conter APENAS o nome limpo e no SINGULAR do ingrediente (ex: 'Pão', 'Cebola', 'Alho', 'Queijo mussarela', 'Raspas de limão').
+2. O campo "amount" deve conter EXCLUSIVAMENTE a quantidade numérica/fracionária e a unidade de medida pura (ex: '1/2 unidade', '500g', '2 colheres de sopa', '1 xícara', '1/2 colher de chá', '2 dentes', 'a gosto').
+3. PROIBIDO MÉTODOS DE PREPARO NOS INGREDIENTES:
+   Palavras como "cortada ao meio", "picado", "ralado", "fatiado", "em cubos", "amassado", "derretido", "cozido", "desfiado", "moído", "grelhado", "descascado" NUNCA DEVEM ENTRAR no campo "item" nem no campo "amount".
+   Qualquer instrução de preparo (como cortar a cebola em pedaços grandes ou ralar o limão) pertence EXCLUSIVAMENTE aos passos do modo de preparo ("steps").
+- totalTime = prepTime + cookTime
+- NUNCA retorne "Não informado" na seção de nutrição (nutrition). Se o vídeo ou texto original informar os valores nutricionais, extraia-os e use-os. Caso NÃO sejam informados, você DEVE obrigatoriamente estimar valores nutricionais realistas (calories, protein, carbs, fat) baseando-se nos ingredientes e quantidades.`;
+
+export function sanitizeIngredients(ingredients) {
+  if (!Array.isArray(ingredients)) return [];
+
+  const methodPatterns = [
+    /\b(cortad[ao]s?(\s+ao\s+meio|\s+em\s+[^\s,]+|\s+ao\s+comprido)?)\b/gi,
+    /\b(picad[ao]s?(\s+finamente|\s+bem|\s+em\s+[^\s,]+)?)\b/gi,
+    /\b(ralad[ao]s?(\s+bem|\s+no\s+ralo\s+[^\s,]+)?)\b/gi,
+    /\b(fatiad[ao]s?)\b/gi,
+    /\b(amassad[ao]s?)\b/gi,
+    /\b(derretid[ao]s?)\b/gi,
+    /\b(cozid[ao]s?)\b/gi,
+    /\b(desfiad[ao]s?)\b/gi,
+    /\b(moíd[ao]s?|moid[ao]s?)\b/gi,
+    /\b(grelhad[ao]s?)\b/gi,
+    /\b(descascad[ao]s?)\b/gi,
+    /\b(triturad[ao]s?)\b/gi,
+    /\b(refogad[ao]s?)\b/gi,
+    /\b(assad[ao]s?)\b/gi,
+    /\b(peneirad[ao]s?)\b/gi,
+    /\b(polvilhad[ao]s?)\b/gi,
+    /\b(pincelad[ao]s?)\b/gi,
+    /\b(em\s+cubos?|em\s+rodelas?|em\s+tiras?|em\s+lascas?|em\s+pedaços?|em\s+gomos?|em\s+quadrados?|em\s+fatias?|em\s+ramos?)\b/gi,
+    /\b(para\s+decorar|para\s+untar|para\s+polvilhar|para\s+servir)\b/gi
+  ];
+
+  return ingredients.map(ing => {
+    if (!ing) return ing;
+    if (typeof ing === 'object' && (ing.isHeader || ing.header || ing.section || ing.type === 'section')) {
+      return ing;
+    }
+    const isObj = typeof ing === 'object';
+    let item = isObj ? (ing.item || ing.name || '').trim() : String(ing).trim();
+    let amount = isObj ? (ing.amount || '').trim() : '';
+
+    methodPatterns.forEach(pattern => {
+      item = item.replace(pattern, '');
+      amount = amount.replace(pattern, '');
+    });
+
+    item = item.replace(/^[\s,.\-–—]+|[\s,.\-–—]+$/g, '').replace(/\s+/g, ' ');
+    amount = amount.replace(/^[\s,.\-–—]+|[\s,.\-–—]+$/g, '').replace(/\s+/g, ' ');
+
+    return isObj ? { ...ing, item, amount } : { item, amount: '' };
+  });
+}
 
 // ---- Gemini AI ----
 
@@ -79,6 +137,9 @@ export async function extractRecipeFromYouTube(youtubeUrl) {
 
   const recipe = await callGemini(body);
   if (recipe) {
+    if (Array.isArray(recipe.ingredients)) {
+      recipe.ingredients = sanitizeIngredients(recipe.ingredients);
+    }
     const isPlaceholder = (imgUrl) => !imgUrl || imgUrl.includes('placeholder') || imgUrl.includes('unsplash') || imgUrl.trim() === '';
     const ytThumb = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '';
 
@@ -100,7 +161,11 @@ export async function extractRecipeFromText(text) {
     }],
     generationConfig: { temperature: 0.1 }
   };
-  return callGemini(body);
+  const recipe = await callGemini(body);
+  if (recipe && Array.isArray(recipe.ingredients)) {
+    recipe.ingredients = sanitizeIngredients(recipe.ingredients);
+  }
+  return recipe;
 }
 
 export async function extractRecipeFromVercelServer(videoUrl) {
@@ -120,7 +185,15 @@ export async function extractRecipeFromVercelServer(videoUrl) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok || !data.success) {
-    throw new Error(data.error || `Erro ${response.status} ao conectar à API Vercel`);
+    const rawErr = data.error || `Erro ${response.status} ao conectar à API Vercel`;
+    if (/demand|quota|429|resource|rate limit|too many requests|overload/i.test(rawErr)) {
+      throw new Error('O Gemini está cheio de demanda agora, você pode tentar de novo em 5 minutinhos? 💛');
+    }
+    throw new Error(rawErr);
+  }
+
+  if (data.recipe && Array.isArray(data.recipe.ingredients)) {
+    data.recipe.ingredients = sanitizeIngredients(data.recipe.ingredients);
   }
 
   return data.recipe;
@@ -135,7 +208,11 @@ async function callGemini(body) {
 
   if (!response.ok) {
     const err = await response.json().catch(() => ({}));
-    throw new Error(err.error?.message || `Erro ${response.status} na API Gemini`);
+    const rawMsg = err.error?.message || `Erro ${response.status} na API Gemini`;
+    if (/demand|quota|429|resource|rate limit|too many requests|overload/i.test(rawMsg)) {
+      throw new Error('O Gemini está cheio de demanda agora, você pode tentar de novo em 5 minutinhos? 💛');
+    }
+    throw new Error(rawMsg);
   }
 
   const data = await response.json();
@@ -171,6 +248,15 @@ function getMyRecipesCollection() {
 }
 
 export async function saveUserRecipe(recipeData) {
+  if (recipeData.nutrition && recipeData.nutrition.calories) {
+    recipeData.nutrition.calories = String(recipeData.nutrition.calories).replace(/kcal/gi, '').replace(/cal/gi, '').trim();
+  }
+  if (recipeData.calories) {
+    recipeData.calories = String(recipeData.calories).replace(/kcal/gi, '').replace(/cal/gi, '').trim();
+  }
+  sanitizeRecipeTags(recipeData);
+  normalizeRecipeIngredients(recipeData);
+
   const col = getMyRecipesCollection();
   const docRef = await addDoc(col, {
     ...recipeData,
@@ -179,6 +265,176 @@ export async function saveUserRecipe(recipeData) {
     updatedAt: serverTimestamp()
   });
   return docRef.id;
+}
+
+export function cleanIngredientName(raw) {
+  if (!raw) return '';
+  let str = raw.toString().trim();
+  const lower = str.toLowerCase();
+  if (lower.includes('sal e pimenta') || lower.includes('sal e pimenta-do-reino') || lower.includes('sal e pimenta do reino')) return 'Pimenta-do-reino';
+  
+  str = str.replace(/\([^)]*\)/g, '');
+  str = str.replace(/\s*\b\d+\s*%?/gi, '');
+  if (str.toLowerCase().includes(' ou ')) str = str.split(/\s+ou\s+/i)[0].trim();
+  
+  str = str.replace(/^\s*\b(?:escalope(?:s)?\s+de|filé(?:s)?\s+de|posta(?:s)?\s+de|pedaço(?:s)?\s+de|fatia(?:s)?\s+de|dente(?:s)?\s+de|dente(?:s)?|ramo(?:s)?\s+de|talo(?:s)?\s+de|punhado\s+de|suco\s+de|casca\s+de|raspas\s+de)\b\s*/i, '');
+  str = str.replace(/^[\d\s\/\.,\:\-\+]+/i, '');
+  str = str.replace(/^\s*a\s+(?=\d)/i, '');
+  
+  const unitsRegex = /^(?:g|kg|ml|l|colher(?:es)?|xícara(?:s)?|lata(?:s)?|pitada(?:s)?|pacote(?:s)?|unidade(?:s)?|copo(?:s)?|col\.?|chá|sopa|sobremesa|café|mãozada(?:s)?|caixinha(?:s)?|vidro(?:s)?|sachê(?:s)?|grama(?:s)?|kilo(?:s)?|quilo(?:s)?|xicara(?:s)?|xic\.?|colh\.?|xícaras?)\b\s*/i;
+  str = str.replace(unitsRegex, '');
+  str = str.replace(/^\s*\b(?:de|da|do|dos|das|em)\b\s*/i, '');
+  
+  const descriptorsRegex = /\b(?:fresc[oas]|picad[oas]|picadinh[oas]|bem\s+picad[oas]|ralad[oas]|moíd[oas]|defumad[oas]|esmagad[oas]|amassad[oas]|torrad[oas]|limp[oas]|maturad[oas]|cortad[oas]|congelad[oas]|fatiad[oas]|desfiad[oas]|cozid[oas]|madur[oas]|inteir[oas]|sec[oas]|desidratad[oas]|triturad[oas]|derretid[oas]|grelhad[oas]|médi[oas]|médio|média|médias|médios|grand[es]|pequen[oas]|light|diet|zero|em\s+cubos?|em\s+cubinhos?|em\s+tiras?|em\s+rodelas?|em\s+fatias?|em\s+pedaços?|em\s+lascas?|em\s+conserva|sem\s+sal|com\s+sal|sem\s+pele|sem\s+osso|a\s+gosto|para\s+servir|para\s+decorar|para\s+fritar|para\s+assar|para\s+untar|para\s+refogar|na\s+hora|caseir[oas])\b/gi;
+  str = str.replace(descriptorsRegex, '');
+  str = str.replace(/\s*\b(?:de|da|do|dos|das|em|ou|e)\b\s*$/gi, '');
+  str = str.trim();
+  if (!str) return '';
+
+  let lstr = str.toLowerCase();
+
+  const canonicalMap = {
+    'batata': 'Batata',
+    'batatas': 'Batata',
+    'batata inglesa': 'Batata',
+    'batata-inglesa': 'Batata',
+    'batatas inglesas': 'Batata',
+    'batata doce': 'Batata-doce',
+    'batata-doce': 'Batata-doce',
+    'batatas doces': 'Batata-doce',
+    'batata baroa': 'Batata-baroa',
+    'batata-baroa': 'Batata-baroa',
+    'mandioquinha': 'Batata-baroa',
+    'cebola': 'Cebola',
+    'cebolas': 'Cebola',
+    'cebola branca': 'Cebola',
+    'cebola roxa': 'Cebola roxa',
+    'cebolas roxas': 'Cebola roxa',
+    'cebola pérola': 'Cebola',
+    'cebolas pérola': 'Cebola',
+    'cebolinha': 'Cebolinha',
+    'cebolinhas': 'Cebolinha',
+    'cebolinha verde': 'Cebolinha',
+    'alho': 'Alho',
+    'alhos': 'Alho',
+    'dente de alho': 'Alho',
+    'dentes de alho': 'Alho',
+    'tomate': 'Tomate',
+    'tomates': 'Tomate',
+    'tomate cereja': 'Tomate-cereja',
+    'tomates cereja': 'Tomate-cereja',
+    'tomate-cereja': 'Tomate-cereja',
+    'ovo': 'Ovo',
+    'ovos': 'Ovo',
+    'ovos inteiros': 'Ovo',
+    'gema': 'Gema de ovo',
+    'gemas': 'Gema de ovo',
+    'gemas de ovo': 'Gema de ovo',
+    'clara': 'Clara de ovo',
+    'claras': 'Clara de ovo',
+    'claras de ovo': 'Clara de ovo',
+    'cenoura': 'Cenoura',
+    'cenouras': 'Cenoura',
+    'banana': 'Banana',
+    'bananas': 'Banana',
+    'limão': 'Limão',
+    'limões': 'Limão',
+    'limao': 'Limão',
+    'limão tahiti': 'Limão',
+    'suco de limão': 'Limão',
+    'laranja': 'Laranja',
+    'laranjas': 'Laranja',
+    'maçã': 'Maçã',
+    'maçãs': 'Maçã',
+    'morango': 'Morango',
+    'morangos': 'Morango',
+    'camarão': 'Camarão',
+    'camarões': 'Camarão',
+    'pepino': 'Pepino',
+    'pepinos': 'Pepino',
+    'abobrinha': 'Abobrinha',
+    'abobrinhas': 'Abobrinha',
+    'berinjela': 'Berinjela',
+    'berinjelas': 'Berinjela',
+    'cogumelo': 'Cogumelo',
+    'cogumelos': 'Cogumelo',
+    'pimentão': 'Pimentão',
+    'pimentões': 'Pimentão',
+    'pimentão vermelho': 'Pimentão vermelho',
+    'pimentão amarelo': 'Pimentão amarelo',
+    'pimentão verde': 'Pimentão verde',
+    'azeite': 'Azeite',
+    'azeite de oliva': 'Azeite',
+    'azeite de oliva extra virgem': 'Azeite',
+    'azeite extravirgem': 'Azeite',
+    'pimenta do reino': 'Pimenta-do-reino',
+    'pimenta-do-reino': 'Pimenta-do-reino',
+    'queijo parmesão': 'Queijo Parmesão',
+    'parmesão': 'Queijo Parmesão',
+    'queijo mussarela': 'Queijo mussarela',
+    'mussarela': 'Queijo mussarela',
+    'mozarela': 'Queijo mussarela',
+    'queijo moçarela': 'Queijo mussarela',
+    'farinha': 'Farinha de trigo',
+    'farinha de trigo': 'Farinha de trigo',
+    'maionese': 'Maionese',
+    'maionese light': 'Maionese',
+    'óleo': 'Óleo',
+    'óleo vegetal': 'Óleo',
+    'óleo de soja': 'Óleo',
+    'óleo para fritar': 'Óleo',
+    'manteiga': 'Manteiga',
+    'manteiga sem sal': 'Manteiga',
+    'manteiga com sal': 'Manteiga',
+    'leite': 'Leite',
+    'creme de leite': 'Creme de leite',
+    'leite condensado': 'Leite condensado',
+    'frango': 'Frango',
+    'peito de frango': 'Peito de frango',
+    'carne moída': 'Carne moída',
+    'bacon': 'Bacon',
+    'linguiça': 'Linguiça',
+    'pancetta': 'Pancetta',
+    'salmão': 'Salmão',
+    'atum': 'Atum'
+  };
+
+  if (canonicalMap[lstr]) return canonicalMap[lstr];
+
+  if (lstr.length > 3 && lstr.endsWith('s') && !lstr.endsWith('ss') && !lstr.endsWith('is') && !lstr.endsWith('us') && !lstr.endsWith('nozes')) {
+    const singularAttempt = lstr.slice(0, -1);
+    if (canonicalMap[singularAttempt]) return canonicalMap[singularAttempt];
+    return singularAttempt.charAt(0).toUpperCase() + singularAttempt.slice(1);
+  }
+
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function normalizeRecipeIngredients(recipe) {
+  if (!recipe || !Array.isArray(recipe.ingredients)) return recipe;
+  recipe.ingredients = sanitizeIngredients(recipe.ingredients);
+  recipe.ingredients = recipe.ingredients.map(ing => {
+    if (!ing) return ing;
+    const isObj = typeof ing === 'object' && ing !== null;
+    let rawItem = isObj ? (ing.item || ing.name || ing.title || '') : String(ing);
+    const upper = rawItem.trim().toUpperCase();
+
+    if ((isObj && (ing.isHeader || ing.header || ing.section || ing.type === 'section')) ||
+        upper.startsWith('PARA ') || upper.startsWith('MASSA') || upper.startsWith('MOLHO') || upper.startsWith('RECHEIO') || rawItem.trim().endsWith(':') ||
+        (isObj && (!ing.amount || ing.amount.trim() === '') && (upper.includes('PARA O') || upper.includes('PARA A') || upper.includes('PARA AS') || upper.includes('PARA OS')))) {
+      return { isHeader: true, title: rawItem.replace(/^[\s:]+|[\s:]+$/g, '') };
+    }
+
+    if (typeof ing === 'string') {
+      const cleanItem = cleanIngredientName(ing);
+      return { item: cleanItem || ing, amount: '' };
+    } else if (ing && typeof ing === 'object') {
+      const cleanItem = cleanIngredientName(rawItem);
+      return { ...ing, item: cleanItem || rawItem };
+    }
+    return ing;
+  });
+  return recipe;
 }
 
 const ALLOWED_TAGS = ['1 Panela', 'Dia a Dia', 'Falta Checar', 'Fritura', 'Gostosão', 'Pouco Calórico', 'Proteico', 'Saudável'];
@@ -198,16 +454,17 @@ export async function getUserRecipes() {
   if (!user) return [];
   try {
     const col = collection(db, 'users', user.uid, 'my_recipes');
-    const q = query(col, orderBy('createdAt', 'desc'));
-    const snapshotPromise = getDocs(q);
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout Firestore')), 3000));
+    const snapshotPromise = getDocs(col);
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout Firestore')), 5000));
     const snapshot = await Promise.race([snapshotPromise, timeoutPromise]);
-    return snapshot.docs.map(d => sanitizeRecipeTags({
+    const recipes = snapshot.docs.map(d => sanitizeRecipeTags({
       ...d.data(),
       id: d.id,
       firestoreId: d.id,
       isUserCreated: true
     }));
+    // Ordenar localmente por data de criação se disponível
+    return recipes.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
   } catch (e) {
     console.warn('Busca de receitas no Firestore excedeu tempo limite ou falhou:', e);
     return [];
@@ -274,6 +531,12 @@ export async function deleteUserRecipe(id) {
     const localRecipes = JSON.parse(localStorage.getItem('receitas_isa_user_recipes')) || [];
     const updated = localRecipes.filter(r => r.id !== id && r.firestoreId !== id);
     localStorage.setItem('receitas_isa_user_recipes', JSON.stringify(updated));
+
+    const deletedStatic = JSON.parse(localStorage.getItem('receitas_isa_deleted_static')) || [];
+    if (!deletedStatic.includes(id)) {
+      deletedStatic.push(id);
+      localStorage.setItem('receitas_isa_deleted_static', JSON.stringify(deletedStatic));
+    }
   } catch (e) {
     console.warn("Erro ao deletar localmente:", e);
   }
@@ -290,18 +553,28 @@ export async function updateUserRecipe(id, recipeData) {
           updatedAt: serverTimestamp()
         });
         return docResult.snap.id;
+      } else {
+        try {
+          await saveUserRecipe({ ...recipeData, id });
+        } catch (err) {
+          console.warn("Erro ao salvar nova receita de usuário no Firestore:", err);
+        }
       }
     } catch (e) {
       console.error("Erro ao atualizar no Firestore:", e);
-      throw e;
     }
   }
+
+  // Atualizar ou inserir localmente
   const localRecipes = JSON.parse(localStorage.getItem('receitas_isa_user_recipes')) || [];
   const idx = localRecipes.findIndex(r => r.id === id || r.firestoreId === id);
   if (idx !== -1) {
     localRecipes[idx] = { ...localRecipes[idx], ...recipeData };
-    localStorage.setItem('receitas_isa_user_recipes', JSON.stringify(localRecipes));
+  } else {
+    localRecipes.push({ id, ...recipeData });
   }
+
+  localStorage.setItem('receitas_isa_user_recipes', JSON.stringify(localRecipes));
   return id;
 }
 
@@ -331,6 +604,8 @@ Campos que você DEVE preencher se estiverem em branco ou nulos (se o usuário j
     "fat": "string (ex: 24g)"
   }
 
+REGRA CRÍTICA: NUNCA retorne "Não informado" nos campos de nutrição (calories, protein, carbs, fat). Se a receita não traz essas informações, você DEVE obrigatoriamente estimar valores nutricionais realistas baseando-se nos ingredientes e quantidades informados (ex: 250 kcal, 15g, 30g, 5g).
+
 Retorne APENAS o objeto JSON completo atualizado (sem markdown, sem backticks, sem texto adicional).`;
 
   const body = {
@@ -343,15 +618,24 @@ Retorne APENAS o objeto JSON completo atualizado (sem markdown, sem backticks, s
   return callGemini(body);
 }
 
-export async function extractRecipeFromFile(base64Data, mimeType) {
+export async function extractRecipeFromFile(fileOrFiles, mimeType) {
   const prompt = RECIPE_PROMPT;
+  const parts = [{ text: prompt }];
+
+  if (Array.isArray(fileOrFiles)) {
+    fileOrFiles.forEach(item => {
+      parts.push({
+        inlineData: { mimeType: item.mimeType, data: item.base64Data }
+      });
+    });
+  } else {
+    parts.push({
+      inlineData: { mimeType: mimeType, data: fileOrFiles }
+    });
+  }
+
   const body = {
-    contents: [{
-      parts: [
-        { text: prompt },
-        { inlineData: { mimeType: mimeType, data: base64Data } }
-      ]
-    }],
+    contents: [{ parts }],
     generationConfig: { temperature: 0.1 }
   };
   return callGemini(body);
