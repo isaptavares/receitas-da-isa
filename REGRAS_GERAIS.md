@@ -61,3 +61,33 @@ Define o nível de complexidade e possui a pasta `difficulties/`.
 
 > [!IMPORTANT]
 > Tags como "Vegano", "Vegetariano", "Oriental" ou "Premium" **não devem ser usadas**. Se uma receita for vegana por natureza, isso deve ser mencionado na descrição ou ingredientes, mas não como tag.
+
+---
+
+## 5. Padronização de Nomes de Ingredientes (Normalização)
+
+Para manter os filtros da geladeira e busca limpos e sem duplicidades:
+
+1. **Remoção de Estados & Modos de Preparo:**
+   - Adjetivos como `derretido`, `congelado`, `grelhado`, `amassado`, `fresco`, `picado`, `ralado`, `moído`, `fatiado`, `desfiado`, `cozido`, `em cubos`, `em conserva`, `em lascas` **devem ser removidos do nome do ingrediente base** (ex: *Manteiga derretida* ➔ *Manteiga*; *Chocolate meio amargo derretido* ➔ *Chocolate meio amargo*).
+
+2. **Remoção de Cortes & Prefixos de Corte:**
+   - Prefixos de preparo como `escalope de`, `filé de`, `dentes de`, `postas de`, `pedaços de` **devem ser omitidos** (ex: *escalope de lombo de porco* ➔ *Lombo de porco*).
+
+3. **Formatos & Concentrações:**
+   - Percentuais como `100%`, `70%` são omitidos (ex: *cacau em pó 100%* ➔ *Cacau em pó*).
+
+4. **Mapas de Canonização:**
+   - **Azeite:** *Azeite de oliva*, *Azeite extra virgem* ➔ `Azeite`.
+   - **Banana:** *Banana congelada*, *Banana prata amassada* ➔ `Banana`.
+   - **Camarão:** *Camarão médio*, *Camarões grandes* ➔ `Camarão`.
+   - **Cebola:** *Cebola pérola*, *Cebolas* ➔ `Cebola` (Manter `Cebola roxa` separada).
+   - **Cebolinha:** *Cebolinha verde* ➔ `Cebolinha`.
+   - **Limão:** *Limão tahiti*, *Limões* ➔ `Limão`.
+   - **Ovo:** *Ovos inteiros*, *Ovo grande*, *Gemas de ovo* ➔ `Ovo`.
+   - **Pepino:** *Pepino em conserva* ➔ `Pepino`.
+   - **Pimenta:** *Pimenta do reino moída na hora*, *Pimenta-do-reino* ➔ `Pimenta-do-reino`.
+   - **Queijo Parmesão:** *Parmesão ralado*, *Queijo parmesão ou em lascas* ➔ `Queijo Parmesão`.
+
+5. **Exclusões de Combos Duplos:**
+   - Combos genéricos como `"Sal e pimenta"`, `"Sal e pimenta-do-reino"` **não devem ser cadastrados como 1 único ingrediente**; devem ser separados em ingredientes individuais ou omitidos da lista global.

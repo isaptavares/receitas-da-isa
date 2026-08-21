@@ -8,9 +8,19 @@
   "calories": 180,
   "servings": 1,
   "difficulty": "Fácil",
-  "categories": ["Café da Manhã"],
-  "tags": ["Saudável"],
-  "ingredients": ["1 xícara de frutas vermelhas congeladas", "1 banana congelada", "100ml de leite vegetal", "Granola crocante", "Frutas frescas para decorar"],
+  "categories": [
+    "Café da Manhã"
+  ],
+  "tags": [
+    "Saudável"
+  ],
+  "ingredients": [
+    "1 xícara de frutas vermelhas congeladas",
+    "1 banana congelada",
+    "100ml de leite vegetal",
+    "Granola crocante",
+    "Frutas frescas para decorar"
+  ],
   "steps": [
     "Bata as frutas congeladas com o leite vegetal no liquidificador ou mixer.",
     "Bata até obter uma consistência de sorbet (creme espesso).",

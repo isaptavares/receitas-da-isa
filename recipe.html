@@ -418,6 +418,22 @@
 
       const refPage = document.referrer && document.referrer.includes('favorites') ? 'favorites.html' : 'index.html';
 
+      const prot = parseFloat(String(n.protein).replace(/[^\d.,]/g, '').replace(',', '.')) || 0;
+      const carb = parseFloat(String(n.carbs).replace(/[^\d.,]/g, '').replace(',', '.')) || 0;
+      const fat = parseFloat(String(n.fat).replace(/[^\d.,]/g, '').replace(',', '.')) || 0;
+      const totalNutrients = prot + carb + fat;
+
+      let p1 = 33, p2 = 66, p3 = 100;
+      if (totalNutrients > 0) {
+        const pctProt = Math.round((prot / totalNutrients) * 100);
+        const pctCarb = Math.round((carb / totalNutrients) * 100);
+        p1 = pctProt;
+        p2 = pctProt + pctCarb;
+        if (p1 > 100) p1 = 100;
+        if (p2 > 100) p2 = 100;
+      }
+      const conicGradient = `conic-gradient(#ffbf00 0 ${p1}%, #2f8f7d ${p1}% ${p2}%, #6b7ef0 ${p2}% ${p3}%)`;
+
       document.getElementById('recipe-main').innerHTML = `
         <article class="recipe-page" aria-label="${recipe.title}">
           <section style="max-width:1280px; margin:0 auto; padding:40px 48px 0">
@@ -485,7 +501,7 @@
                   <div style="font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#6b7ef0">Nutrição</div>
                   <div style="font-size:12px; color:#a39a8c; font-weight:500; margin-top:3px">Por porção</div>
                   <div style="display:flex; align-items:center; gap:22px; margin-top:18px">
-                    <div style="width:92px; height:92px; border-radius:50%; background:conic-gradient(#ffbf00 0 42%, #2f8f7d 42% 74%, #6b7ef0 74% 100%); display:flex; align-items:center; justify-content:center; flex-shrink:0">
+                    <div style="width:92px; height:92px; border-radius:50%; background:${conicGradient}; display:flex; align-items:center; justify-content:center; flex-shrink:0">
                       <div style="width:70px; height:70px; border-radius:50%; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center">
                         <span style="font-size:22px; font-weight:800; line-height:1">${cleanCalories || '0'}</span>
                         <span style="font-size:9px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#a39a8c">kcal</span>
@@ -670,7 +686,7 @@
         rawAmount = cleanPrepMethods(rawAmount);
 
         if (!isObj && name) {
-          const m = name.match(/^([\d.,]+(?:[/][\d.,]+)?)\s*(.*)$/);
+          const m = name.match(/^(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:[.,]\d+)?)\s*(.*)$/);
           if (m) {
             rawAmount = m[1];
             name = m[2];
@@ -679,11 +695,17 @@
 
         let scaledAmount = rawAmount;
         if (rawAmount) {
-          const match = rawAmount.match(/^([\d.,]+(?:[/][\d.,]+)?)\s*(.*)$/);
+          const match = rawAmount.match(/^(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:[.,]\d+)?)\s*(.*)$/);
           if (match) {
              let numText = match[1].replace(',', '.');
              let num = 0;
-             if (numText.includes('/')) {
+             if (numText.includes(' ')) {
+                const parts = numText.split(' ');
+                const intPart = parseFloat(parts[0]);
+                const fracParts = parts[1].split('/');
+                const frac = parseFloat(fracParts[0]) / parseFloat(fracParts[1]);
+                num = intPart + frac;
+             } else if (numText.includes('/')) {
                 const parts = numText.split('/');
                 num = parseFloat(parts[0]) / parseFloat(parts[1]);
              } else {
@@ -692,10 +714,37 @@
              
              if (!isNaN(num)) {
                let scaledNum = num * currentServings;
-               if (scaledNum % 1 !== 0) {
-                 scaledNum = Math.round(scaledNum * 10) / 10;
+               scaledNum = Math.round(scaledNum * 100) / 100;
+               
+               let intPart = Math.floor(scaledNum);
+               let fracPart = scaledNum - intPart;
+               
+               const tolerance = 0.03;
+               if (Math.abs(fracPart - 0) < tolerance) fracPart = 0;
+               else if (Math.abs(fracPart - 0.25) < tolerance) fracPart = 0.25;
+               else if (Math.abs(fracPart - 0.33) < tolerance) fracPart = 0.33;
+               else if (Math.abs(fracPart - 0.5) < tolerance) fracPart = 0.5;
+               else if (Math.abs(fracPart - 0.67) < tolerance) fracPart = 0.67;
+               else if (Math.abs(fracPart - 0.75) < tolerance) fracPart = 0.75;
+               else if (Math.abs(fracPart - 1) < tolerance) { fracPart = 0; intPart++; }
+               
+               let scaledStr = '';
+               if (fracPart === 0) {
+                 scaledStr = intPart.toString();
+               } else if (fracPart === 0.25) {
+                 scaledStr = intPart > 0 ? `${intPart}&ensp;1/4` : `1/4`;
+               } else if (fracPart === 0.33) {
+                 scaledStr = intPart > 0 ? `${intPart}&ensp;1/3` : `1/3`;
+               } else if (fracPart === 0.5) {
+                 scaledStr = intPart > 0 ? `${intPart}&ensp;1/2` : `1/2`;
+               } else if (fracPart === 0.67) {
+                 scaledStr = intPart > 0 ? `${intPart}&ensp;2/3` : `2/3`;
+               } else if (fracPart === 0.75) {
+                 scaledStr = intPart > 0 ? `${intPart}&ensp;3/4` : `3/4`;
+               } else {
+                 scaledStr = scaledNum.toString().replace('.', ',');
                }
-               let scaledStr = scaledNum.toString().replace('.', ',');
+               
                scaledAmount = `${scaledStr} ${match[2]}`.trim();
              }
           }

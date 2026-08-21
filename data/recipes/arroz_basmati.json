@@ -8,9 +8,20 @@
   "calories": 180,
   "servings": 2,
   "difficulty": "Fácil",
-  "categories": ["Acompanhamento"],
-  "tags": ["1 panela", "Saudável"],
-  "ingredients": ["Arroz Basmati", "Cardamomo", "Cravo-da-índia", "Pau de canela", "Sal"],
+  "categories": [
+    "Acompanhamento"
+  ],
+  "tags": [
+    "1 panela",
+    "Saudável"
+  ],
+  "ingredients": [
+    "Arroz Basmati",
+    "Cardamomo",
+    "Cravo-da-índia",
+    "Pau de canela",
+    "Sal"
+  ],
   "steps": [
     "Lave o arroz basmati até que a água saia clara.",
     "Em uma panela, coloque o arroz com as especiarias.",

@@ -8,9 +8,20 @@
   "calories": 400,
   "servings": 1,
   "difficulty": "Fácil",
-  "categories": ["Lanche"],
-  "tags": ["Proteico", "Saudável"],
-  "ingredients": ["1 tortilha de trigo", "Filé de frango em tiras grelhado", "1/2 avocado fatiado", "Tomates cereja cortado", "Molho de hortelã"],
+  "categories": [
+    "Lanche"
+  ],
+  "tags": [
+    "Proteico",
+    "Saudável"
+  ],
+  "ingredients": [
+    "1 tortilha de trigo",
+    "Filé de frango em tiras grelhado",
+    "1/2 avocado fatiado",
+    "Tomates cereja cortado",
+    "Molho de hortelã"
+  ],
   "steps": [
     "Aqueça levemente a tortilha em uma frigideira.",
     "Distribua o frango quente e o avocado no centro.",

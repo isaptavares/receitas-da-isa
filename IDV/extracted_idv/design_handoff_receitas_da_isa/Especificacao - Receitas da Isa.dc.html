@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="./doc-page.js"></script>
+<style>
+  body { margin:0; font-family:'Plus Jakarta Sans', Helvetica, sans-serif; color:#14110d; -webkit-font-smoothing:antialiased; }
+  doc-page:not(:defined) { visibility:hidden; }
+  doc-page, doc-page h1, doc-page h2, doc-page h3, doc-page p, doc-page li, doc-page ul, doc-page td, doc-page th, doc-page div, doc-page span, doc-page strong, doc-page em { font-family:'Plus Jakarta Sans', Helvetica, sans-serif; }
+  doc-page code { font-family:'JetBrains Mono', monospace; }
+  a { color:#8a6a00; }
+  a:hover { color:#d99f00; }
+</style>
+</helmet>
+
+<doc-page margin="0.8in">
+  <div style="display:flex; align-items:center; gap:12px; margin-bottom:26px">
+    <div style="width:38px; height:38px; border-radius:12px; background:#ffbf00; display:flex; align-items:center; justify-content:center"><div style="width:13px; height:13px; border-radius:50%; background:#14110d"></div></div>
+    <div style="font-size:11pt; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Especificação de design</div>
+  </div>
+
+  <h1 style="margin:0; font-size:30pt; font-weight:800; letter-spacing:-0.03em; line-height:1.05">Receitas da Isa — redesign completo</h1>
+  <p style="margin:14px 0 0; font-size:12pt; line-height:1.6; color:#6b6459">Documento de handoff para implementação. Descreve as sete telas desktop e as cinco telas mobile do redesign do site <strong>Receitas da Isa</strong> (isaptavares.github.io/receitas-da-isa): catálogo de receitas, páginas por categoria, ficha de receita, três fluxos de criação e planejador semanal com lista de compras.</p>
+
+  <h2 style="margin:34px 0 10px; font-size:16pt; font-weight:800; letter-spacing:-0.02em">Como usar este material</h2>
+  <p style="margin:0 0 10px; font-size:11pt; line-height:1.6">Os arquivos HTML que acompanham este documento são <strong>referências de design</strong> — protótipos de aparência e comportamento, não código de produção. A tarefa é recriar esses designs no ambiente do site real (HTML estático + JS no GitHub Pages, Firebase para dados, Gemini para as importações por IA), seguindo os padrões já existentes do projeto. O arquivo <code style="font-family:'JetBrains Mono',monospace; font-size:10pt">support.js</code> é apenas o runtime dos protótipos e não deve ser portado.</p>
+  <p style="margin:0; font-size:11pt; line-height:1.6"><strong>Fidelidade: alta.</strong> Cores, tipografia, espaçamentos, raios, sombras e estados de hover são finais. As fotos são placeholders listrados marcados (<em>foto do prato</em>, <em>foto da receita — 1:1</em>, <em>destaque</em>) e devem ser trocadas pelas imagens reais.</p>
+
+  <h2 style="margin:34px 0 12px; font-size:16pt; font-weight:800; letter-spacing:-0.02em">Tokens</h2>
+  <h3 style="margin:0 0 8px; font-size:12pt; font-weight:800">Cores</h3>
+  <table style="width:100%; border-collapse:collapse; font-size:10.5pt">
+    <thead>
+      <tr>
+        <th style="text-align:left; padding:8px 10px; border-bottom:2px solid #14110d; font-weight:800">Papel</th>
+        <th style="text-align:left; padding:8px 10px; border-bottom:2px solid #14110d; font-weight:800">Hex</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Fundo</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#ffffff</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Texto principal</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#14110d</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Texto corpo</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#6b6459</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Texto terciário / legenda</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#a39a8c</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Amarelo de marca — ícones e CTA</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#ffbf00</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Amarelo escuro — texto e hover</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#d99f00 · #8a6a00</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Amarelo claro — fundo de selo</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#fff6d9</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Roxo — destaque de título, hover destrutivo</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#7b4bd1</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Vermelho — exclusivo do coração de favoritar</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#e14b3f</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Verde-azulado — acento</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#2f8f7d · texto #1f6b5c · fundo #e6f2ef</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Azul-violeta — acento</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#6b7ef0 · texto #3a4bc0 · fundo #eaeefe</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Superfície bege</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#f7f4ee</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Linhas e bordas</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">#f0ebe3 · campo #ece5d9 · botão #e5ded2</td></tr>
+    </tbody>
+  </table>
+  <p style="margin:12px 0 0; font-size:10.5pt; line-height:1.6; color:#6b6459">Placeholder de imagem: <code style="font-family:'JetBrains Mono',monospace; font-size:9.5pt">repeating-linear-gradient(135deg,#f4efe6 0 12px,#efe8dc 12px 24px)</code>. Marcas de terceiros nos chips de importação: YouTube #ff0033, Instagram #c13584, TikTok #14110d, Panelinha #e42313, TudoGostoso #ff6a28 (logo em <code style="font-family:'JetBrains Mono',monospace; font-size:9.5pt">assets/tudogostoso.png</code>).</p>
+
+  <h3 style="margin:24px 0 8px; font-size:12pt; font-weight:800">Tipografia</h3>
+  <p style="margin:0; font-size:11pt; line-height:1.7">Família única: <strong>Plus Jakarta Sans</strong> (400/500/600/700/800 + itálico 600/700). Monoespaçada de apoio: <strong>JetBrains Mono</strong> (400/500), usada em legendas técnicas, quantidades e datas curtas. Ambas do Google Fonts.<br />
+  Escala desktop: h1 hero 74px/0.98 · h1 de página 60–64px · h2 seção 44px · h2 card 22–32px · título de card 17–18px · corpo 16–18px/1.55–1.6 · rótulo 13px 800 uppercase (letter-spacing 0.08em) · selo 11–12px 800 uppercase (0.1–0.14em).<br />
+  Escala mobile: h1 hero 40px · h1 de página 34–40px · h2 seção 26px · título de card 15px · corpo 15–16px · rótulos 10–11px.<br />
+  Títulos com letter-spacing de −0.02em a −0.035em. Ênfase em títulos = <code style="font-family:'JetBrains Mono',monospace; font-size:10pt">&lt;em&gt;</code> peso 700 na cor de acento da página (roxo, verde ou azul-violeta).</p>
+
+  <h3 style="margin:24px 0 8px; font-size:12pt; font-weight:800">Espaçamento, forma e traço</h3>
+  <p style="margin:0; font-size:11pt; line-height:1.7">Containers desktop: max-width 1440px (home, categoria, planejador), 1280px (receita), 1040px (formulários), 900px (importar); padding lateral 48px. Mobile: 390px de largura, padding lateral 20px.<br />
+  Raios: 999px (pílulas) · 28px (imagem principal, modal) · 26–22px (cards) · 20–18px (blocos menores) · 16–12px (campos e botões pequenos).<br />
+  <strong>Contornos vazados: 2px</strong> (tracejados 2–2,5px). Ícones em SVG de traço, <strong>stroke-width 2.8</strong>, cantos e pontas arredondadas, viewBox 18×18 (24×24 no globo). Exceção: os cinco ícones de ação da ficha mobile usam 1.8 para ganhar legibilidade em 22px.<br />
+  Sombras: card flutuante 0 22px 54px rgba(20,17,13,.18) · imagem principal 0 28px 64px rgba(20,17,13,.16) · botão de card 0 4px 12px rgba(20,17,13,.12) · modal 0 40px 100px rgba(20,17,13,.35).<br />
+  Layout sempre em flex/grid com gap; colunas com minmax(0,1fr) para não estourar. No cabeçalho desktop a navegação não encolhe e a busca cede espaço (flex:0 1 260px; overflow:hidden).</p>
+
+  <h2 style="margin:34px 0 12px; font-size:16pt; font-weight:800; letter-spacing:-0.02em">Componentes recorrentes</h2>
+  <h3 style="margin:0 0 8px; font-size:12pt; font-weight:800">Cabeçalho desktop</h3>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65">Sticky, fundo rgba(255,255,255,.92) com backdrop-filter blur(12px), borda inferior #f0ebe3, padding 20px 48px. Logo: quadrado 40px raio 13px em #ffbf00 com círculo preto de 14px; wordmark "Receitas da Isa" 19px/800 e sublinha "SABORES DO MUNDO" 11px/800 uppercase #a39a8c. Nav: Início · Favoritas · Planejador · Recebidas (badge numérico); item ativo com peso 700 e borda inferior 2px #ffbf00. À direita: busca em pílula #f7f4ee e botão "Entrar" preto. Nas três telas de criação a nav dá lugar a abas (Manualmente / Por link / Importar), a ativa com fundo #fff6d9 e texto #8a6a00.</p>
+
+  <h3 style="margin:0 0 8px; font-size:12pt; font-weight:800">Card de receita</h3>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65">Imagem 4:3 raio 22px. Sobre ela, no canto superior direito, <strong>cinco botões redondos brancos de 32px</strong> na ordem <strong>favoritar, editar, apagar, adicionar ao planejador, compartilhar</strong> (gap 6px, sombra leve, ícones de 17px). O coração de favoritar é sempre #e14b3f; os outros são #14110d com hover colorido — editar #d99f00, apagar #e14b3f, planejador #2f8f7d, compartilhar #6b7ef0. Canto inferior esquerdo: chip branco com a culinária (11px/800 uppercase). Abaixo da imagem: nome 18px/800 e linha de metadados 13px/600 #a39a8c com pontos coloridos — tempo (ponto #ffbf00), dificuldade (ponto #2f8f7d) e calorias. No mobile o card é 1:1 em grade de duas colunas e leva apenas o coração; as demais ações vivem na ficha da receita, para não criar alvos menores que 44px.</p>
+
+  <h3 style="margin:0 0 8px; font-size:12pt; font-weight:800">Composição em camadas</h3>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65">Assinatura visual do redesign, usada no hero da home, no hero da receita e no hero da categoria: formas geométricas grandes em baixa opacidade atrás da imagem (círculo #6b7ef0 a 0.15, quarto de círculo #7b4bd1 a 0.16, gota #ffbf00 a 0.28), imagem com sombra profunda e <strong>um card branco flutuando sobreposto</strong> — nutrição na home e na receita, "mais visitada da semana" na categoria. Exige z-index explícito para o card ficar acima das formas.</p>
+
+  <h3 style="margin:0 0 8px; font-size:12pt; font-weight:800">Card de nutrição</h3>
+  <p style="margin:0; font-size:11pt; line-height:1.65">Donut de 88–96px em <code style="font-family:'JetBrains Mono',monospace; font-size:10pt">conic-gradient(#ffbf00 0 42%, #2f8f7d 42% 74%, #6b7ef0 74% 100%)</code> com miolo branco de 66–72px exibindo kcal; ao lado, três linhas com bolinha da cor correspondente — Proteína, Carbo, Gordura.</p>
+
+  <h2 style="margin:34px 0 12px; font-size:16pt; font-weight:800; letter-spacing:-0.02em">Telas desktop</h2>
+
+  <h3 style="margin:0 0 8px; font-size:12pt; font-weight:800">1. Home</h3>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65"><strong>Hero em duas colunas:</strong> selo pílula #fff6d9 "VOCÊ É O QUE VOCÊ COME"; h1 74px "Então, que comamos bem" em roxo itálico; botões "Explorar receitas" (amarelo) e "Minhas favoritas" (contornado, coração vermelho); três estatísticas — 248 Receitas, 19 Culinárias em verde, 36 Favoritas em roxo — acima de uma linha divisória; à direita, a composição em camadas com o card de nutrição.<br />
+  <strong>Linha de criação:</strong> três cartões brancos sobre bloco #f7f4ee — Adicionar manualmente, Por link, Importar.<br />
+  <strong>Categorias:</strong> grade de 6 cartões contornados com ícone circular amarelo, nome e contagem.<br />
+  <strong>Receitas:</strong> barra de filtros em #f7f4ee (busca, Culinária, Dificuldade, Calorias, Tags, campo "Ingredientes da geladeira", Limpar filtros) e grade de 4 colunas de cards.<br />
+  <strong>Modal de ingredientes:</strong> abre pelo campo do filtro. Overlay rgba(20,17,13,.55), card 620px raio 28px. Cabeçalho com ✕, título "Filtrar por ingredientes" e "Limpar"; busca; bloco "Selecionados" (miniaturas 58px com borda amarela e badge ✕ preto) e "Populares" (miniaturas cinzas; selecionadas ficam amarelas com badge ✓); rodapé com a contagem e o botão <strong>Confirmar</strong>, que grava a seleção no campo ("Azeite, Alho" com até dois itens, senão "N ingredientes") e fecha.</p>
+
+  <h3 style="margin:0 0 8px; font-size:12pt; font-weight:800">2. Categoria</h3>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65">Uma única página serve todas as categorias. Breadcrumb; selo com a contagem; h1 64px; descrição; "Organizar por" com Padrão / Mais recentes / Menor tempo / Menos calorias; à direita a composição em camadas com o card "MAIS VISITADA DA SEMANA". Grade de 4 colunas e botão "Carregar mais". Não há chips de outras categorias — a página é de uma categoria só.</p>
+
+  <h3 style="margin:0 0 8px; font-size:12pt; font-weight:800">3. Ficha de receita</h3>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65">Breadcrumb; chips de culinária e tags; h1 58px; descrição; grade de quatro metadados (Tempo, Dificuldade, Rendimento, Calorias) com separadores de 1px; barra de ações na ordem <strong>Favoritar</strong> (amarelo, coração vermelho), Editar, Apagar, Adicionar ao planejador, Compartilhar. À direita, <strong>uma única imagem</strong> 1:1 com as formas atrás e o card de nutrição sobreposto. Abaixo, duas colunas: <strong>Ingredientes</strong> em card #f7f4ee com stepper de porções (− / +, 1 a 12) que recalcula as quantidades em tempo real em formato pt-BR; e <strong>Modo de preparo</strong> com etapas numeradas em quadrados #fff6d9, subetapas 1.1/1.2 indentadas com filete lateral, encerrando no bloco preto "DICA DA ISA".</p>
+
+  <h3 style="margin:0 0 8px; font-size:12pt; font-weight:800">4. Nova receita — manual</h3>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65">Selo "PRA NUNCA MAIS ESQUECER". <strong>Passo 1, obrigatórios:</strong> nome; lista dinâmica de ingredientes (quantidade + ingrediente + remover, botão tracejado "+ Adicionar ingrediente", contador "N adicionados"); modo de preparo em editor com numeração de linhas, nota "cada linha = 1 etapa · Tab indenta em 1.1, 1.2…" e barra inferior com "Organizar com IA". <strong>Passo 2, opcionais e autopreenchíveis por IA:</strong> culinária, dificuldade, tempo, rendimento, calorias; chips de categorias e de tags; imagem de capa com upload de arquivo <strong>e alternativa "OU POR URL"</strong> (campo + botão "Usar URL") ao lado da prévia. Rodapé com aviso, Cancelar e "Salvar receita".</p>
+
+  <h3 style="margin:0 0 8px; font-size:12pt; font-weight:800">5. Nova receita — por link</h3>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65">Selo "CHEGA DE SALVAR E NÃO FAZER". Dois cards de altura igual — são flex column e o campo de URL é empurrado para a base com margin-top:auto, então os botões ficam alinhados. <strong>Vídeo:</strong> ícone de play amarelo, chips YouTube / Instagram / TikTok com seus marcadores, campo de URL e botão amarelo "Importar vídeo". <strong>Site de receitas:</strong> ícone de globo azul-violeta, chips de exemplo Panelinha (texto vermelho), TudoGostoso (logo em PNG) e "etc." em #ffbf00 — todos com a mesma moldura; campo de URL e botão <strong>roxo</strong> "Importar do site". Sem painel de logs.</p>
+
+  <h3 style="margin:0 0 8px; font-size:12pt; font-weight:800">6. Nova receita — importação</h3>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65">Selo "PRA JAMAIS PERDER AQUELA RECEITA DE FAMÍLIA". Área de arrastar-e-soltar tracejada com botão "Escolher arquivo" e formatos aceitos (JPG, PNG, WEBP, PDF até 10 MB); linha do arquivo selecionado com nome, tamanho, barra de progresso amarela e remover; três cartões explicando o processo (Leitura do arquivo → Estimativas → Sua revisão); Cancelar e <strong>Importar</strong>.</p>
+
+  <h3 style="margin:0 0 8px; font-size:12pt; font-weight:800">7. Planejador</h3>
+  <p style="margin:0; font-size:11pt; line-height:1.65">Selo "MENU DA SEMANA"; h1 "Meu planejador" em verde; descrição; navegação de semana logo abaixo do texto (setas grossas, "10 – 16 ago") — não existe botão "Nova semana": avançar a seta abre a semana seguinte. Grade minmax(0,1fr) / minmax(280px,400px): <strong>sete cards de dia</strong> com cabeçalho #f7f4ee (nome, data monoespaçada, selo "HOJE" amarelo) e dois slots Almoço/Jantar em repeat(auto-fit,minmax(260px,1fr)) — preenchido mostra miniatura de 64px, rótulo e título; vazio mostra "Adicionar almoço/jantar"; botão "+" à direita. <strong>Lista de compras</strong> sticky (top 104px) com topo em <strong>fundo amarelo</strong>, título, progresso ("4 de 22 comprados") e botões brancos Copiar texto / Salvar PDF; corpo rolável com grupos (Legumes, Frutas, Proteínas), contagem por grupo e itens com caixa de seleção (marcado = quadrado verde com ✓), nome, receita de origem e quantidade em pílula.</p>
+
+  <h2 style="margin:34px 0 12px; font-size:16pt; font-weight:800; letter-spacing:-0.02em">Telas mobile (390px)</h2>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65">Todas compartilham a <strong>barra de abas fixa</strong> no rodapé — Receitas, Planejador, botão "+" amarelo de 52px elevado ao centro, Compras, Favoritas — sobre fundo translúcido com borda superior de 2px e padding inferior de 22px para a safe area. Telas internas trocam o cabeçalho por uma barra com botão de voltar circular (38px) e o contexto à esquerda.</p>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65"><strong>Home:</strong> hero com selo, h1 40px, botões Explorar e Favoritas e, à direita deles, um <strong>botão "+" amarelo de 56px</strong> que abre as três opções de criação empilhadas (Manualmente em amarelo, Por link em azul-violeta, Importar em verde) e vira "✕"; estatísticas; busca em pílula; carrossel de categorias no formato iFood (miniatura arredondada de 84×72 com o nome abaixo, sem contagem); seção de receitas com <strong>bloco de filtros</strong> logo abaixo do título — rótulo "FILTRAR RECEITAS", campo "Ingredientes" de largura cheia mostrando a seleção atual e quatro campos com seta ▾ (Culinária, Dificuldade, Calorias, Tags) em duas colunas; grade de receitas em duas colunas. O pop-up de ingredientes vira <strong>bottom sheet</strong> com raio 28px no topo, miniaturas em quatro colunas e o mesmo par contagem / Confirmar.</p>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65"><strong>Categoria:</strong> selo com contagem, h1 40px, descrição, card horizontal "MAIS VISITADA DA SEMANA" com miniatura de 88px, faixa rolável de ordenação e grade de duas colunas com "Carregar mais".</p>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65"><strong>Ficha de receita:</strong> foto 1:1 a <strong>80% da largura</strong>, centralizada, com as formas atrás; chips; h1 34px; descrição; metadados em grade 2×2; <strong>cinco botões só de ícone</strong> (56px de altura, grade de cinco colunas, sem rolagem) na ordem favoritar — destacado em #fff6d9 com borda amarela e coração vermelho — editar, apagar, planejador e compartilhar, com traço 1.8; card de nutrição; ingredientes com stepper; preparo com subetapas; bloco "DICA DA ISA"; e CTA fixo no rodapé "Adicionar ao planejador".</p>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65"><strong>Nova receita:</strong> os três fluxos em um único arquivo com abas (Manual, Por link, Importar) e barra fixa no rodapé com Cancelar e o CTA correspondente ("Salvar receita" ou "Importar"). Campos empilhados; tempo e porções lado a lado; chips de categoria e tag com white-space:nowrap.</p>
+  <p style="margin:0; font-size:11pt; line-height:1.65"><strong>Planejador:</strong> abas Semana / Lista de compras. Em Semana, os sete dias empilhados com almoço e jantar em linhas; em Lista de compras, o mesmo card de topo amarelo com grupos e itens.</p>
+
+  <h2 style="margin:34px 0 12px; font-size:16pt; font-weight:800; letter-spacing:-0.02em">Interações e estados</h2>
+  <ul style="margin:0; padding-left:20px; font-size:11pt; line-height:1.7">
+    <li><strong>Modal / sheet de ingredientes:</strong> abre a partir do campo do filtro copiando a seleção já aplicada; tocar na miniatura entra ou sai da seleção; Limpar esvazia o rascunho; Confirmar grava e fecha; ✕ descarta.</li>
+    <li><strong>Stepper de porções:</strong> limites de 1 a 12; recalcula todas as quantidades e o rótulo de rendimento.</li>
+    <li><strong>Lista de ingredientes no formulário manual:</strong> adicionar e remover linhas, de 1 a 20.</li>
+    <li><strong>Botão "+" do hero mobile:</strong> alterna entre "+" e "✕" e revela as três rotas de criação.</li>
+    <li><strong>Hovers:</strong> links → #d99f00; botões contornados → borda #ffbf00; ações destrutivas → #e14b3f ou #7b4bd1; ícones de card conforme a tabela do componente.</li>
+    <li><strong>Foco em campos:</strong> a borda passa para #ffbf00 (ou #6b7ef0 no campo de URL de site).</li>
+    <li><strong>Placeholders</strong> em #6b6459 com opacity 1, para contraste alto.</li>
+  </ul>
+
+  <h2 style="margin:34px 0 12px; font-size:16pt; font-weight:800; letter-spacing:-0.02em">Assets e arquivos</h2>
+  <p style="margin:0 0 14px; font-size:11pt; line-height:1.65"><code style="font-family:'JetBrains Mono',monospace; font-size:10pt">assets/tudogostoso.png</code> — logo oficial do TudoGostoso, recortado nas bordas brancas (236×50). O logo do Panelinha <strong>não</strong> está incluído: o SVG do site deles bloqueia uso externo, então aparece como texto no vermelho da marca; substituir pelo arquivo oficial quando disponível. Todas as fotos de pratos são placeholders. Fontes via Google Fonts.</p>
+  <table style="width:100%; border-collapse:collapse; font-size:10.5pt">
+    <thead>
+      <tr>
+        <th style="text-align:left; padding:8px 10px; border-bottom:2px solid #14110d; font-weight:800">Arquivo</th>
+        <th style="text-align:left; padding:8px 10px; border-bottom:2px solid #14110d; font-weight:800">Tela</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">Receitas da Isa</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Home desktop</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">Categoria - Café da Manhã</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Categoria desktop (todas)</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">Receita</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Ficha de receita desktop</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">Nova Receita - Manual / Link / Importar</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Três fluxos de criação desktop</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">Planejador</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Planejador desktop</td></tr>
+      <tr><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3; font-family:'JetBrains Mono',monospace">Mobile - Home / Categoria / Receita / Nova Receita / Planejador</td><td style="padding:7px 10px; border-bottom:1px solid #f0ebe3">Cinco telas mobile</td></tr>
+    </tbody>
+  </table>
+</doc-page>
+</x-dc>
+</body>
+</html>

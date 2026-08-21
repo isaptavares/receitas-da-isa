@@ -33,77 +33,129 @@
 </head>
 <body>
 
-  <!-- ===== NAVBAR ===== -->
-  <nav class="navbar" id="navbar" aria-label="Navegação principal">
-    <a class="nav-logo" href="index.html" aria-label="Receitas da Isa - Início">
-      <span class="nav-logo-icon">🍴</span>
-      <span class="nav-logo-text">
-        Receitas da Isa
-        <em class="nav-logo-sub">sabores do mundo</em>
-      </span>
+    <!-- ===== NAVBAR ===== -->
+  <header class="navbar" id="navbar" style="display:flex; align-items:center; gap:32px; padding:20px 48px; border-bottom:1px solid #f0ebe3; position:sticky; top:0; background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); z-index:20">
+    <a href="index.html" class="nav-logo" style="display:flex; align-items:center; gap:12px; flex-shrink:0; text-decoration:none">
+      <div style="width:40px; height:40px; border-radius:13px; background:#ffbf00; display:flex; align-items:center; justify-content:center"><div style="width:14px; height:14px; border-radius:50%; background:#14110d"></div></div>
+      <div style="display:flex; flex-direction:column; line-height:1">
+        <span style="font-size:19px; font-weight:800; letter-spacing:-0.02em; color:#14110d">Receitas da Isa</span>
+        <span style="font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:#a39a8c; margin-top:4px">sabores do mundo</span>
+      </div>
     </a>
-    <ul class="nav-links" role="list">
-      <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
-      <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
-      <li><a class="nav-link" href="planner.html" id="nav-planner"><span class="nav-link-icon">📅</span> <span>Planejador</span></a></li>
-      <li><button class="nav-link nav-inbox-btn" onclick="openInboxModal(event)" type="button" id="nav-inbox" title="Receitas Recebidas"><span class="nav-link-icon">📩</span> <span>Recebidas</span> <span class="nav-inbox-badge" id="inbox-badge" style="display:none;">0</span></button></li>
-      <li id="nav-auth-container">
-        <button class="nav-login-btn" id="login-btn">
-          <span>🔑</span> <span>Entrar</span>
+    <nav style="display:flex; align-items:center; gap:28px; margin-left:16px; min-width:0">
+      <a href="index.html" style="font-size:15px; font-weight:600; color:#6b6459; text-decoration:none">Início</a>
+      <a href="favorites.html" style="font-size:15px; font-weight:700; padding-bottom:2px; border-bottom:2px solid #ffbf00; color:#14110d; text-decoration:none">Favoritas</a>
+      <a href="planner.html" style="font-size:15px; font-weight:600; color:#6b6459; text-decoration:none">Planejador</a>
+    </nav>
+    <div style="flex:1"></div>
+    <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-shrink:1">
+      <div style="display:flex; align-items:center; gap:10px; background:#f7f4ee; border-radius:999px; padding:10px 18px; flex:0 1 240px; min-width:44px; overflow:hidden">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;"><circle cx="6.5" cy="6.5" r="4.5" stroke="#ffbf00" stroke-width="2.2"/><path d="M10 10L14 14" stroke="#ffbf00" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <input placeholder="Procurar receitas..." style="border:none; background:transparent; outline:none; font-family:inherit; font-size:14px; font-weight:500; width:100%; color:#14110d" />
+      </div>
+      <div id="nav-auth-container" style="display:flex; align-items:center; gap:10px">
+        <button class="nav-login-btn" id="login-btn" style="background:#14110d; color:#fff; font-size:14px; font-weight:700; padding:12px 22px; border-radius:999px; flex-shrink:0; cursor:pointer; border:none; display:flex; align-items:center; gap:6px">
+          <span>🔑</span> Entrar
         </button>
-      </li>
-    </ul>
-  </nav>
-
-  <!-- ===== BANNER ===== -->
-  <header class="fav-banner" id="fav-banner">
-    <div class="fav-banner-eyebrow">♥ Receitas salvas</div>
-    <h1 class="fav-banner-title">Minhas <em>Favoritas</em></h1>
-    <p class="fav-banner-desc" id="fav-banner-desc">As receitas que você mais ama, sempre à mão.</p>
+      </div>
+    </div>
   </header>
 
-  <!-- ===== FILTER BAR ===== -->
-  <section class="section" id="favoritas-section" aria-labelledby="favs-heading">
+  <section style="max-width:1440px; margin:0 auto; padding:44px 48px 0">
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:32px; flex-wrap:wrap">
+      <div>
+        <div style="display:inline-flex; align-items:center; gap:9px; background:#fff6d9; border-radius:999px; padding:8px 16px; margin-bottom:20px">
+          <div style="width:8px; height:8px; border-radius:50%; background:#ffbf00"></div>
+          <span style="font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#8a6a00">Receitas salvas</span>
+        </div>
+        <h1 style="margin:0; font-size:60px; font-weight:800; letter-spacing:-0.035em; line-height:1">Minhas <em style="color:#2f8f7d; font-weight:700; font-style:normal">Favoritas</em></h1>
+        <p id="fav-banner-desc" style="margin:16px 0 0; font-size:18px; color:#6b6459">As receitas que você mais ama, sempre à mão.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="favoritas-section" aria-labelledby="favs-heading" style="max-width:1440px; margin:0 auto; padding:0 48px 40px; margin-top:32px">
+
     <h2 class="visually-hidden" id="favs-heading">Lista de receitas favoritas</h2>
 
-    <div class="filter-bar" id="filter-bar" role="search" aria-label="Filtros">
-      <div class="filter-row">
-        <div class="filter-group" style="flex:2; min-width:200px;">
-          <label class="filter-label" for="filter-search">🔍 Busca</label>
-          <input class="filter-search" type="search" id="filter-search"
-                 placeholder="Buscar nas favoritas..."
-                 aria-label="Buscar receitas favoritas">
-        </div>
-        <div class="filter-group">
-          <label class="filter-label" for="filter-cuisine">🌍 Culinária</label>
-          <select class="filter-select" id="filter-cuisine" aria-label="Filtrar por culinária">
-            <option value="todas">Todas</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label class="filter-label" for="filter-difficulty">⚡ Dificuldade</label>
-          <select class="filter-select" id="filter-difficulty" aria-label="Filtrar por dificuldade">
-            <option value="todas">Qualquer</option>
-            <option value="Fácil">Fácil</option>
-            <option value="Médio">Médio</option>
-            <option value="Difícil">Difícil</option>
-          </select>
-        </div>
-        <button class="filter-reset" id="filter-reset-btn" aria-label="Limpar filtros">✕ Limpar</button>
+    <!-- FILTER BAR CONTAINER -->
+    <div class="filter-bar" id="filter-bar" role="search" aria-label="Filtros de receitas" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:10px 12px; background:#f7f4ee; border-radius:22px; margin-bottom:20px">
+
+      <!-- Search Input -->
+      <div style="display:flex; align-items:center; gap:10px; background:#fff; border-radius:16px; padding:0 16px; height:46px; flex:1; min-width:180px">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;"><circle cx="6.5" cy="6.5" r="4.5" stroke="#ffbf00" stroke-width="2.2"/><path d="M10 10L14 14" stroke="#ffbf00" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <input class="filter-search" type="search" id="filter-search" placeholder="Pesquise por nome" style="border:none; outline:none; background:transparent; font-family:inherit; font-size:14px; font-weight:500; width:100%; color:#14110d" aria-label="Buscar receitas" />
       </div>
-      <div class="filter-row">
-        <div class="filter-group" style="min-width:220px;">
-          <label class="filter-label" for="filter-calories">🔥 Calorias máximas</label>
-          <div class="calorie-range">
-            <input type="range" id="filter-calories" min="100" max="1200" value="1200" step="50">
-            <span class="calorie-display" id="calorie-display">Todas</span>
+
+      <!-- Culinária custom dropdown -->
+      <div class="custom-dropdown" id="dd-cuisine" style="position:relative;">
+        <button class="filter-pill-btn" id="dd-cuisine-btn" type="button" onclick="toggleDropdown('dd-cuisine')" style="display:flex; align-items:center; gap:8px; height:46px; padding:0 14px 0 16px; border-radius:16px; background:#fff; border:none; font-family:inherit; font-size:14px; font-weight:700; color:#14110d; cursor:pointer; white-space:nowrap;">
+          <span id="dd-cuisine-label">Culinária</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="flex-shrink:0; transition:transform 0.2s"><path d="M1 1L5 5L9 1" stroke="#a39a8c" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="dropdown-panel" id="dd-cuisine-panel" style="display:none; position:absolute; top:calc(100% + 6px); left:0; min-width:180px; background:#fff; border-radius:16px; box-shadow:0 8px 32px rgba(20,17,13,0.13); z-index:100; overflow:hidden; padding:8px;">
+          <div id="dd-cuisine-options" style="display:flex; flex-direction:column; gap:2px;"></div>
+        </div>
+      </div>
+
+      <!-- Dificuldade custom dropdown -->
+      <div class="custom-dropdown" id="dd-diff" style="position:relative;">
+        <button class="filter-pill-btn" id="dd-diff-btn" type="button" onclick="toggleDropdown('dd-diff')" style="display:flex; align-items:center; gap:8px; height:46px; padding:0 14px 0 16px; border-radius:16px; background:#fff; border:none; font-family:inherit; font-size:14px; font-weight:700; color:#14110d; cursor:pointer; white-space:nowrap;">
+          <span id="dd-diff-label">Dificuldade</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="flex-shrink:0; transition:transform 0.2s"><path d="M1 1L5 5L9 1" stroke="#a39a8c" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="dropdown-panel" id="dd-diff-panel" style="display:none; position:absolute; top:calc(100% + 6px); left:0; min-width:160px; background:#fff; border-radius:16px; box-shadow:0 8px 32px rgba(20,17,13,0.13); z-index:100; overflow:hidden; padding:8px;">
+          <div id="dd-diff-options" style="display:flex; flex-direction:column; gap:2px;">
+            <button class="dd-option" onclick="toggleDiffFilter('Fácil')" id="ddopt-diff-Fácil" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%; transition:background 0.15s;">
+              <span class="dd-check" style="width:18px; height:18px; border-radius:6px; border:2px solid #e5ded2; flex-shrink:0; display:flex; align-items:center; justify-content:center;"></span> Fácil
+            </button>
+            <button class="dd-option" onclick="toggleDiffFilter('Médio')" id="ddopt-diff-Médio" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%; transition:background 0.15s;">
+              <span class="dd-check" style="width:18px; height:18px; border-radius:6px; border:2px solid #e5ded2; flex-shrink:0; display:flex; align-items:center; justify-content:center;"></span> Médio
+            </button>
+            <button class="dd-option" onclick="toggleDiffFilter('Difícil')" id="ddopt-diff-Difícil" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%; transition:background 0.15s;">
+              <span class="dd-check" style="width:18px; height:18px; border-radius:6px; border:2px solid #e5ded2; flex-shrink:0; display:flex; align-items:center; justify-content:center;"></span> Difícil
+            </button>
           </div>
         </div>
-        <div class="filter-group" style="flex:2;">
-          <span class="filter-label">🏷️ Tags</span>
-          <div class="tags-filter" id="tags-filter" role="group" aria-label="Filtro por tags"></div>
+      </div>
+
+      <!-- Calorias custom dropdown -->
+      <div class="custom-dropdown" id="dd-cal" style="position:relative;">
+        <button class="filter-pill-btn" id="dd-cal-btn" type="button" onclick="toggleDropdown('dd-cal')" style="display:flex; align-items:center; gap:8px; height:46px; padding:0 14px 0 16px; border-radius:16px; background:#fff; border:none; font-family:inherit; font-size:14px; font-weight:700; color:#14110d; cursor:pointer; white-space:nowrap;">
+          <span id="dd-cal-label">Calorias</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="flex-shrink:0;"><path d="M1 1L5 5L9 1" stroke="#a39a8c" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="dropdown-panel" id="dd-cal-panel" style="display:none; position:absolute; top:calc(100% + 6px); left:0; min-width:170px; background:#fff; border-radius:16px; box-shadow:0 8px 32px rgba(20,17,13,0.13); z-index:100; overflow:hidden; padding:8px;">
+          <div style="display:flex; flex-direction:column; gap:2px;">
+            <button class="dd-option" onclick="setCalFilter(300)" id="ddopt-cal-300" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%; transition:background 0.15s;">
+              <span class="dd-check" style="width:18px; height:18px; border-radius:6px; border:2px solid #e5ded2; flex-shrink:0; display:flex; align-items:center; justify-content:center;"></span> Até 300 kcal
+            </button>
+            <button class="dd-option" onclick="setCalFilter(500)" id="ddopt-cal-500" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%; transition:background 0.15s;">
+              <span class="dd-check" style="width:18px; height:18px; border-radius:6px; border:2px solid #e5ded2; flex-shrink:0; display:flex; align-items:center; justify-content:center;"></span> Até 500 kcal
+            </button>
+            <button class="dd-option" onclick="setCalFilter(700)" id="ddopt-cal-700" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%; transition:background 0.15s;">
+              <span class="dd-check" style="width:18px; height:18px; border-radius:6px; border:2px solid #e5ded2; flex-shrink:0; display:flex; align-items:center; justify-content:center;"></span> Até 700 kcal
+            </button>
+            <button class="dd-option" onclick="setCalFilter(900)" id="ddopt-cal-900" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%; transition:background 0.15s;">
+              <span class="dd-check" style="width:18px; height:18px; border-radius:6px; border:2px solid #e5ded2; flex-shrink:0; display:flex; align-items:center; justify-content:center;"></span> Até 900 kcal
+            </button>
+          </div>
         </div>
       </div>
+
+      <!-- Ingredientes da geladeira -->
+      <button id="open-ingredients-modal-btn" type="button" style="border:none; background:#fff; border-radius:16px; height:46px; padding:0 18px; font-family:inherit; font-size:14px; font-weight:800; color:#14110d; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; outline:none; transition:all 0.2s; white-space:nowrap;">
+        <span id="ingredients-btn-dot" style="width:8px; height:8px; border-radius:50%; background:#ffbf00; flex-shrink:0; display:none;"></span>
+        <span id="ingredients-btn-label">Ingredientes da geladeira</span>
+      </button>
+
+      <!-- Limpar filtros -->
+      <button class="filter-reset" id="filter-reset-btn" aria-label="Limpar todos os filtros" style="border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:700; color:#a39a8c; height:46px; padding:0 10px; cursor:pointer; margin-left:auto; display:flex; align-items:center; justify-content:center; white-space:nowrap;">
+        Limpar filtros
+      </button>
+
+      <!-- TAGS PILL ROW inside gray container -->
+      <div id="tags-filter" style="display:none; flex-wrap:wrap; gap:8px; width:100%; padding-top:8px; border-top:1px solid #ede7db;"></div>
     </div>
 
     <p class="results-count" id="results-count" aria-live="polite"></p>
@@ -113,15 +165,55 @@
   </section>
 
   <!-- ===== FOOTER ===== -->
-  <footer>
-    <span class="footer-logo">🍴 Receitas da Isa</span>
-    <span class="footer-copy">Feito com <span>♥</span> e muito sabor • 2026</span>
+  <footer class="site-footer">
+    <div style="display:flex; align-items:center; gap:12px">
+      <div style="width:30px; height:30px; border-radius:10px; background:#ffbf00; display:flex; align-items:center; justify-content:center"><div style="width:10px; height:10px; border-radius:50%; background:#14110d"></div></div>
+      <span style="font-size:15px; font-weight:800; color:#14110d">Receitas da Isa</span>
+    </div>
+    <span style="font-size: 14px; color: #a39a8c; font-weight: 500;">Feito com <span style="color:#ffbf00">♥</span> e muito sabor • 2026</span>
   </footer>
 
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
+  <!-- ===== INGREDIENTS MODAL ===== -->
+  <div id="ingredients-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(20,17,13,0.5); z-index:1000; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px);" onclick="closeIngredientsModal()">
+    <div style="background:#fff; width:100%; max-width:640px; max-height:88vh; border-radius:28px; padding:28px; box-shadow:0 30px 80px rgba(0,0,0,0.25); display:flex; flex-direction:column; gap:18px; overflow:hidden; position:relative;" onclick="event.stopPropagation()">
+      
+      <!-- Modal Header -->
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <button id="close-ingredients-modal-btn" style="width:38px; height:38px; border-radius:50%; background:#f7f4ee; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; font-weight:700; color:#14110d;">✕</button>
+        <h3 style="margin:0; font-size:18px; font-weight:800; color:#14110d;">Filtrar por ingredientes</h3>
+        <button id="modal-clear-ingredients-btn" style="background:none; border:none; color:#a39a8c; font-weight:700; font-size:14px; cursor:pointer;">Limpar</button>
+      </div>
+
+      <!-- Search Bar -->
+      <div style="display:flex; align-items:center; gap:12px; background:#f7f4ee; border-radius:16px; padding:14px 18px;">
+        <span style="font-size:14px; color:#d99f00;">🔍</span>
+        <input type="search" id="modal-ingredient-search" placeholder="Buscar mais ingredientes..." style="border:none; outline:none; background:transparent; font-family:inherit; font-size:14px; font-weight:500; width:100%; color:#14110d;" />
+      </div>
+
+      <!-- Selected Chips Area -->
+      <div id="modal-selected-ingredients-chips" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-height:0;"></div>
+
+      <!-- Popular Label -->
+      <div style="font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#a39a8c;">Populares</div>
+
+      <!-- Ingredients Grid -->
+      <div id="modal-ingredients-grid" style="display:grid; grid-template-columns:repeat(6,1fr); gap:12px; overflow-y:auto; padding-right:4px; max-height:280px;">
+        <!-- Populated via JS -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #f0ebe3; padding-top:16px; margin-top:auto;">
+        <span id="modal-selected-count-text" style="font-size:14px; font-weight:700; color:#a39a8c;">Nenhum ingrediente selecionado</span>
+        <button id="modal-confirm-ingredients-btn" style="background:#ffbf00; border:none; border-radius:999px; padding:14px 36px; font-size:15px; font-weight:800; color:#14110d; cursor:pointer; box-shadow:0 8px 20px rgba(255,191,0,0.3); transition:all 0.2s" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">Confirmar</button>
+      </div>
+
+    </div>
+  </div>
+
   <script type="module" src="js/auth.js"></script>
-  <script type="module" src="js/recipes.js?v=7"></script>
+  <script type="module" src="js/recipes.js?v=28"></script>
   <script type="module">
     // =============================================
     // FAVORITES PAGE CONTROLLER
@@ -131,7 +223,202 @@
     let favRecipes = [];
     let favTags = [];
     let activeTags = [];
-    let maxCalories = 1200;
+    let activeCuisines = [];
+    let activeDifficulties = [];
+    let activeCalMax = null;
+    let globalIngredients = [];
+    let activeIngredients = [];
+
+    function cleanIngredientName(raw) {
+      if (!raw) return '';
+      let str = raw.toString().trim();
+
+      const lower = str.toLowerCase();
+      if (lower.includes('sal e pimenta') || lower.includes('sal e pimenta-do-reino') || lower.includes('sal e pimenta do reino')) {
+        return '';
+      }
+
+      str = str.replace(/\([^)]*\)/g, '');
+      str = str.replace(/\s*\b\d+\s*%?/gi, '');
+
+      if (str.toLowerCase().includes(' ou ')) {
+        str = str.split(/\s+ou\s+/i)[0].trim();
+      }
+
+      str = str.replace(/^\s*\b(?:escalope(?:s)?\s+de|filé(?:s)?\s+de|posta(?:s)?\s+de|pedaço(?:s)?\s+de|fatia(?:s)?\s+de|dente(?:s)?\s+de|dente(?:s)?|ramo(?:s)?\s+de|talo(?:s)?\s+de|punhado\s+de|suco\s+de)\b\s*/i, '');
+      str = str.replace(/^[\d\s\/\.,\:\-\+]+/i, '');
+      str = str.replace(/^\s*a\s+(?=\d)/i, '');
+      
+      const unitsRegex = /^(?:g|kg|ml|l|colher(?:es)?|xícara(?:s)?|lata(?:s)?|pitada(?:s)?|pacote(?:s)?|unidade(?:s)?|copo(?:s)?|col\.?|chá|sopa|sobremesa|café|mãozada(?:s)?|caixinha(?:s)?|vidro(?:s)?|sachê(?:s)?|grama(?:s)?|kilo(?:s)?|quilo(?:s)?|xicara(?:s)?|xic\.?|colh\.?|xícaras?)\b\s*/i;
+      str = str.replace(unitsRegex, '');
+      str = str.replace(/^\s*\b(?:de|da|do|dos|das|em)\b\s*/i, '');
+
+      const descriptorsRegex = /\b(?:fresc[oas]|picad[oas]|picadinh[oas]|bem\s+picad[oas]|ralad[oas]|moíd[oas]|defumad[oas]|esmagad[oas]|amassad[oas]|torrad[oas]|limp[oas]|maturad[oas]|cortad[oas]|congelad[oas]|fatiad[oas]|desfiad[oas]|cozid[oas]|madur[oas]|inteir[oas]|sec[oas]|desidratad[oas]|triturad[oas]|derretid[oas]|grelhad[oas]|médi[oas]|médio|média|médias|médios|grand[es]|pequen[oas]|light|diet|zero|em\s+cubos?|em\s+cubinhos?|em\s+tiras?|em\s+rodelas?|em\s+fatias?|em\s+pedaços?|em\s+lascas?|em\s+conserva|sem\s+sal|com\s+sal|sem\s+pele|sem\s+osso|a\s+gosto|para\s+servir|para\s+decorar|para\s+fritar|para\s+assar|para\s+untar|para\s+refogar|na\s+hora|caseir[oas])\b/gi;
+      str = str.replace(descriptorsRegex, '');
+      str = str.replace(/\s*\b(?:de|da|do|dos|das|em|ou|e)\b\s*$/gi, '');
+      str = str.trim();
+
+      if (!str) return '';
+
+      const canonicalMap = {
+        'batata': 'Batata',
+        'batatas': 'Batata',
+        'batata inglesa': 'Batata',
+        'batata-inglesa': 'Batata',
+        'batatas inglesas': 'Batata',
+        'batata doce': 'Batata-doce',
+        'batata-doce': 'Batata-doce',
+        'batatas doces': 'Batata-doce',
+        'batata baroa': 'Batata-baroa',
+        'batata-baroa': 'Batata-baroa',
+        'mandioquinha': 'Batata-baroa',
+        'cebola': 'Cebola',
+        'cebolas': 'Cebola',
+        'cebola branca': 'Cebola',
+        'cebola roxa': 'Cebola roxa',
+        'cebolas roxas': 'Cebola roxa',
+        'cebola pérola': 'Cebola',
+        'cebolas pérola': 'Cebola',
+        'cebolinha': 'Cebolinha',
+        'cebolinhas': 'Cebolinha',
+        'cebolinha verde': 'Cebolinha',
+        'alho': 'Alho',
+        'alhos': 'Alho',
+        'dente de alho': 'Alho',
+        'dentes de alho': 'Alho',
+        'tomate': 'Tomate',
+        'tomates': 'Tomate',
+        'tomate cereja': 'Tomate-cereja',
+        'tomates cereja': 'Tomate-cereja',
+        'tomate-cereja': 'Tomate-cereja',
+        'ovo': 'Ovo',
+        'ovos': 'Ovo',
+        'ovos inteiros': 'Ovo',
+        'gema': 'Gema de ovo',
+        'gemas': 'Gema de ovo',
+        'gemas de ovo': 'Gema de ovo',
+        'clara': 'Clara de ovo',
+        'claras': 'Clara de ovo',
+        'claras de ovo': 'Clara de ovo',
+        'cenoura': 'Cenoura',
+        'cenouras': 'Cenoura',
+        'banana': 'Banana',
+        'bananas': 'Banana',
+        'limão': 'Limão',
+        'limões': 'Limão',
+        'limao': 'Limão',
+        'limão tahiti': 'Limão',
+        'suco de limão': 'Limão',
+        'laranja': 'Laranja',
+        'laranjas': 'Laranja',
+        'maçã': 'Maçã',
+        'maçãs': 'Maçã',
+        'morango': 'Morango',
+        'morangos': 'Morango',
+        'camarão': 'Camarão',
+        'camarões': 'Camarão',
+        'pepino': 'Pepino',
+        'pepinos': 'Pepino',
+        'abobrinha': 'Abobrinha',
+        'abobrinhas': 'Abobrinha',
+        'berinjela': 'Berinjela',
+        'berinjelas': 'Berinjela',
+        'cogumelo': 'Cogumelo',
+        'cogumelos': 'Cogumelo',
+        'pimentão': 'Pimentão',
+        'pimentões': 'Pimentão',
+        'pimentão vermelho': 'Pimentão vermelho',
+        'pimentão amarelo': 'Pimentão amarelo',
+        'pimentão verde': 'Pimentão verde',
+        'azeite': 'Azeite',
+        'azeite de oliva': 'Azeite',
+        'azeite de oliva extra virgem': 'Azeite',
+        'azeite extravirgem': 'Azeite',
+        'pimenta do reino': 'Pimenta-do-reino',
+        'pimenta-do-reino': 'Pimenta-do-reino',
+        'queijo parmesão': 'Queijo Parmesão',
+        'parmesão': 'Queijo Parmesão',
+        'queijo mussarela': 'Queijo mussarela',
+        'mussarela': 'Queijo mussarela',
+        'mozarela': 'Queijo mussarela',
+        'queijo moçarela': 'Queijo mussarela',
+        'farinha': 'Farinha de trigo',
+        'farinha de trigo': 'Farinha de trigo',
+        'maionese': 'Maionese',
+        'maionese light': 'Maionese',
+        'óleo': 'Óleo',
+        'óleo vegetal': 'Óleo',
+        'óleo de soja': 'Óleo',
+        'óleo para fritar': 'Óleo',
+        'manteiga': 'Manteiga',
+        'manteiga sem sal': 'Manteiga',
+        'manteiga com sal': 'Manteiga',
+        'leite': 'Leite',
+        'creme de leite': 'Creme de leite',
+        'leite condensado': 'Leite condensado',
+        'frango': 'Frango',
+        'peito de frango': 'Peito de frango',
+        'carne moída': 'Carne moída',
+        'bacon': 'Bacon',
+        'linguiça': 'Linguiça',
+        'pancetta': 'Pancetta',
+        'salmão': 'Salmão',
+        'atum': 'Atum'
+      };
+
+      let lstr = str.toLowerCase();
+      if (canonicalMap[lstr]) return canonicalMap[lstr];
+
+      if (lstr.length > 3 && lstr.endsWith('s') && !lstr.endsWith('ss') && !lstr.endsWith('is') && !lstr.endsWith('us') && !lstr.endsWith('nozes')) {
+        const singularAttempt = lstr.slice(0, -1);
+        if (canonicalMap[singularAttempt]) return canonicalMap[singularAttempt];
+        return singularAttempt.charAt(0).toUpperCase() + singularAttempt.slice(1);
+      }
+
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function getIngredientIcon(name) {
+      const n = name.toLowerCase();
+      if (n.includes('azeite')) return '🫒';
+      if (n.includes('óleo')) return '🌻';
+      if (n.includes('alho')) return '🧄';
+      if (n.includes('cebola')) return '🧅';
+      if (n.includes('tomate')) return '🍅';
+      if (n.includes('manjericão') || n.includes('salsinha') || n.includes('coentro') || n.includes('alecrim') || n.includes('ervas') || n.includes('hortelã') || n.includes('cebolinha') || n.includes('tomilho') || n.includes('louro')) return '🌿';
+      if (n.includes('arroz')) return '🌾';
+      if (n.includes('frango')) return '🍗';
+      if (n.includes('ovo') || n.includes('gema')) return '🥚';
+      if (n.includes('manteiga')) return '🧈';
+      if (n.includes('limão')) return '🍋';
+      if (n.includes('laranja')) return '🍊';
+      if (n.includes('banana')) return '🍌';
+      if (n.includes('abacate') || n.includes('avocado')) return '🥑';
+      if (n.includes('abacaxi')) return '🍍';
+      if (n.includes('fruta') || n.includes('morango')) return '🍓';
+      if (n.includes('espinafre') || n.includes('alface') || n.includes('rúcula') || n.includes('couve') || n.includes('repolho') || n.includes('berinjela')) return '🥬';
+      if (n.includes('queijo') || n.includes('parmesão') || n.includes('pecorino') || n.includes('mozzarella') || n.includes('mussarela')) return '🧀';
+      if (n.includes('batata')) return '🥔';
+      if (n.includes('cenoura')) return '🥕';
+      if (n.includes('leite') || n.includes('iogurte') || n.includes('creme') || n.includes('maionese')) return '🥛';
+      if (n.includes('farinha') || n.includes('trigo') || n.includes('tapioca')) return '🌾';
+      if (n.includes('carne') || n.includes('pancetta') || n.includes('guanciale') || n.includes('acém') || n.includes('bacon') || n.includes('linguiça') || n.includes('porco') || n.includes('lombo') || n.includes('picanha')) return '🥩';
+      if (n.includes('pimenta')) return '🌶️';
+      if (n.includes('cogumelo') || n.includes('shimeji') || n.includes('shiitake')) return '🍄';
+      if (n.includes('salmão') || n.includes('peixe') || n.includes('atum') || n.includes('lula') || n.includes('mexilhão')) return '🐟';
+      if (n.includes('camarão')) return '🦐';
+      if (n.includes('massa') || n.includes('espaguete') || n.includes('macarrão')) return '🍝';
+      if (n.includes('pão') || n.includes('torrada') || n.includes('rap10') || n.includes('tortilha')) return '🍞';
+      if (n.includes('abóbora')) return '🎃';
+      if (n.includes('gengibre')) return '🫚';
+      if (n.includes('chocolate') || n.includes('cacau')) return '🍫';
+      if (n.includes('castanha') || n.includes('amendoim') || n.includes('noses') || n.includes('nozes')) return '🥜';
+      if (n.includes('mel')) return '🍯';
+      if (n.includes('açúcar')) return '🍬';
+      if (n.includes('vinho')) return '🍷';
+      if (n.includes('sal') || n.includes('canela') || n.includes('curry') || n.includes('cardamomo') || n.includes('açafrão') || n.includes('páprica')) return '🧂';
+      return '🥘';
+    }
 
     async function init() {
       initNavbar();
@@ -142,6 +429,32 @@
 
         const favIds = getFavorites();
         favRecipes = allRecipes.filter(r => favIds.includes(r.id));
+
+        // Collect ingredients from favRecipes
+        const ingSet = new Set();
+        (index.allIngredients || []).forEach(i => {
+          const cleaned = cleanIngredientName(i);
+          if (cleaned) ingSet.add(cleaned);
+        });
+        favRecipes.forEach(r => {
+          if (r.ingredients && Array.isArray(r.ingredients)) {
+            r.ingredients.forEach(item => {
+              const name = typeof item === 'string' ? item : (item.item || item.name || '');
+              const cleaned = cleanIngredientName(name);
+              if (cleaned) ingSet.add(cleaned);
+            });
+          }
+        });
+
+        // Fallback robusto se a lista estiver vazia por cache, assincronismo ou falta de receitas favoritadas
+        if (ingSet.size === 0) {
+          const fallbackIngredients = [
+            'Abacate', 'Abacaxi', 'Abóbora', 'Abobrinha', 'Açúcar', 'Açúcar mascavo', 'Agrião', 'Água', 'Alecrim', 'Alface', 'Alho', 'Alho-poró', 'Amendoim', 'Amido de milho', 'Arroz', 'Atum', 'Aveia', 'Azeite', 'Azeitona', 'Bacon', 'Banana', 'Batata', 'Batata-doce', 'Batata-baroa', 'Berinjela', 'Brócolis', 'Cacau em pó', 'Café', 'Caldo de carne', 'Caldo de galinha', 'Caldo de legumes', 'Camarão', 'Canela', 'Carne moída', 'Castanha-de-caju', 'Cebola', 'Cebola roxa', 'Cebolinha', 'Cenoura', 'Chocolate', 'Chocolate meio amargo', 'Chocolate branco', 'Clara de ovo', 'Coentro', 'Cogumelo', 'Creme de leite', 'Ervilha', 'Espaguete', 'Espinafre', 'Farinha de mandioca', 'Farinha de rosca', 'Farinha de trigo', 'Feijão', 'Fermento em pó', 'Gema de ovo', 'Gengibre', 'Hortelã', 'Iogurte natural', 'Laranja', 'Leite', 'Leite condensado', 'Leite de coco', 'Limão', 'Linguiça', 'Louro', 'Maçã', 'Macarrão', 'Maionese', 'Mandioca', 'Manteiga', 'Manjericão', 'Mel', 'Milho', 'Molho de soja', 'Molho de tomate', 'Morango', 'Nozes', 'Óleo', 'Orégano', 'Ovo', 'Pão', 'Pancetta', 'Páprica', 'Peito de frango', 'Pepino', 'Pimenta-calabresa', 'Pimenta-dedo-de-moça', 'Pimenta-do-reino', 'Pimentão', 'Pimentão amarelo', 'Pimentão vermelho', 'Pimentão verde', 'Presunto', 'Queijo mussarela', 'Queijo Parmesão', 'Queijo provolone', 'Queijo ricota', 'Rabanete', 'Repolho', 'Requeijão', 'Rúcula', 'Sal', 'Salmão', 'Salsinha', 'Shoyu', 'Tapioca', 'Tomate', 'Tomate-cereja', 'Tomilho', 'Vinagre', 'Vinho tinto', 'Vinho branco'
+          ];
+          fallbackIngredients.forEach(ing => ingSet.add(ing));
+        }
+
+        globalIngredients = Array.from(ingSet).sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
         // Collect tags only from favorites
         const tagSet = new Set();
@@ -156,14 +469,15 @@
           desc.textContent = `${favRecipes.length} receita${favRecipes.length > 1 ? 's' : ''} salva${favRecipes.length > 1 ? 's' : ''} com carinho ♥`;
         }
 
-        // Populate cuisine select for favorites only
+        // Populate cuisine options
         const cuisines = [...new Set(favRecipes.map(r => r.cuisine))];
-        const sel = document.getElementById('filter-cuisine');
-        cuisines.forEach(c => {
-          const opt = document.createElement('option');
-          opt.value = c; opt.textContent = c;
-          sel.appendChild(opt);
-        });
+        const panel = document.getElementById('dd-cuisine-options');
+        if (panel) {
+          panel.innerHTML = cuisines.map(c => `
+            <button class="dd-option" onclick="toggleCuisineFilter('${c.replace(/'/g, "\\'")}')" id="ddopt-cuisine-${c.replace(/\s/g,'-')}" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%; transition:background 0.15s;">
+              <span class="dd-check" style="width:18px; height:18px; border-radius:6px; border:2px solid #e5ded2; flex-shrink:0; display:flex; align-items:center; justify-content:center;"></span> ${c}
+            </button>`).join('');
+        }
 
         renderTagChips();
         applyFilters();
@@ -177,15 +491,170 @@
       }
     }
 
+    function openIngredientsModal() {
+      const modal = document.getElementById('ingredients-modal-overlay');
+      if (modal) {
+        modal.style.display = 'flex';
+        renderModalIngredientsGrid('');
+        renderModalSelectedChips();
+      }
+    }
+
+    function closeIngredientsModal() {
+      const modal = document.getElementById('ingredients-modal-overlay');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function toggleModalIngredient(name) {
+      const idx = activeIngredients.indexOf(name);
+      if (idx >= 0) {
+        activeIngredients.splice(idx, 1);
+      } else {
+        activeIngredients.push(name);
+      }
+      const searchVal = document.getElementById('modal-ingredient-search') ? document.getElementById('modal-ingredient-search').value : '';
+      renderModalIngredientsGrid(searchVal);
+      renderModalSelectedChips();
+    }
+
+    function renderModalIngredientsGrid(filterTerm = '') {
+      const grid = document.getElementById('modal-ingredients-grid');
+      if (!grid) return;
+
+      const term = filterTerm.toLowerCase().trim();
+      let list = globalIngredients;
+
+      if (term) {
+        list = globalIngredients.filter(ing => ing.toLowerCase().includes(term));
+      }
+
+      if (list.length === 0) {
+        grid.innerHTML = `<div style="grid-column: span 6; text-align:center; padding:20px; color:#a39a8c; font-size:14px; font-weight:600;">Nenhum ingrediente encontrado para "${filterTerm}"</div>`;
+        return;
+      }
+
+      grid.innerHTML = list.map(name => {
+        const isSelected = activeIngredients.includes(name);
+        const icon = getIngredientIcon(name);
+        const safeName = name.replace(/'/g, "\\'");
+        return `
+          <div onclick="toggleModalIngredient('${safeName}')" style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px 6px; border-radius:18px; border:2px solid ${isSelected ? '#ffbf00' : '#f0ebe3'}; background:${isSelected ? '#fff6d9' : '#fff'}; cursor:pointer; transition:all 0.2s; text-align:center;">
+            <div style="width:46px; height:46px; border-radius:14px; background:${isSelected ? '#fff' : '#f7f4ee'}; display:flex; align-items:center; justify-content:center; font-size:22px;">${icon}</div>
+            <span style="font-size:12px; font-weight:700; color:#14110d; line-height:1.2; word-break:break-word;">${name}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderModalSelectedChips() {
+      const chipsContainer = document.getElementById('modal-selected-ingredients-chips');
+      const countText = document.getElementById('modal-selected-count-text');
+      const btnLabel = document.getElementById('ingredients-btn-label');
+      const btn = document.getElementById('open-ingredients-modal-btn');
+      const dot = document.getElementById('ingredients-btn-dot');
+
+      if (chipsContainer) {
+        chipsContainer.innerHTML = activeIngredients.map(ing => `
+          <span style="display:inline-flex; align-items:center; gap:6px; background:#fff6d9; border:1px solid #ffbf00; color:#14110d; border-radius:999px; padding:6px 14px; font-size:13px; font-weight:700;">
+            ${ing}
+            <span onclick="toggleModalIngredient('${ing.replace(/'/g, "\\'")}')" style="cursor:pointer; font-weight:800; color:#d99f00; margin-left:2px;">✕</span>
+          </span>
+        `).join('');
+      }
+
+      if (countText) {
+        countText.textContent = activeIngredients.length === 0 
+          ? 'Nenhum ingrediente selecionado'
+          : `${activeIngredients.length} ingrediente${activeIngredients.length !== 1 ? 's' : ''} selecionado${activeIngredients.length !== 1 ? 's' : ''}`;
+      }
+
+      if (btn) {
+        if (activeIngredients.length > 0) {
+          btn.style.border = '2px solid #ffbf00';
+          btn.style.background = '#fff6d9';
+          if (dot) dot.style.display = 'inline-block';
+          if (btnLabel) btnLabel.textContent = `Ingredientes da geladeira (${activeIngredients.length})`;
+        } else {
+          btn.style.border = 'none';
+          btn.style.background = '#fff';
+          if (dot) dot.style.display = 'none';
+          if (btnLabel) btnLabel.textContent = 'Ingredientes da geladeira';
+        }
+      }
+    }
+
+    function toggleDropdown(id) {
+      const panel = document.getElementById(id + '-panel');
+      if (!panel) return;
+      const isOpen = panel.style.display !== 'none';
+      document.querySelectorAll('.dropdown-panel').forEach(p => p.style.display = 'none');
+      if (!isOpen) panel.style.display = 'block';
+    }
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.custom-dropdown')) {
+        document.querySelectorAll('.dropdown-panel').forEach(p => p.style.display = 'none');
+      }
+    });
+
+    function toggleCuisineFilter(val) {
+      const idx = activeCuisines.indexOf(val);
+      if (idx === -1) activeCuisines.push(val); else activeCuisines.splice(idx, 1);
+      updateDropdownUI('cuisine', activeCuisines, 'Culinária');
+      applyFilters();
+    }
+
+    function toggleDiffFilter(val) {
+      const idx = activeDifficulties.indexOf(val);
+      if (idx === -1) activeDifficulties.push(val); else activeDifficulties.splice(idx, 1);
+      updateDropdownUI('diff', activeDifficulties, 'Dificuldade');
+      applyFilters();
+    }
+
+    function setCalFilter(val) {
+      activeCalMax = activeCalMax === val ? null : val;
+      [300,500,700,900].forEach(v => {
+        const btn = document.getElementById('ddopt-cal-' + v);
+        if (btn) updateCheckbox(btn, activeCalMax === v);
+      });
+      const label = document.getElementById('dd-cal-label');
+      if (label) label.textContent = activeCalMax ? `Até ${activeCalMax} kcal` : 'Calorias';
+      const calBtn = document.getElementById('dd-cal-btn');
+      if (calBtn) calBtn.style.background = activeCalMax ? '#fff6d9' : '#fff';
+      applyFilters();
+    }
+
+    function updateCheckbox(btn, active) {
+      const check = btn.querySelector('.dd-check');
+      if (!check) return;
+      check.style.background = active ? '#ffbf00' : '';
+      check.style.border = active ? '2px solid #ffbf00' : '2px solid #e5ded2';
+      check.innerHTML = active ? '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="#14110d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+      btn.style.background = active ? '#fff6d9' : '';
+    }
+
+    function updateDropdownUI(ddId, activeArr, defaultLabel) {
+      const options = document.querySelectorAll(`#dd-${ddId}-options .dd-option`);
+      options.forEach(btn => {
+        const val = btn.textContent.trim();
+        updateCheckbox(btn, activeArr.includes(val));
+      });
+      const label = document.getElementById(`dd-${ddId}-label`);
+      if (label) label.textContent = activeArr.length ? activeArr.join(', ') : defaultLabel;
+      const pill = document.getElementById(`dd-${ddId}-btn`);
+      if (pill) pill.style.background = activeArr.length ? '#fff6d9' : '#fff';
+    }
+
     function renderTagChips() {
       const container = document.getElementById('tags-filter');
-      if (favTags.length === 0) { container.innerHTML = '<span style="font-size:0.8rem;color:var(--clr-text-dim)">Nenhuma tag disponível</span>'; return; }
-      container.innerHTML = favTags.map(t => `
-        <button class="tag-chip ${activeTags.includes(t) ? 'active' : ''}"
-                onclick="toggleTag('${t}')" id="tag-chip-${t.replace(/\s/g,'-')}"
-                aria-pressed="${activeTags.includes(t)}">
-          ${t}
-        </button>`).join('');
+      if (!container) return;
+      if (favTags.length === 0) { container.style.display = 'none'; return; }
+      container.style.display = 'flex';
+      container.innerHTML = favTags.map(t => {
+        const active = activeTags.includes(t);
+        return `<button onclick="window.toggleTag('${t.replace(/'/g, "\\'")}')"
+          style="padding:8px 16px; border-radius:999px; border:2px solid ${active ? '#ffbf00' : '#e5ded2'}; background:${active ? '#fff6d9' : '#fff'}; font-family:inherit; font-size:13px; font-weight:700; color:${active ? '#8a6a00' : '#6b6459'}; cursor:pointer; white-space:nowrap; transition:all 0.18s;">${t}${active ? ' <span style="font-size:11px;">✕</span>' : ''}</button>`;
+      }).join('');
     }
 
     function toggleTag(tag) {
@@ -196,12 +665,14 @@
     }
 
     function applyFilters() {
+      const searchElem = document.getElementById('filter-search');
       const filters = {
-        cuisine: document.getElementById('filter-cuisine').value,
-        difficulty: document.getElementById('filter-difficulty').value,
-        search: document.getElementById('filter-search').value.trim(),
-        maxCalories: maxCalories < 1200 ? maxCalories : null,
+        cuisines: activeCuisines,
+        difficulties: activeDifficulties,
+        search: searchElem ? searchElem.value.trim() : '',
+        maxCalories: activeCalMax,
         tags: activeTags,
+        ingredients: activeIngredients,
       };
 
       const filterFn = window.filterRecipes || filterRecipes;
@@ -209,10 +680,12 @@
       renderGrid(filtered);
 
       const count = document.getElementById('results-count');
-      if (favRecipes.length === 0) { count.innerHTML = ''; return; }
-      count.innerHTML = filtered.length === favRecipes.length
-        ? `Exibindo <span>${filtered.length}</span> favorita${filtered.length !== 1 ? 's' : ''}`
-        : `<span>${filtered.length}</span> de ${favRecipes.length} favorita${favRecipes.length !== 1 ? 's' : ''}`;
+      if (favRecipes.length === 0) { if (count) count.innerHTML = ''; return; }
+      if (count) {
+        count.innerHTML = filtered.length === favRecipes.length
+          ? `Exibindo <span>${filtered.length}</span> favorita${filtered.length !== 1 ? 's' : ''}`
+          : `<span>${filtered.length}</span> de ${favRecipes.length} favorita${favRecipes.length !== 1 ? 's' : ''}`;
+      }
     }
 
     function renderGrid(recipes) {
@@ -238,8 +711,8 @@
           </div>`;
         return;
       }
-      grid.innerHTML = recipes.map((r, i) =>
-        renderRecipeCard(r, { featured: i === 0 && recipes.length > 2 })
+      grid.innerHTML = recipes.map((r) =>
+        renderRecipeCard(r)
       ).join('');
     }
 
@@ -247,38 +720,64 @@
     document.addEventListener('DOMContentLoaded', () => {
       init();
 
-      document.getElementById('filter-search').addEventListener('input', () => applyFilters());
-      document.getElementById('filter-cuisine').addEventListener('change', () => applyFilters());
-      document.getElementById('filter-difficulty').addEventListener('change', () => applyFilters());
+      const searchInput = document.getElementById('filter-search');
+      if (searchInput) searchInput.addEventListener('input', () => applyFilters());
 
-      const calSlider = document.getElementById('filter-calories');
-      const calDisplay = document.getElementById('calorie-display');
-      calSlider.addEventListener('input', (e) => {
-        maxCalories = parseInt(e.target.value);
-        calDisplay.textContent = maxCalories >= 1200 ? 'Todas' : `até ${maxCalories} kcal`;
+      const openModalBtn = document.getElementById('open-ingredients-modal-btn');
+      if (openModalBtn) openModalBtn.addEventListener('click', openIngredientsModal);
+
+      const closeModalBtn = document.getElementById('close-ingredients-modal-btn');
+      if (closeModalBtn) closeModalBtn.addEventListener('click', closeIngredientsModal);
+
+      const confirmModalBtn = document.getElementById('modal-confirm-ingredients-btn');
+      if (confirmModalBtn) confirmModalBtn.addEventListener('click', () => { closeIngredientsModal(); applyFilters(); });
+
+      const clearModalBtn = document.getElementById('modal-clear-ingredients-btn');
+      if (clearModalBtn) clearModalBtn.addEventListener('click', () => {
+        activeIngredients = [];
+        renderModalIngredientsGrid('');
+        renderModalSelectedChips();
         applyFilters();
       });
 
-      document.getElementById('filter-reset-btn').addEventListener('click', () => {
-        document.getElementById('filter-search').value = '';
-        document.getElementById('filter-cuisine').value = 'todas';
-        document.getElementById('filter-difficulty').value = 'todas';
-        document.getElementById('filter-calories').value = 1200;
-        document.getElementById('calorie-display').textContent = 'Todas';
-        maxCalories = 1200;
-        activeTags = [];
-        renderTagChips();
-        applyFilters();
-        showToast('Filtros limpos ✓');
-      });
+      const modalSearch = document.getElementById('modal-ingredient-search');
+      if (modalSearch) modalSearch.addEventListener('input', e => renderModalIngredientsGrid(e.target.value));
+
+      const resetBtn = document.getElementById('filter-reset-btn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          const s = document.getElementById('filter-search'); if (s) s.value = '';
+          activeCuisines = [];
+          activeDifficulties = [];
+          activeCalMax = null;
+          activeTags = [];
+          activeIngredients = [];
+          updateDropdownUI('cuisine', [], 'Culinária');
+          updateDropdownUI('diff', [], 'Dificuldade');
+          [300,500,700,900].forEach(v => { const b = document.getElementById('ddopt-cal-'+v); if(b) updateCheckbox(b, false); });
+          const calLabel = document.getElementById('dd-cal-label'); if(calLabel) calLabel.textContent = 'Calorias';
+          const calBtn = document.getElementById('dd-cal-btn'); if(calBtn) calBtn.style.background = '#fff';
+          renderTagChips();
+          renderModalSelectedChips();
+          applyFilters();
+          showToast('Filtros limpos ✓');
+        });
+      }
 
       // Recarrega favoritos quando o usuário logar
       window.addEventListener('authChange', () => init());
     });
 
-    // Expor funções usadas em onclick dinâmicos
+    window.toggleDropdown = toggleDropdown;
+    window.toggleCuisineFilter = toggleCuisineFilter;
+    window.toggleDiffFilter = toggleDiffFilter;
+    window.setCalFilter = setCalFilter;
     window.toggleTag = toggleTag;
+    window.openIngredientsModal = openIngredientsModal;
+    window.closeIngredientsModal = closeIngredientsModal;
+    window.toggleModalIngredient = toggleModalIngredient;
   </script>
   <script type="module" src="js/share.js?v=3"></script>
+  <script src="js/quick-search.js"></script>
 </body>
 </html>

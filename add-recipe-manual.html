@@ -1,449 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Adicionar Receita Manualmente — Receitas da Isa. Crie suas próprias receitas e complete os campos opcionais usando nossa Inteligência Artificial.">
+  <meta name="description"
+    content="Adicionar Receita Manualmente — Receitas da Isa. Crie suas próprias receitas e complete os campos opcionais usando nossa Inteligência Artificial.">
   <title>Adicionar Receita Manualmente — Receitas da Isa</title>
   <link rel="stylesheet" href="css/main.css?v=2">
   <style>
-    /* Custom Styling for Add Recipe Form */
-    .form-section {
-      padding-top: calc(var(--nav-height) + 2rem);
-      padding-bottom: 4rem;
-      max-width: 800px;
-      margin: 0 auto;
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-
-    .form-header {
-      margin-bottom: 2.5rem;
-      text-align: center;
-    }
-
-    .form-title {
-      font-family: var(--font-display);
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--clr-text);
-      line-height: 1.2;
-      margin-top: 0.5rem;
-    }
-
-    .form-title em {
-      font-style: italic;
-      color: var(--clr-gold);
-    }
-
-    .form-subtitle {
-      color: var(--clr-text-muted);
-      font-size: 0.95rem;
-      margin-top: 0.8rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .form-card {
-      background: var(--clr-surface);
-      border: 1px solid var(--clr-border);
-      border-radius: var(--radius-md);
-      padding: 2.5rem;
-      margin-bottom: 2rem;
-      box-shadow: var(--shadow-lg);
-      transition: all var(--transition);
-      position: relative;
-    }
-
-    .form-card:hover {
-      border-color: var(--clr-border-hover);
-    }
-
-    .form-card.required-card {
-      border-color: rgba(232, 168, 56, 0.25);
-      box-shadow: 0 4px 30px rgba(232, 168, 56, 0.04);
-    }
-
-    .form-card-title {
-      font-family: var(--font-display);
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--clr-gold-light);
-      margin-bottom: 1.8rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      border-bottom: 1px solid var(--clr-border);
-      padding-bottom: 0.8rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.8rem;
-    }
-
-    .form-group.row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-
-    @media (max-width: 600px) {
-      .form-group.row {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-      .form-card {
-        padding: 1.5rem;
-      }
-    }
-
-    .form-label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: var(--clr-text);
-      margin-bottom: 0.6rem;
-    }
-
-    .form-label span.req {
-      color: var(--clr-terracotta);
-      margin-left: 4px;
-      font-weight: bold;
-    }
-
-    .form-input, .form-textarea, .form-select {
-      background: var(--clr-surface-2);
-      color: var(--clr-text);
-      border: 1.5px solid var(--clr-border);
-      border-radius: var(--radius-sm);
-      padding: 0.75rem 1rem;
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      outline: none;
-      transition: all var(--transition);
-      width: 100%;
-    }
-
-    .form-select {
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a09070' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 1rem center;
-      padding-right: 2.5rem;
-      cursor: pointer;
-    }
-
-    .form-select option {
-      background: var(--clr-surface-2);
-    }
-
-    .form-input:focus, .form-textarea:focus, .form-select:focus {
-      border-color: var(--clr-gold);
-      box-shadow: 0 0 12px rgba(232, 168, 56, 0.15);
-      background: var(--clr-surface-3);
-    }
-
-    .form-textarea {
-      resize: vertical;
-      min-height: 150px;
-      line-height: 1.5;
-    }
-
-    /* Ingredient List Styles */
-    .ingredients-list-container {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .ingredient-row {
-      display: grid;
-      grid-template-columns: 2fr 1fr auto;
-      gap: 0.8rem;
-      align-items: center;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .btn-remove-ing {
-      color: var(--clr-text-muted);
-      font-size: 1.2rem;
-      padding: 0.5rem;
-      border-radius: var(--radius-sm);
-      transition: all var(--transition);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .btn-remove-ing:hover {
-      color: var(--clr-terracotta);
-      background: rgba(192, 97, 74, 0.12);
-    }
-
-    .btn-add-ing {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      color: var(--clr-gold-light);
-      padding: 0.6rem 1.2rem;
-      border-radius: var(--radius-sm);
-      border: 1px dashed var(--clr-border-hover);
-      transition: all var(--transition);
-      cursor: pointer;
-      width: fit-content;
-    }
-
-    .btn-add-ing:hover {
-      background: rgba(232, 168, 56, 0.08);
-      border-color: var(--clr-gold);
-    }
-
-    /* AI Notice Banner */
-    .ai-notice-banner {
-      background: rgba(232, 168, 56, 0.06);
-      border: 1px solid rgba(232, 168, 56, 0.18);
-      border-radius: var(--radius-md);
-      padding: 1.2rem;
-      margin-bottom: 2rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-
-    .ai-notice-icon {
-      font-size: 1.6rem;
-      line-height: 1;
-    }
-
-    .ai-notice-text {
-      font-size: 0.88rem;
-      color: var(--clr-text-muted);
-      line-height: 1.5;
-    }
-
-    .ai-notice-text strong {
-      color: var(--clr-gold-light);
-      font-weight: 600;
-    }
-
-    /* Checkbox list style */
-    .category-checkbox-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 0.8rem;
-      margin-top: 0.5rem;
-    }
-
-    .category-checkbox-label {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      cursor: pointer;
-      font-size: 0.9rem;
-      color: var(--clr-text-muted);
-      transition: color var(--transition);
-      background: var(--clr-surface-2);
-      padding: 0.6rem 1rem;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--clr-border);
-    }
-
-    .category-checkbox-label input {
-      accent-color: var(--clr-gold);
-      width: 16px;
-      height: 16px;
-    }
-
-    .category-checkbox-label:hover {
-      color: var(--clr-text);
-      border-color: var(--clr-border-hover);
-    }
-
-    .category-checkbox-label:has(input:checked) {
-      color: var(--clr-gold-light);
-      border-color: var(--clr-gold);
-      background: rgba(232, 168, 56, 0.04);
-    }
-
-    /* Cover image styling */
-    .cover-image-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-
-    @media (max-width: 600px) {
-      .cover-image-options {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-    }
-
-    .image-upload-wrapper {
-      border: 2px dashed var(--clr-border);
-      border-radius: var(--radius-sm);
-      padding: 1.8rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all var(--transition);
-      background: var(--clr-surface-2);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .image-upload-wrapper:hover {
-      border-color: var(--clr-gold);
-      background: var(--clr-surface-3);
-    }
-
-    .image-upload-wrapper span.icon {
-      font-size: 2rem;
-    }
-
-    .image-preview-container {
-      margin-top: 1.5rem;
-      display: none;
-      justify-content: center;
-      position: relative;
-    }
-
-    .image-preview {
-      max-height: 220px;
-      border-radius: var(--radius-md);
-      border: 1.5px solid var(--clr-border);
-      box-shadow: var(--shadow-md);
-      object-fit: cover;
-    }
-
-    .btn-remove-preview {
-      position: absolute;
-      top: -10px;
-      right: -10px;
-      background: var(--clr-terracotta);
-      color: var(--clr-cream);
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: var(--shadow-sm);
-    }
-
-    /* Steps Editor */
-    .steps-editor-wrapper {
-      position: relative;
-    }
-
-    .steps-toolbar {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .steps-toolbar-hint {
-      font-size: 0.78rem;
-      color: var(--clr-text-dim);
-      flex: 1;
-    }
-
-    .steps-tab-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.78rem;
-      color: var(--clr-text-muted);
-      padding: 0.3rem 0.8rem;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--clr-border);
-      background: var(--clr-surface-2);
-      transition: all var(--transition);
-      cursor: pointer;
-      font-family: var(--font-body);
-    }
-
-    .steps-tab-btn:hover {
-      background: var(--clr-surface-3);
-      border-color: var(--clr-border-hover);
-      color: var(--clr-text);
-    }
-
-    .steps-editor-container {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      border: 1.5px solid var(--clr-border);
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      transition: border-color var(--transition);
-      background: var(--clr-surface-2);
-    }
-
-    .steps-editor-container:focus-within {
-      border-color: var(--clr-gold);
-      box-shadow: 0 0 12px rgba(232, 168, 56, 0.15);
-    }
-
-    .steps-line-numbers {
-      background: var(--clr-surface-2);
-      color: var(--clr-text-dim);
-      font-family: var(--font-body);
-      font-size: 0.85rem;
-      padding: 0.75rem 0.3rem 0.75rem 0.6rem;
-      text-align: right;
-      line-height: 1.5rem;
-      user-select: none;
-      min-width: 26px;
-      border-right: none;
-      white-space: pre;
-      pointer-events: none;
-    }
-
-    .steps-editor-textarea {
-      background: transparent;
-      color: var(--clr-text);
-      border: none;
-      border-radius: 0;
-      padding: 0.75rem 1rem 0.75rem 0.3rem;
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      outline: none;
-      width: 100%;
-      resize: vertical;
-      min-height: 180px;
-      line-height: 1.5rem;
-      box-shadow: none;
-    }
-
-    .steps-editor-textarea::placeholder {
-      color: var(--clr-text-dim);
-    }
-
-    /* Actions container */
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 1.2rem;
-      margin-top: 2.5rem;
-    }
-
-    /* Loading Overlay for AI autocomplete */
     .loading-overlay {
       position: fixed;
       inset: 0;
@@ -469,265 +34,482 @@
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .loading-text {
-      font-family: var(--font-display);
+      font-family: 'Plus Jakarta Sans', Helvetica, sans-serif;
       font-size: 1.6rem;
-      color: var(--clr-text);
+      color: #fff;
       margin-bottom: 0.6rem;
+      font-weight: 800;
     }
 
     .loading-subtext {
       font-size: 0.95rem;
-      color: var(--clr-text-muted);
+      color: #a39a8c;
       max-width: 450px;
       line-height: 1.5;
     }
   </style>
 </head>
+
 <body>
-
   <!-- ===== NAVBAR ===== -->
-  <nav class="navbar" id="navbar" aria-label="Navegação principal">
-    <div style="display: flex; align-items: center;">
-      <a class="nav-logo" href="index.html" aria-label="Receitas da Isa - Início">
-        <span class="nav-logo-icon">🍴</span>
-        <span class="nav-logo-text">
-          Receitas da Isa
-          <em class="nav-logo-sub">sabores do mundo</em>
-        </span>
-      </a>
-
+  <header class="navbar" id="navbar"
+    style="display:flex; align-items:center; gap:32px; padding:20px 48px; border-bottom:1px solid #f0ebe3; position:sticky; top:0; background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); z-index:20">
+    <a href="index.html" class="nav-logo" style="display:flex; align-items:center; gap:12px; flex-shrink:0">
+      <div
+        style="width:40px; height:40px; border-radius:13px; background:#ffbf00; display:flex; align-items:center; justify-content:center">
+        <div style="width:14px; height:14px; border-radius:50%; background:#14110d"></div>
+      </div>
+      <div style="display:flex; flex-direction:column; line-height:1">
+        <span style="font-size:19px; font-weight:800; letter-spacing:-0.02em">Receitas da Isa</span>
+        <span
+          style="font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:#a39a8c; margin-top:4px">sabores
+          do mundo</span>
+      </div>
+    </a>
+    <div style="flex:1"></div>
+    <div style="display:flex; align-items:center; gap:16px; min-width:0; flex-shrink:1">
+      <div style="display:flex; align-items:center; gap:8px; background:#f7f4ee; padding:6px; border-radius:999px;">
+        <a href="add-recipe-manual.html"
+          style="padding:10px 18px; border-radius:999px; font-size:14px; font-weight:700; text-decoration:none; transition:all 0.2s; background:#fff; color:#14110d; box-shadow:0 4px 12px rgba(0,0,0,0.06); white-space:nowrap">Manualmente</a>
+        <a href="add-recipe-link.html"
+          style="padding:10px 18px; border-radius:999px; font-size:14px; font-weight:700; text-decoration:none; transition:all 0.2s; color:#6b6459; background:transparent; white-space:nowrap">Por link</a>
+        <a href="add-recipe-import.html"
+          style="padding:10px 18px; border-radius:999px; font-size:14px; font-weight:700; text-decoration:none; transition:all 0.2s; color:#6b6459; background:transparent; white-space:nowrap">Importar</a>
+      </div>
+      <div
+        style="display:flex; align-items:center; gap:10px; background:#f7f4ee; border-radius:999px; padding:10px 18px; flex:0 1 240px; min-width:44px; overflow:hidden">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;">
+          <circle cx="6.5" cy="6.5" r="4.5" stroke="#ffbf00" stroke-width="2.2" />
+          <path d="M10 10L14 14" stroke="#ffbf00" stroke-width="2.2" stroke-linecap="round" />
+        </svg>
+        <input placeholder="Procurar receitas..."
+          style="border:none; background:transparent; outline:none; font-family:inherit; font-size:14px; font-weight:500; width:100%; color:#14110d" />
+      </div>
     </div>
-    <ul class="nav-links" role="list">
-      <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
-      <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
-      <li><a class="nav-link" href="planner.html" id="nav-planner"><span class="nav-link-icon">📅</span> <span>Planejador</span></a></li>
-      <li id="nav-auth-container">
-        <button class="nav-login-btn" id="login-btn">
-          <span>🔑</span> <span>Entrar</span>
-        </button>
-      </li>
-    </ul>
-  </nav>
+  </header>
 
-  <!-- ===== MAIN CONTENT ===== -->
-  <main class="form-section">
-    <header class="form-header">
-      <div class="section-label">✦ Compartilhe seu sabor</div>
-      <h1 class="form-title">Nova Receita <em>Manualmente</em></h1>
-      <p class="form-subtitle">Cadastre o coração do seu prato. Preencha os campos obrigatórios e nossa Inteligência Artificial cuidará do preenchimento e estimativas de todo o resto!</p>
-    </header>
+  <section style="max-width:1040px; margin:0 auto; padding:56px 48px 0">
+    <div
+      style="display:inline-flex; align-items:center; gap:9px; background:#fff6d9; border-radius:999px; padding:8px 16px; margin-bottom:22px">
+      <div style="width:8px; height:8px; border-radius:50%; background:#ffbf00"></div>
+      <span style="font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#8a6a00">Pra
+        nunca mais esquecer</span>
+    </div>
+    <h1 class="form-title" style="margin:0; font-size:60px; font-weight:800; letter-spacing:-0.035em; line-height:1">
+      Nova receita <em style="color:#7b4bd1; font-weight:700">manualmente</em></h1>
+    <p class="form-subtitle"
+      style="margin:20px 0 0; font-size:18px; line-height:1.6; color:#6b6459; max-width:640px; text-wrap:pretty">
+      Cadastre o coração do seu prato. Preencha os campos obrigatórios e nossa Inteligência Artificial cuidará do
+      preenchimento e estimativas de todo o resto.</p>
+  </section>
 
-    <form id="recipe-form" onsubmit="handleFormSubmit(event)">
-      
-      <!-- ===== OBRIGATÓRIOS ===== -->
-      <div class="form-card required-card">
-        <h2 class="form-card-title"><span>✍️</span> Informações Obrigatórias</h2>
-        
-        <!-- Nome da Receita -->
-        <div class="form-group">
-          <label class="form-label" for="recipe-title">Nome da Receita <span class="req">*</span></label>
-          <input type="text" id="recipe-title" class="form-input" placeholder="Ex: Macarrão Cremoso com Cogumelos" required>
+  <form id="recipe-form" onsubmit="handleFormSubmit(event)">
+    <section style="max-width:1040px; margin:0 auto; padding:44px 48px 0">
+      <div style="display:flex; align-items:center; gap:14px; margin-bottom:24px">
+        <span
+          style="width:28px; height:28px; border-radius:9px; background:#ffbf00; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800">1</span>
+        <h2 style="margin:0; font-size:26px; font-weight:800; letter-spacing:-0.02em">Informações obrigatórias</h2>
+      </div>
+
+      <div style="border:2px solid #f0ebe3; border-radius:26px; padding:32px">
+        <label
+          style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:10px"
+          for="recipe-title">Nome da receita <span style="color:#7b4bd1">*</span></label>
+        <input type="text" id="recipe-title" required placeholder="Ex.: Poke bowl de salmão"
+          style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:16px 18px; font-size:16px; font-weight:600; outline:none; background:#fff" />
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin:32px 0 12px">
+          <label
+            style="font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459">Ingredientes
+            <span style="color:#7b4bd1">*</span></label>
         </div>
 
-        <!-- Ingredientes Item por Item -->
-        <div class="form-group">
-          <label class="form-label">Ingredientes <span class="req">*</span></label>
-          <div class="ingredients-list-container" id="ingredients-container">
-            <!-- As linhas de ingredientes serão inseridas aqui dinamicamente -->
+        <div style="display:flex; gap:10px; margin-bottom:8px; padding:0 2px;">
+          <span
+            style="flex:2; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#a39a8c">Nome
+            do ingrediente</span>
+          <span
+            style="flex:1; min-width:130px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#a39a8c">Quantidade
+            / Medida</span>
+          <span style="width:42px; flex-shrink:0;"></span>
+        </div>
+
+        <div id="ingredients-container" style="display:flex; flex-direction:column; gap:10px">
+          <!-- Linhas de ingredientes injetadas pelo JS -->
+        </div>
+        <button type="button" onclick="addIngredientRow()"
+          style="margin-top:14px; border:2px dashed #e5ded2; background:#fffdf6; color:#8a6a00; font-family:inherit; font-size:14px; font-weight:800; padding:13px 22px; border-radius:12px; cursor:pointer; white-space:nowrap">+
+          Adicionar ingrediente</button>
+
+        <div
+          style="margin:32px 0 12px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap">
+          <label style="font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459"
+            for="recipe-steps">Modo de preparo <span style="color:#7b4bd1">*</span></label>
+          <span style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#a39a8c">cada linha = 1 etapa ·
+            Tab indenta em subitem (a., b…)</span>
+        </div>
+        <div style="border:2px solid #ece5d9; border-radius:14px; overflow:hidden">
+          <div style="display:flex; padding:16px 18px; background:#fff">
+            <div id="steps-line-numbers"
+              style="font-family:inherit; font-size:16px; line-height:1.7; font-weight:700; color:#a39a8c; padding-right:12px; text-align:left; user-select:none; white-space:pre; width:60px; min-width:60px; max-width:60px; flex-shrink:0; overflow:hidden;">
+              1.</div>
+            <textarea required id="recipe-steps" rows="5" placeholder="Cozinhe o arroz e tempere ainda quente…"
+              style="flex:1; border:none; outline:none; resize:vertical; font-family:inherit; font-size:16px; line-height:1.7; font-weight:500; color:#14110d; background:transparent;"
+              oninput="updateStepsEditor()" onkeydown="handleStepsKeydown(event)"
+              onscroll="syncStepsScroll()"></textarea>
           </div>
-          <button type="button" class="btn-add-ing" onclick="addIngredientRow()">
-            <span>+</span> Adicionar Ingrediente
-          </button>
         </div>
+      </div>
+    </section>
 
-        <!-- Modo de Preparo -->
-        <div class="form-group">
-          <label class="form-label" for="recipe-steps">Modo de Preparo <span class="req">*</span></label>
-          <div class="steps-editor-wrapper">
-            <div class="steps-toolbar">
-              <span class="steps-toolbar-hint">Cada linha = 1 etapa. Tab = indenta a linha atual como subitem (1.1, 1.2...)</span>
-              <button type="button" class="steps-tab-btn" onclick="insertTabInSteps()" title="Adicionar recuo (subitem)">
-                ⇥ Tab
+    <section style="max-width:1040px; margin:0 auto; padding:44px 48px 0">
+      <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px">
+        <span
+          style="width:28px; height:28px; border-radius:9px; background:#f7f4ee; color:#6b6459; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800">2</span>
+        <h2 style="margin:0; font-size:26px; font-weight:800; letter-spacing:-0.02em">Informações opcionais</h2>
+        <span
+          style="background:#eaeefe; color:#3a4bc0; border-radius:999px; padding:6px 13px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase">Autopreenchível</span>
+      </div>
+      <p style="margin:0 0 24px; font-size:16px; line-height:1.6; color:#6b6459; max-width:720px">Se você não preencher,
+        nossa Inteligência Artificial analisará seu título, ingredientes e modo de preparo para estimar tempos,
+        calorias, culinária e categorias automaticamente.</p>
+
+      <div style="border:2px solid #f0ebe3; border-radius:26px; padding:32px">
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:18px">
+          <div>
+            <label
+              style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:10px">Culinária
+              / origem</label>
+            <input type="hidden" id="recipe-cuisine" value="" />
+            <div class="custom-dropdown" id="form-dd-cuisine" style="position:relative;">
+              <button type="button" onclick="toggleFormDropdown('form-dd-cuisine')" id="form-dd-cuisine-btn"
+                style="display:flex; align-items:center; justify-content:space-between; width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-family:inherit; font-size:15px; font-weight:600; background:#fff; color:#14110d; cursor:pointer; outline:none; transition:all 0.2s;">
+                <span id="form-dd-cuisine-label">—</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="flex-shrink:0;">
+                  <path d="M1 1L5 5L9 1" stroke="#a39a8c" stroke-width="2" stroke-linecap="round" />
+                </svg>
               </button>
+              <div class="dropdown-panel" id="form-dd-cuisine-panel"
+                style="display:none; position:absolute; top:calc(100% + 6px); left:0; right:0; background:#fff; border-radius:16px; box-shadow:0 12px 36px rgba(20,17,13,0.15); z-index:100; overflow:hidden; padding:8px; max-height:240px; overflow-y:auto;">
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                  <button type="button" class="dd-option" onclick="selectFormCuisine('')"
+                    style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#a39a8c; cursor:pointer; text-align:left; width:100%;">
+                    —
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormCuisine('Brasileira')"
+                    style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%;">
+                    <img src="https://flagcdn.com/w40/br.png" alt="BR"
+                      style="width:20px; height:15px; border-radius:3px; object-fit:cover; flex-shrink:0;"> Brasileira
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormCuisine('Italiana')"
+                    style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%;">
+                    <img src="https://flagcdn.com/w40/it.png" alt="IT"
+                      style="width:20px; height:15px; border-radius:3px; object-fit:cover; flex-shrink:0;"> Italiana
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormCuisine('Japonesa')"
+                    style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%;">
+                    <img src="https://flagcdn.com/w40/jp.png" alt="JP"
+                      style="width:20px; height:15px; border-radius:3px; object-fit:cover; flex-shrink:0;"> Japonesa
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormCuisine('Mexicana')"
+                    style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%;">
+                    <img src="https://flagcdn.com/w40/mx.png" alt="MX"
+                      style="width:20px; height:15px; border-radius:3px; object-fit:cover; flex-shrink:0;"> Mexicana
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormCuisine('Francesa')"
+                    style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%;">
+                    <img src="https://flagcdn.com/w40/fr.png" alt="FR"
+                      style="width:20px; height:15px; border-radius:3px; object-fit:cover; flex-shrink:0;"> Francesa
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormCuisine('Tailandesa')"
+                    style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%;">
+                    <img src="https://flagcdn.com/w40/th.png" alt="TH"
+                      style="width:20px; height:15px; border-radius:3px; object-fit:cover; flex-shrink:0;"> Tailandesa
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormCuisine('Americana')"
+                    style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%;">
+                    <img src="https://flagcdn.com/w40/us.png" alt="US"
+                      style="width:20px; height:15px; border-radius:3px; object-fit:cover; flex-shrink:0;"> Americana
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormCuisine('Indiana')"
+                    style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%;">
+                    <img src="https://flagcdn.com/w40/in.png" alt="IN"
+                      style="width:20px; height:15px; border-radius:3px; object-fit:cover; flex-shrink:0;"> Indiana
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormCuisine('Espanhola')"
+                    style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%;">
+                    <img src="https://flagcdn.com/w40/es.png" alt="ES"
+                      style="width:20px; height:15px; border-radius:3px; object-fit:cover; flex-shrink:0;"> Espanhola
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormCuisine('Grega')"
+                    style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%;">
+                    <img src="https://flagcdn.com/w40/gr.png" alt="GR"
+                      style="width:20px; height:15px; border-radius:3px; object-fit:cover; flex-shrink:0;"> Grega
+                  </button>
+                </div>
+              </div>
             </div>
-            <div class="steps-editor-container">
-              <div class="steps-line-numbers" id="steps-line-numbers" aria-hidden="true">1</div>
-              <textarea
-                id="recipe-steps"
-                class="steps-editor-textarea"
-                placeholder="Ex: Aqueça a panela em fogo médio&#10;  Adicione o azeite e refogue o alho&#10;Junte os demais ingredientes..."
-                required
-                oninput="updateStepsEditor()"
-                onkeydown="handleStepsKeydown(event)"
-                onscroll="syncStepsScroll()"
-              ></textarea>
+          </div>
+          <div>
+            <label
+              style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:10px">Dificuldade</label>
+            <input type="hidden" id="recipe-difficulty" value="" />
+            <div class="custom-dropdown" id="form-dd-diff" style="position:relative;">
+              <button type="button" onclick="toggleFormDropdown('form-dd-diff')" id="form-dd-diff-btn"
+                style="display:flex; align-items:center; justify-content:space-between; width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-family:inherit; font-size:15px; font-weight:600; background:#fff; color:#14110d; cursor:pointer; outline:none; transition:all 0.2s;">
+                <span id="form-dd-diff-label">—</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="flex-shrink:0;">
+                  <path d="M1 1L5 5L9 1" stroke="#a39a8c" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </button>
+              <div class="dropdown-panel" id="form-dd-diff-panel"
+                style="display:none; position:absolute; top:calc(100% + 6px); left:0; right:0; background:#fff; border-radius:16px; box-shadow:0 12px 36px rgba(20,17,13,0.15); z-index:100; overflow:hidden; padding:8px;">
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                  <button type="button" class="dd-option" onclick="selectFormDiff('')"
+                    style="display:flex; align-items:center; padding:10px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:14px; font-weight:600; color:#a39a8c; cursor:pointer; text-align:left; width:100%;">
+                    —
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormDiff('Fácil')"
+                    style="display:flex; align-items:center; padding:8px 12px; border-radius:10px; border:none; background:transparent; cursor:pointer; text-align:left; width:100%;">
+                    <span
+                      style="border:2px solid #2f8f7d; color:#2f8f7d; border-radius:999px; padding:5px 14px; font-size:13px; font-weight:700; background:#f0f9f7;">Fácil</span>
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormDiff('Médio')"
+                    style="display:flex; align-items:center; padding:8px 12px; border-radius:10px; border:none; background:transparent; cursor:pointer; text-align:left; width:100%;">
+                    <span
+                      style="border:2px solid #ffbf00; color:#8a6a00; border-radius:999px; padding:5px 14px; font-size:13px; font-weight:700; background:#fffdf3;">Médio</span>
+                  </button>
+                  <button type="button" class="dd-option" onclick="selectFormDiff('Difícil')"
+                    style="display:flex; align-items:center; padding:8px 12px; border-radius:10px; border:none; background:transparent; cursor:pointer; text-align:left; width:100%;">
+                    <span
+                      style="border:2px solid #e14b3f; color:#e14b3f; border-radius:999px; padding:5px 14px; font-size:13px; font-weight:700; background:#fdf2f1;">Difícil</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label
+              style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:10px"
+              for="recipe-preptime">Tempo de preparo</label>
+            <input type="number" min="1" id="recipe-preptime" placeholder="Minutos"
+              style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none; background:#fff; color:#14110d;" />
+          </div>
+          <div>
+            <label
+              style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:10px"
+              for="recipe-servings">Rendimento</label>
+            <input type="number" min="1" id="recipe-servings" placeholder="Porções"
+              style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none; background:#fff; color:#14110d;" />
+          </div>
+        </div>
+
+        <!-- Nova linha: Nutrição (Calorias, Carboidratos, Gorduras, Proteínas) -->
+        <div style="margin-top:28px">
+          <label
+            style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:12px">Informações
+            Nutricionais (por porção)</label>
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:18px;">
+            <div>
+              <label
+                style="display:block; font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#a39a8c; margin-bottom:8px"
+                for="recipe-calories">Calorias</label>
+              <input type="number" min="1" id="recipe-calories" placeholder="Ex: 400 kcal"
+                style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none; background:#fff; color:#14110d;" />
+            </div>
+            <div>
+              <label
+                style="display:block; font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#a39a8c; margin-bottom:8px"
+                for="recipe-carbs">Carboidratos</label>
+              <input type="text" id="recipe-carbs" placeholder="Ex: 40g"
+                style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none; background:#fff; color:#14110d;" />
+            </div>
+            <div>
+              <label
+                style="display:block; font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#a39a8c; margin-bottom:8px"
+                for="recipe-fat">Gorduras</label>
+              <input type="text" id="recipe-fat" placeholder="Ex: 10g"
+                style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none; background:#fff; color:#14110d;" />
+            </div>
+            <div>
+              <label
+                style="display:block; font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#a39a8c; margin-bottom:8px"
+                for="recipe-protein">Proteínas</label>
+              <input type="text" id="recipe-protein" placeholder="Ex: 20g"
+                style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none; background:#fff; color:#14110d;" />
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:32px">
+          <label
+            style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:12px">Categorias</label>
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:11px 20px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:9px; white-space:nowrap">
+              <input type="checkbox" name="recipe-category" value="Café da Manhã"
+                style="accent-color:#ffbf00; width:16px; height:16px"> Café da Manhã
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:11px 20px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:9px; white-space:nowrap">
+              <input type="checkbox" name="recipe-category" value="Almoço"
+                style="accent-color:#ffbf00; width:16px; height:16px"> Almoço
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:11px 20px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:9px; white-space:nowrap">
+              <input type="checkbox" name="recipe-category" value="Lanche"
+                style="accent-color:#ffbf00; width:16px; height:16px"> Lanche
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:11px 20px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:9px; white-space:nowrap">
+              <input type="checkbox" name="recipe-category" value="Jantar"
+                style="accent-color:#ffbf00; width:16px; height:16px"> Jantar
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:11px 20px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:9px; white-space:nowrap">
+              <input type="checkbox" name="recipe-category" value="Sobremesa"
+                style="accent-color:#ffbf00; width:16px; height:16px"> Sobremesa
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:11px 20px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:9px; white-space:nowrap">
+              <input type="checkbox" name="recipe-category" value="Acompanhamento"
+                style="accent-color:#ffbf00; width:16px; height:16px"> Acompanhamento
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-top:32px">
+          <label
+            style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:12px">Tags</label>
+          <div style="display:flex; gap:9px; flex-wrap:wrap">
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:10px 17px; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:6px">
+              <input type="checkbox" name="recipe-tag" value="1 panela" style="accent-color:#2f8f7d"> 1 panela
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:10px 17px; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:6px">
+              <input type="checkbox" name="recipe-tag" value="Dia a dia" style="accent-color:#2f8f7d"> Dia a dia
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:10px 17px; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:6px">
+              <input type="checkbox" name="recipe-tag" value="Gostosão" style="accent-color:#2f8f7d"> Gostosão
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:10px 17px; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:6px">
+              <input type="checkbox" name="recipe-tag" value="Fritura" style="accent-color:#2f8f7d"> Fritura
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:10px 17px; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:6px">
+              <input type="checkbox" name="recipe-tag" value="Proteico" style="accent-color:#2f8f7d"> Proteico
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:10px 17px; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:6px">
+              <input type="checkbox" name="recipe-tag" value="Pouco calórico" style="accent-color:#2f8f7d"> Pouco
+              calórico
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:10px 17px; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:6px">
+              <input type="checkbox" name="recipe-tag" value="Saudável" style="accent-color:#2f8f7d"> Saudável
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:10px 17px; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:6px">
+              <input type="checkbox" name="recipe-tag" value="Rápido" style="accent-color:#2f8f7d"> Rápido
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:10px 17px; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:6px">
+              <input type="checkbox" name="recipe-tag" value="Low Carb" style="accent-color:#2f8f7d"> Low Carb
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:10px 17px; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:6px">
+              <input type="checkbox" name="recipe-tag" value="Vegano" style="accent-color:#2f8f7d"> Vegano
+            </label>
+            <label
+              style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:10px 17px; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:6px">
+              <input type="checkbox" name="recipe-tag" value="Sem Glúten" style="accent-color:#2f8f7d"> Sem Glúten
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-top:32px">
+          <label
+            style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:12px">Imagem
+            de capa</label>
+          <div style="display:grid; grid-template-columns:minmax(0,1fr) 200px; gap:18px; align-items:stretch">
+            <div style="display:flex; flex-direction:column; gap:14px">
+              <div onclick="document.getElementById('recipe-image').click()"
+                style="border:2px dashed #e5ded2; border-radius:20px; padding:26px; text-align:center; background:#fffdf6; cursor:pointer">
+                <div
+                  style="width:46px; height:46px; border-radius:14px; background:#ffbf00; margin:0 auto 14px; display:flex; align-items:center; justify-content:center">
+                  <div style="width:16px; height:16px; border-radius:50%; border:3.5px solid #14110d"></div>
+                </div>
+                <div style="font-size:16px; font-weight:800">Escolher arquivo de imagem</div>
+                <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#a39a8c; margin-top:8px">JPG
+                  · PNG · WEBP</div>
+                <input type="file" id="recipe-image" accept="image/*" style="display: none;"
+                  onchange="handleImageChange(event)">
+              </div>
+              <div style="display:flex; align-items:center; gap:14px">
+                <span style="flex:1; height:1px; background:#f0ebe3"></span>
+                <span
+                  style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">ou
+                  por URL</span>
+                <span style="flex:1; height:1px; background:#f0ebe3"></span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px">
+                <div style="display:flex; gap:10px">
+                  <input type="text" id="recipe-image-url" placeholder="https://…/foto-da-receita.jpg"
+                    style="flex:1; min-width:0; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none; background:#fff; color:#14110d; transition:border-color 0.2s;"
+                    onfocus="this.style.borderColor='#ffbf00'" onblur="this.style.borderColor='#ece5d9'"
+                    oninput="handleImageUrlChange(event)" onchange="handleImageUrlChange(event)" />
+                  <button type="button" onclick="applyImageUrl()"
+                    style="background:#14110d; color:#fff; border:none; border-radius:14px; padding:0 22px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; flex-shrink:0; transition:background 0.2s, transform 0.1s;"
+                    onmouseover="this.style.background='#2d2822'" onmouseout="this.style.background='#14110d'">Usar
+                    URL</button>
+                </div>
+                <div
+                  style="font-size:12px; color:#8c8273; font-weight:600; padding-left:4px; display:flex; align-items:center; gap:5px">
+                  <span>💡</span> Clique com o botão direito na imagem na web e escolha <strong>"Copiar endereço da
+                    imagem"</strong>.
+                </div>
+              </div>
+            </div>
+            <div id="image-preview-container"
+              style="border-radius:20px; background:repeating-linear-gradient(135deg,#f4efe6 0 12px,#efe8dc 12px 24px); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; border:2px solid #ece5d9; min-height:160px">
+              <span id="image-preview-placeholder"
+                style="font-family:'JetBrains Mono', monospace; font-size:14px; color:#a39a8c; font-weight:500;">prévia</span>
+              <img src="" alt="Prévia da imagem" id="image-preview-img"
+                style="width:100%; height:100%; object-fit:cover; display:none; position:absolute; inset:0;">
+              <button type="button" id="image-preview-clear" onclick="clearImagePreview()"
+                style="position:absolute; top:10px; right:10px; background:#14110d; color:#fff; border:none; border-radius:50%; width:26px; height:26px; display:none; align-items:center; justify-content:center; cursor:pointer; font-size:13px; z-index:2; transition:transform 0.15s;"
+                onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"
+                title="Remover prévia">✕</button>
             </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- ===== AVISO DA IA ===== -->
-      <div class="ai-notice-banner">
-        <span class="ai-notice-icon">✨</span>
-        <div class="ai-notice-text">
-          Os campos a seguir são <strong>opcionais</strong>. Se você não os preencher, nossa <strong>Inteligência Artificial</strong> analisará seu título, ingredientes e modo de preparo para estimar tempos, calorias, culinária e categorias automaticamente!
+    <section style="max-width:1040px; margin:0 auto; padding:36px 48px 0">
+      <div
+        style="display:flex; align-items:center; justify-content:space-between; gap:16px; background:#f7f4ee; border-radius:22px; padding:20px 24px; flex-wrap:wrap">
+        <span style="font-size:14px; font-weight:700; color:#6b6459">Você pode salvar agora e deixar a IA completar o
+          resto.</span>
+        <div style="display:flex; gap:12px">
+          <a href="index.html"
+            style="border:2px solid #e5ded2; background:#fff; font-size:15px; font-weight:700; padding:14px 26px; border-radius:999px; text-decoration:none; color:#14110d">Cancelar</a>
+          <button type="submit" id="submit-recipe-btn"
+            style="background:#ffbf00; color:#14110d; border:none; font-family:inherit; font-size:15px; font-weight:800; padding:15px 30px; border-radius:999px; cursor:pointer">Salvar
+            receita</button>
         </div>
       </div>
-
-      <!-- ===== OPCIONAIS ===== -->
-      <div class="form-card">
-        <h2 class="form-card-title"><span>🍽️</span> Informações Opcionais <span style="font-size: 0.8rem; color: var(--clr-text-muted); font-weight: normal; margin-left: auto;">(Autopreenchíveis)</span></h2>
-
-        <!-- Culinária e Dificuldade -->
-        <div class="form-group row">
-          <div>
-            <label class="form-label" for="recipe-cuisine">Culinária / Origem</label>
-            <select id="recipe-cuisine" class="form-select">
-              <option value="">-</option>
-              <option value="Brasileira">Brasileira</option>
-              <option value="Italiana">Italiana</option>
-              <option value="Japonesa">Japonesa</option>
-              <option value="Mexicana">Mexicana</option>
-              <option value="Francesa">Francesa</option>
-              <option value="Tailandesa">Tailandesa</option>
-              <option value="Americana">Americana</option>
-              <option value="Indiana">Indiana</option>
-              <option value="Espanhola">Espanhola</option>
-              <option value="Grega">Grega</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label" for="recipe-difficulty">Dificuldade</label>
-            <select id="recipe-difficulty" class="form-select">
-              <option value="">-</option>
-              <option value="Fácil">Fácil</option>
-              <option value="Médio">Médio</option>
-              <option value="Difícil">Difícil</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Tempo de Preparo -->
-        <div class="form-group">
-          <label class="form-label" for="recipe-preptime">Tempo de Preparo (minutos)</label>
-          <input type="number" id="recipe-preptime" class="form-input" placeholder="Ex: 25" min="1">
-        </div>
-
-        <!-- Porções e Calorias -->
-        <div class="form-group row">
-          <div>
-            <label class="form-label" for="recipe-servings">Rendimento (Porções)</label>
-            <input type="number" id="recipe-servings" class="form-input" placeholder="Ex: 4" min="1">
-          </div>
-          <div>
-            <label class="form-label" for="recipe-calories">Calorias estimado (kcal por porção)</label>
-            <input type="number" id="recipe-calories" class="form-input" placeholder="Ex: 350" min="1">
-          </div>
-        </div>
-
-        <!-- Categorias -->
-        <div class="form-group">
-          <label class="form-label">Categorias</label>
-          <div class="category-checkbox-grid">
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-category" value="Café da Manhã"> Café da Manhã
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-category" value="Almoço"> Almoço
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-category" value="Lanche"> Lanche
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-category" value="Jantar"> Jantar
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-category" value="Sobremesa"> Sobremesa
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-category" value="Acompanhamento"> Acompanhamento
-            </label>
-          </div>
-        </div>
-
-        <!-- Tags -->
-        <div class="form-group">
-          <label class="form-label">Tags</label>
-          <div class="category-checkbox-grid">
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-tag" value="1 panela"> 1 panela
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-tag" value="Dia a dia"> Dia a dia
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-tag" value="Gostosão"> Gostosão
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-tag" value="Fritura"> Fritura
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-tag" value="Proteico"> Proteico
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-tag" value="Pouco calórico"> Pouco calórico
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-tag" value="Saudável"> Saudável
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-tag" value="Rápido"> Rápido
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-tag" value="Low Carb"> Low Carb
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-tag" value="Vegano"> Vegano
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-tag" value="Sem Glúten"> Sem Glúten
-            </label>
-            <label class="category-checkbox-label">
-              <input type="checkbox" name="recipe-tag" value="Falta checar"> Falta checar
-            </label>
-          </div>
-        </div>
-
-        <!-- Imagem de Capa -->
-        <div class="form-group">
-          <label class="form-label">Imagem de Capa</label>
-          <div class="cover-image-options">
-            <div class="image-upload-wrapper" onclick="document.getElementById('recipe-image').click()">
-              <span class="icon">📸</span>
-              <strong>Escolher arquivo de imagem</strong>
-              <span style="font-size: 0.78rem; color: var(--clr-text-muted);">Formatos aceitos: JPG, PNG, WEBP</span>
-              <input type="file" id="recipe-image" accept="image/*" style="display: none;" onchange="handleImageChange(event)">
-            </div>
-            <div style="display: flex; flex-direction: column; justify-content: center;">
-              <span style="text-align: center; color: var(--clr-text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">— OU —</span>
-              <input type="url" id="recipe-image-url" class="form-input" placeholder="Inserir link da imagem (URL)" onchange="handleImageUrlChange(event)">
-            </div>
-          </div>
-          
-          <div class="image-preview-container" id="image-preview-container">
-            <span class="btn-remove-preview" onclick="clearImagePreview()">✕</span>
-            <img src="" alt="Prévia da imagem" class="image-preview" id="image-preview-img">
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== ACTIONS ===== -->
-      <div class="form-actions">
-        <a href="index.html" class="btn btn-outline">Cancelar</a>
-        <button type="submit" class="btn btn-primary" id="submit-recipe-btn">✨ Salvar Receita</button>
-      </div>
-
-    </form>
-  </main>
+    </section>
+  </form>
 
   <!-- ===== LOADING OVERLAY ===== -->
   <div class="loading-overlay" id="loading-overlay">
@@ -736,22 +518,28 @@
     <div class="loading-subtext" id="loading-subtext">Isso pode levar alguns segundos. Por favor, aguarde.</div>
   </div>
 
-  <!-- ===== FOOTER ===== -->
-  <footer>
-    <span class="footer-logo">🍴 Receitas da Isa</span>
-    <span class="footer-copy">Feito com <span>♥</span> e muito sabor • 2026</span>
+  <footer class="site-footer">
+    <div style="display:flex; align-items:center; gap:12px">
+      <div
+        style="width:30px; height:30px; border-radius:10px; background:#ffbf00; display:flex; align-items:center; justify-content:center">
+        <div style="width:10px; height:10px; border-radius:50%; background:#14110d"></div>
+      </div>
+      <span style="font-size:15px; font-weight:800; color:#14110d">Receitas da Isa</span>
+    </div>
+    <span style="font-size: 14px; color: #a39a8c; font-weight: 500;">Feito com <span style="color:#ffbf00">♥</span> e
+      muito sabor • 2026</span>
   </footer>
-
+  \n
   <!-- Scripts -->
   <script type="module" src="js/auth.js"></script>
-  <script type="module" src="js/recipes.js?v=7"></script>
+  <script type="module" src="js/recipes.js?v=30"></script>
   <script type="module">
-    import { saveUserRecipe, updateUserRecipe, autocompleteRecipeWithAI, uploadRecipeImage } from './js/user-recipes.js?v=8';
+    import { saveUserRecipe, updateUserRecipe, autocompleteRecipeWithAI, uploadRecipeImage } from './js/user-recipes.js?v=10';
     import { getUser, authReady } from './js/auth.js';
 
     document.addEventListener('DOMContentLoaded', async () => {
       initNavbar();
-      
+
       await authReady;
       if (!getUser()) {
         showToast("🔒 Faça login para poder salvar suas receitas na sua conta!", 6000);
@@ -801,30 +589,48 @@
           addIngredientRow();
         }
 
-        // Preenche modo de preparo
+        // Preenche modo de preparo preservando a indentação (\t) para subitens
         if (Array.isArray(recipe.steps)) {
-          document.getElementById('recipe-steps').value = recipe.steps.join('\n');
+          const rawSteps = recipe.steps.map(stepStr => {
+            const str = (stepStr || '').toString();
+            // Se for um subitem salvo como "1.1 texto", "a. texto", "a) texto" ou com \t/espaços
+            const isSub = str.startsWith('\t') ||
+              str.startsWith('  ') ||
+              /^\d+\.\d+[\s\.]/.test(str) ||
+              /^[a-z][\.\)]\s/i.test(str);
+
+            if (isSub) {
+              // Extrai o texto limpo sem o prefixo antigo de subitem
+              const cleanText = str
+                .replace(/^[\t\s]+/, '')
+                .replace(/^\d+\.\d+[\s\.]*/, '')
+                .replace(/^[a-z][\.\)]\s*/i, '');
+              return '\t' + cleanText;
+            }
+            return str;
+          });
+          document.getElementById('recipe-steps').value = rawSteps.join('\n');
         } else if (typeof recipe.steps === 'string') {
           document.getElementById('recipe-steps').value = recipe.steps;
         }
         if (window.updateStepsEditor) updateStepsEditor();
 
         // Preenche campos opcionais
-        if (recipe.cuisine) document.getElementById('recipe-cuisine').value = recipe.cuisine;
-        if (recipe.difficulty) document.getElementById('recipe-difficulty').value = recipe.difficulty;
+        if (recipe.cuisine) selectFormCuisine(recipe.cuisine);
+        if (recipe.difficulty) selectFormDiff(recipe.difficulty);
         if (recipe.prepTime || recipe.totalTime) document.getElementById('recipe-preptime').value = recipe.prepTime || recipe.totalTime;
         if (recipe.servings) document.getElementById('recipe-servings').value = recipe.servings;
         if (recipe.calories) document.getElementById('recipe-calories').value = recipe.calories;
+        if (recipe.nutrition) {
+          if (recipe.nutrition.carbs) document.getElementById('recipe-carbs').value = recipe.nutrition.carbs;
+          if (recipe.nutrition.fat) document.getElementById('recipe-fat').value = recipe.nutrition.fat;
+          if (recipe.nutrition.protein) document.getElementById('recipe-protein').value = recipe.nutrition.protein;
+        }
 
         // Prévia da imagem
         if (recipe.image) {
           document.getElementById('recipe-image-url').value = recipe.image;
-          const previewImg = document.getElementById('image-preview-img');
-          const previewContainer = document.getElementById('image-preview-container');
-          if (previewImg && previewContainer) {
-            previewImg.src = recipe.image;
-            previewContainer.style.display = 'flex';
-          }
+          showImagePreview(recipe.image);
         }
 
         // Preenche categorias
@@ -851,21 +657,82 @@
       }
     }
 
-    // Adiciona uma linha de ingrediente
-    window.addIngredientRow = function(itemVal = '', amountVal = '') {
+    // Custom dropdown handlers
+    function toggleFormDropdown(id) {
+      const panel = document.getElementById(id + '-panel');
+      if (!panel) return;
+      const isOpen = panel.style.display !== 'none';
+      document.querySelectorAll('.dropdown-panel').forEach(p => p.style.display = 'none');
+      if (!isOpen) panel.style.display = 'block';
+    }
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.custom-dropdown')) {
+        document.querySelectorAll('.dropdown-panel').forEach(p => p.style.display = 'none');
+      }
+    });
+
+    function selectFormCuisine(val) {
+      const input = document.getElementById('recipe-cuisine');
+      const label = document.getElementById('form-dd-cuisine-label');
+      const btn = document.getElementById('form-dd-cuisine-btn');
+      if (input) input.value = val;
+      if (label) {
+        const flagCodeMap = {
+          'Brasileira': 'br', 'Italiana': 'it', 'Japonesa': 'jp', 'Mexicana': 'mx',
+          'Francesa': 'fr', 'Tailandesa': 'th', 'Americana': 'us', 'Indiana': 'in',
+          'Espanhola': 'es', 'Grega': 'gr'
+        };
+        if (val && flagCodeMap[val]) {
+          label.innerHTML = `<span style="display:inline-flex; align-items:center; gap:8px;"><img src="https://flagcdn.com/w40/${flagCodeMap[val]}.png" alt="${val}" style="width:20px; height:15px; border-radius:3px; object-fit:cover; flex-shrink:0;"> ${val}</span>`;
+        } else {
+          label.textContent = val || '—';
+        }
+      }
+      if (btn) btn.style.background = '#fff';
+      document.querySelectorAll('.dropdown-panel').forEach(p => p.style.display = 'none');
+    }
+
+    function selectFormDiff(val) {
+      const input = document.getElementById('recipe-difficulty');
+      const label = document.getElementById('form-dd-diff-label');
+      const btn = document.getElementById('form-dd-diff-btn');
+      if (input) input.value = val;
+      if (label) {
+        const pillMap = {
+          'Fácil': '<span style="border:2px solid #2f8f7d; color:#2f8f7d; border-radius:999px; padding:3px 12px; font-size:13px; font-weight:700; background:#f0f9f7;">Fácil</span>',
+          'Médio': '<span style="border:2px solid #ffbf00; color:#8a6a00; border-radius:999px; padding:3px 12px; font-size:13px; font-weight:700; background:#fffdf3;">Médio</span>',
+          'Difícil': '<span style="border:2px solid #e14b3f; color:#e14b3f; border-radius:999px; padding:3px 12px; font-size:13px; font-weight:700; background:#fdf2f1;">Difícil</span>'
+        };
+        if (val && pillMap[val]) {
+          label.innerHTML = pillMap[val];
+        } else {
+          label.textContent = val || '—';
+        }
+      }
+      if (btn) btn.style.background = '#fff';
+      document.querySelectorAll('.dropdown-panel').forEach(p => p.style.display = 'none');
+    }
+
+    window.toggleFormDropdown = toggleFormDropdown;
+    window.selectFormCuisine = selectFormCuisine;
+    window.selectFormDiff = selectFormDiff;
+
+    window.addIngredientRow = function (itemVal = '', amountVal = '') {
       const container = document.getElementById('ingredients-container');
       const row = document.createElement('div');
       row.className = 'ingredient-row';
+      row.style.cssText = 'display:flex; align-items:center; gap:10px; width:100%;';
       row.innerHTML = `
-        <input type="text" class="form-input ing-item" placeholder="Ex: Farinha de trigo" value="${itemVal.replace(/"/g, '&quot;')}" oninput="handleIngredientInput(this)">
-        <input type="text" class="form-input ing-amount" placeholder="Ex: 2 xícaras" value="${amountVal.replace(/"/g, '&quot;')}" oninput="handleIngredientInput(this)">
-        <button type="button" class="btn-remove-ing" onclick="removeIngredientRow(this)" aria-label="Remover ingrediente">✕</button>
+        <input type="text" class="ing-item" placeholder="Ex: Farinha de trigo" value="${itemVal.replace(/"/g, '&quot;')}" oninput="handleIngredientInput(this)" style="flex:2; border:2px solid #ece5d9; border-radius:14px; padding:14px 16px; font-family:inherit; font-size:15px; font-weight:600; outline:none; background:#fff; color:#14110d; transition:border-color 0.2s;" onfocus="this.style.borderColor='#ffbf00'" onblur="this.style.borderColor='#ece5d9'">
+        <input type="text" class="ing-amount" placeholder="Ex: 2 xícaras" value="${amountVal.replace(/"/g, '&quot;')}" oninput="handleIngredientInput(this)" style="flex:1; min-width:130px; border:2px solid #ece5d9; border-radius:14px; padding:14px 16px; font-family:inherit; font-size:15px; font-weight:600; outline:none; background:#fff; color:#14110d; transition:border-color 0.2s;" onfocus="this.style.borderColor='#ffbf00'" onblur="this.style.borderColor='#ece5d9'">
+        <button type="button" onclick="removeIngredientRow(this)" aria-label="Remover ingrediente" style="width:42px; height:42px; border-radius:12px; border:none; background:#f7f4ee; color:#a39a8c; font-size:16px; font-weight:700; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.18s;" onmouseover="this.style.background='#fdeae8'; this.style.color='#e14b3f';" onmouseout="this.style.background='#f7f4ee'; this.style.color='#a39a8c';">✕</button>
       `;
       container.appendChild(row);
     };
 
     // Adiciona dinamicamente uma nova linha ao digitar na última linha existente
-    window.handleIngredientInput = function(input) {
+    window.handleIngredientInput = function (input) {
       const row = input.closest('.ingredient-row');
       const container = document.getElementById('ingredients-container');
       if (row === container.lastElementChild) {
@@ -878,7 +745,7 @@
     };
 
     // Remove uma linha de ingrediente
-    window.removeIngredientRow = function(button) {
+    window.removeIngredientRow = function (button) {
       const container = document.getElementById('ingredients-container');
       if (container.children.length > 1) {
         button.closest('.ingredient-row').remove();
@@ -892,25 +759,25 @@
     // ===== STEPS EDITOR: NUMERAÇÃO E TAB =====
 
     // Atualiza os números das linhas e sincroniza scroll
-    window.updateStepsEditor = function() {
+    window.updateStepsEditor = function () {
       const textarea = document.getElementById('recipe-steps');
       const lineNumbers = document.getElementById('steps-line-numbers');
       const lines = textarea.value.split('\n');
 
       let stepCount = 0;
       let subCount = 0;
-      let lastMainStep = 0;
 
       const nums = lines.map(line => {
         const isSubItem = line.startsWith('\t') || line.startsWith('  ');
         if (isSubItem) {
+          // Subitem (a., b...) recuado com 6 espaços para alinhar logo abaixo do texto principal
+          const charCode = 97 + (subCount % 26); // 97 = 'a'
           subCount++;
-          return `${lastMainStep || 1}.${subCount}`;
+          return `      ${String.fromCharCode(charCode)}.`;
         } else {
           stepCount++;
-          lastMainStep = stepCount;
           subCount = 0;
-          return String(stepCount);
+          return `${stepCount}.`;
         }
       });
 
@@ -936,7 +803,7 @@
     }
 
     // Gerencia a tecla Tab (subitem) e Enter (manter nível) no steps textarea
-    window.handleStepsKeydown = function(event) {
+    window.handleStepsKeydown = function (event) {
       const textarea = event.target;
 
       if (event.key === 'Tab') {
@@ -966,60 +833,84 @@
     };
 
     // Botão mobile: indenta a linha atual do cursor (mesmo efeito da tecla Tab)
-    window.insertTabInSteps = function() {
+    window.insertTabInSteps = function () {
       const textarea = document.getElementById('recipe-steps');
       textarea.focus();
       indentCurrentLine(textarea);
     };
 
     // Sincroniza o scroll da coluna de números com o textarea
-    window.syncStepsScroll = function() {
+    window.syncStepsScroll = function () {
       const textarea = document.getElementById('recipe-steps');
       const lineNumbers = document.getElementById('steps-line-numbers');
       if (lineNumbers) lineNumbers.scrollTop = textarea.scrollTop;
     };
 
+    // Exibe a prévia da imagem e ajusta os elementos visuais
+    window.showImagePreview = function (src) {
+      const previewImg = document.getElementById('image-preview-img');
+      const placeholder = document.getElementById('image-preview-placeholder');
+      const clearBtn = document.getElementById('image-preview-clear');
+
+      if (previewImg && src) {
+        previewImg.src = src;
+        previewImg.style.display = 'block';
+        if (placeholder) placeholder.style.display = 'none';
+        if (clearBtn) clearBtn.style.display = 'flex';
+      }
+    };
+
     // Manipula a prévia da imagem por arquivo
-    window.handleImageChange = function(event) {
+    window.handleImageChange = function (event) {
       const file = event.target.files[0];
       if (file) {
-        // Limpa o campo URL
         document.getElementById('recipe-image-url').value = '';
-        
         const reader = new FileReader();
-        reader.onload = function(e) {
-          const previewImg = document.getElementById('image-preview-img');
-          const previewContainer = document.getElementById('image-preview-container');
-          previewImg.src = e.target.result;
-          previewContainer.style.display = 'flex';
+        reader.onload = function (e) {
+          showImagePreview(e.target.result);
         };
         reader.readAsDataURL(file);
       }
     };
 
-    // Manipula a prévia da imagem por URL
-    window.handleImageUrlChange = function(event) {
+    // Manipula a prévia da imagem por URL ao digitar/colar
+    window.handleImageUrlChange = function (event) {
       const url = event.target.value.trim();
       if (url) {
-        // Limpa o campo arquivo
         document.getElementById('recipe-image').value = '';
-        
-        const previewImg = document.getElementById('image-preview-img');
-        const previewContainer = document.getElementById('image-preview-container');
-        previewImg.src = url;
-        previewContainer.style.display = 'flex';
+        showImagePreview(url);
+      } else {
+        clearImagePreview();
+      }
+    };
+
+    // Botão "Usar URL"
+    window.applyImageUrl = function () {
+      const urlInput = document.getElementById('recipe-image-url');
+      const url = urlInput ? urlInput.value.trim() : '';
+      if (url) {
+        document.getElementById('recipe-image').value = '';
+        showImagePreview(url);
       }
     };
 
     // Limpa a imagem selecionada e oculta a prévia
-    window.clearImagePreview = function() {
-      document.getElementById('recipe-image').value = '';
-      document.getElementById('recipe-image-url').value = '';
-      
+    window.clearImagePreview = function () {
+      const fileInput = document.getElementById('recipe-image');
+      const urlInput = document.getElementById('recipe-image-url');
+      if (fileInput) fileInput.value = '';
+      if (urlInput) urlInput.value = '';
+
       const previewImg = document.getElementById('image-preview-img');
-      const previewContainer = document.getElementById('image-preview-container');
-      previewImg.src = '';
-      previewContainer.style.display = 'none';
+      const placeholder = document.getElementById('image-preview-placeholder');
+      const clearBtn = document.getElementById('image-preview-clear');
+
+      if (previewImg) {
+        previewImg.src = '';
+        previewImg.style.display = 'none';
+      }
+      if (placeholder) placeholder.style.display = 'block';
+      if (clearBtn) clearBtn.style.display = 'none';
     };
 
     // Limpa o formulário inteiro após salvar, para a pessoa poder cadastrar outra receita em seguida
@@ -1183,9 +1074,9 @@
     }
 
     // Submissão do formulário
-    window.handleFormSubmit = async function(event) {
+    window.handleFormSubmit = async function (event) {
       event.preventDefault();
-      
+
       const user = getUser();
       if (!user) {
         showToast("🔒 Você precisa estar logado para salvar e cadastrar receitas!");
@@ -1215,17 +1106,25 @@
       const subtitle = null; // Campo removido — a IA gera automaticamente
       const cuisine = document.getElementById('recipe-cuisine').value || null;
       const difficulty = document.getElementById('recipe-difficulty').value || null;
-      
+
       const prepVal = document.getElementById('recipe-preptime').value;
       const prepTime = prepVal ? parseInt(prepVal) : null;
       const cookTime = null;
-      
+
       const servingsVal = document.getElementById('recipe-servings').value;
       const servings = servingsVal ? parseInt(servingsVal) : null;
+
+      let calories = document.getElementById('recipe-calories').value.trim() || null;
+      let carbs = document.getElementById('recipe-carbs').value.trim() || null;
+      let fat = document.getElementById('recipe-fat').value.trim() || null;
+      let protein = document.getElementById('recipe-protein').value.trim() || null;
       
-      const calVal = document.getElementById('recipe-calories').value;
-      const calories = calVal ? parseInt(calVal) : null;
-      
+      const isNotInformed = (val) => val && val.toLowerCase().includes('informado');
+      if (isNotInformed(calories)) calories = null;
+      if (isNotInformed(carbs)) carbs = null;
+      if (isNotInformed(fat)) fat = null;
+      if (isNotInformed(protein)) protein = null;
+
       const categories = getSelectedCategories();
       const tags = getTagsList();
 
@@ -1242,6 +1141,7 @@
         totalTime: prepTime,
         servings,
         calories,
+        nutrition: (calories || carbs || fat || protein) ? { calories: calories || 300, carbs: carbs || '40g', fat: fat || '10g', protein: protein || '20g' } : null,
         categories,
         tags
       };
@@ -1253,119 +1153,135 @@
 
       try {
 
-      if (needsAI) {
-        showLoading("Inteligência Artificial Ativa 🤖", "Analisando sua receita para preencher os campos restantes, estimar tempos e calorias...");
-        try {
-          const aiResult = await withTimeout(autocompleteRecipeWithAI(partialRecipe), 25000, 'A IA demorou demais para responder.');
+        if (needsAI) {
+          showLoading("Inteligência Artificial Ativa 🤖", "Analisando sua receita para preencher os campos restantes, estimar tempos e calorias...");
+          try {
+            const aiResult = await withTimeout(autocompleteRecipeWithAI(partialRecipe), 25000, 'A IA demorou demais para responder.');
 
-          // Mescla respeitando os campos que o usuário já preencheu
-          finalRecipe = {
-            title: partialRecipe.title,
-            ingredients: partialRecipe.ingredients,
-            steps: partialRecipe.steps,
-            subtitle: partialRecipe.subtitle || aiResult.subtitle || '',
-            cuisine: partialRecipe.cuisine || aiResult.cuisine || 'Brasileira',
-            difficulty: partialRecipe.difficulty || aiResult.difficulty || 'Médio',
-            prepTime: partialRecipe.prepTime || aiResult.prepTime || 15,
-            cookTime: partialRecipe.cookTime || aiResult.cookTime || 15,
-            totalTime: partialRecipe.totalTime || aiResult.totalTime || ((partialRecipe.prepTime || aiResult.prepTime || 15) + (partialRecipe.cookTime || aiResult.cookTime || 15)),
-            servings: partialRecipe.servings || aiResult.servings || 2,
-            calories: partialRecipe.calories || aiResult.calories || aiResult.nutrition?.calories || 300,
-            categories: partialRecipe.categories.length > 0 ? partialRecipe.categories : (aiResult.categories || ['Almoço']),
-            tags: partialRecipe.tags.length > 0 ? partialRecipe.tags : (aiResult.tags || ['Saudável']),
-            nutrition: aiResult.nutrition || { calories: aiResult.calories || 300, protein: "20g", carbs: "40g", fat: "10g" }
-          };
-        } catch (err) {
-          console.error("Erro no autocompletar da IA:", err);
-          showToast("⚠️ IA indisponível. Salvando com valores padrão...");
-          // Fallback seguro em caso de falha da API
-          finalRecipe = {
-            ...partialRecipe,
-            subtitle: partialRecipe.subtitle || 'Uma receita caseira deliciosa.',
-            cuisine: partialRecipe.cuisine || 'Brasileira',
-            difficulty: partialRecipe.difficulty || 'Médio',
-            prepTime: partialRecipe.prepTime || 15,
-            cookTime: partialRecipe.cookTime || 20,
-            totalTime: partialRecipe.totalTime || ((partialRecipe.prepTime || 15) + (partialRecipe.cookTime || 20)),
-            servings: partialRecipe.servings || 2,
-            calories: partialRecipe.calories || 350,
-            categories: partialRecipe.categories.length > 0 ? partialRecipe.categories : ['Almoço'],
-            tags: partialRecipe.tags.length > 0 ? partialRecipe.tags : ['Dia a dia']
-          };
+            // Mescla respeitando os campos que o usuário já preencheu
+            finalRecipe = {
+              title: partialRecipe.title,
+              ingredients: partialRecipe.ingredients,
+              steps: partialRecipe.steps,
+              subtitle: partialRecipe.subtitle || aiResult.subtitle || '',
+              cuisine: partialRecipe.cuisine || aiResult.cuisine || 'Brasileira',
+              difficulty: partialRecipe.difficulty || aiResult.difficulty || 'Médio',
+              prepTime: partialRecipe.prepTime || aiResult.prepTime || 15,
+              cookTime: partialRecipe.cookTime || aiResult.cookTime || 15,
+              totalTime: partialRecipe.totalTime || aiResult.totalTime || ((partialRecipe.prepTime || aiResult.prepTime || 15) + (partialRecipe.cookTime || aiResult.cookTime || 15)),
+              servings: partialRecipe.servings || aiResult.servings || 2,
+              calories: partialRecipe.calories || aiResult.calories || aiResult.nutrition?.calories || 300,
+              categories: partialRecipe.categories.length > 0 ? partialRecipe.categories : (aiResult.categories || ['Almoço']),
+              tags: partialRecipe.tags.length > 0 ? partialRecipe.tags : (aiResult.tags || ['Saudável']),
+              nutrition: aiResult.nutrition || { calories: aiResult.calories || 300, protein: "20g", carbs: "40g", fat: "10g" }
+            };
+          } catch (err) {
+            console.error("Erro no autocompletar da IA:", err);
+            let userMsg = err.message || 'IA indisponível';
+            if (/demand|quota|429|resource|rate limit|too many requests|overload/i.test(userMsg)) {
+              userMsg = 'O Gemini está cheio de demanda agora, tente novamente em 5 minutos.';
+            }
+            if (window.showErrorModal) {
+              window.showErrorModal('Aviso da IA', userMsg + ' Salvando com valores padrão...');
+            } else {
+              showToast("⚠️ " + userMsg + " Salvando com valores padrão...");
+            }
+            // Fallback seguro em caso de falha da API
+            finalRecipe = {
+              ...partialRecipe,
+              subtitle: partialRecipe.subtitle || 'Uma receita caseira deliciosa.',
+              cuisine: partialRecipe.cuisine || 'Brasileira',
+              difficulty: partialRecipe.difficulty || 'Médio',
+              prepTime: partialRecipe.prepTime || 15,
+              cookTime: partialRecipe.cookTime || 20,
+              totalTime: partialRecipe.totalTime || ((partialRecipe.prepTime || 15) + (partialRecipe.cookTime || 20)),
+              servings: partialRecipe.servings || 2,
+              calories: partialRecipe.calories || 350,
+              categories: partialRecipe.categories.length > 0 ? partialRecipe.categories : ['Almoço'],
+              tags: partialRecipe.tags.length > 0 ? partialRecipe.tags : ['Dia a dia']
+            };
+          }
         }
-      }
 
-      // 3. Processamento da imagem (Com compressão + Fallback Base64 garantido)
-      const imageFile = document.getElementById('recipe-image').files[0];
-      const imageUrlInput = document.getElementById('recipe-image-url').value.trim();
-      let finalImageUrl = "images/placeholder_recipe.png";
+        // 3. Processamento da imagem (Com compressão + Fallback Base64 garantido)
+        const imageFile = document.getElementById('recipe-image').files[0];
+        const imageUrlInput = document.getElementById('recipe-image-url').value.trim();
+        let finalImageUrl = "images/placeholder_recipe.png";
 
-      if (imageFile) {
-        showLoading("Otimizando imagem...", "Redimensionando e comprimindo a foto...");
-        try {
-          // Comprime fotos gigantes de celular (ex: 8MB) para ~150KB em milissegundos
-          const compressed = await compressImageFile(imageFile, 1000, 0.85);
+        if (imageFile) {
+          showLoading("Otimizando imagem...", "Redimensionando e comprimindo a foto...");
+          try {
+            // Comprime fotos gigantes de celular (ex: 8MB) para ~150KB em milissegundos
+            const compressed = await compressImageFile(imageFile, 1000, 0.85);
 
-          if (user) {
-            showLoading("Enviando imagem...", "Salvando imagem de capa da receita...");
-            try {
-              const tempSlug = generateSlug(title);
-              finalImageUrl = await withTimeout(uploadRecipeImage(compressed.file, tempSlug), 8000, 'Upload no Firebase Storage demorou.');
-            } catch (storageErr) {
-              console.warn("Storage demorou ou falhou. Salvando foto diretamente em Base64:", storageErr);
-              // Fallback infalível: salva o Base64 comprimido para a imagem NUNCA ser perdida
+            if (user) {
+              showLoading("Enviando imagem...", "Salvando imagem de capa da receita...");
+              try {
+                const tempSlug = generateSlug(title);
+                finalImageUrl = await withTimeout(uploadRecipeImage(compressed.file, tempSlug), 8000, 'Upload no Firebase Storage demorou.');
+              } catch (storageErr) {
+                console.warn("Storage demorou ou falhou. Salvando foto diretamente em Base64:", storageErr);
+                // Fallback infalível: salva o Base64 comprimido para a imagem NUNCA ser perdida
+                finalImageUrl = compressed.base64;
+              }
+            } else {
               finalImageUrl = compressed.base64;
             }
-          } else {
-            finalImageUrl = compressed.base64;
+          } catch (err) {
+            console.error("Erro no processamento da imagem:", err);
+            showToast("⚠️ Falha ao comprimir imagem, tentando manter original.");
           }
+        } else if (imageUrlInput) {
+          finalImageUrl = imageUrlInput;
+        }
+
+        finalRecipe.image = finalImageUrl;
+
+        // 4. Salvar ou Atualizar receita
+        let savedId;
+        const editId = new URLSearchParams(window.location.search).get('edit');
+        try {
+          if (editId) {
+            showLoading("Atualizando receita...", "Salvando suas alterações...");
+            savedId = await withTimeout(updateUserRecipe(editId, finalRecipe), 20000, 'Atualizar a receita demorou demais.');
+          } else if (user) {
+            showLoading("Salvando no Firestore...", "Registrando sua receita na nuvem...");
+            savedId = await withTimeout(saveUserRecipe(finalRecipe), 20000, 'Salvar a receita na nuvem demorou demais.');
+          } else {
+            showLoading("Salvando no navegador...", "Armazenando sua receita localmente...");
+            const localRecipes = JSON.parse(localStorage.getItem('receitas_isa_user_recipes')) || [];
+            savedId = generateSlug(title);
+            finalRecipe.id = savedId;
+            localRecipes.push(finalRecipe);
+            localStorage.setItem('receitas_isa_user_recipes', JSON.stringify(localRecipes));
+          }
+
+          hideLoading();
+          const successMsg = editId ? `🎉 Receita "${title}" atualizada com sucesso!` : `🎉 Receita "${title}" criada com sucesso!`;
+          showToast(`${successMsg} Redirecionando...`, 3000);
+          setTimeout(() => {
+            window.location.href = `recipe.html?id=${savedId || editId}`;
+          }, 500);
+
         } catch (err) {
-          console.error("Erro no processamento da imagem:", err);
-          showToast("⚠️ Falha ao comprimir imagem, tentando manter original.");
+          console.error("Erro ao salvar:", err);
+          hideLoading();
+          if (window.showErrorModal) {
+            window.showErrorModal('Erro ao Salvar', err.message || err);
+          } else {
+            showToast(`❌ Ocorreu um erro ao salvar a receita: ${err.message || err}`);
+          }
         }
-      } else if (imageUrlInput) {
-        finalImageUrl = imageUrlInput;
-      }
-      
-      finalRecipe.image = finalImageUrl;
-
-      // 4. Salvar ou Atualizar receita
-      let savedId;
-      const editId = new URLSearchParams(window.location.search).get('edit');
-      try {
-        if (editId) {
-          showLoading("Atualizando receita...", "Salvando suas alterações...");
-          savedId = await withTimeout(updateUserRecipe(editId, finalRecipe), 20000, 'Atualizar a receita demorou demais.');
-        } else if (user) {
-          showLoading("Salvando no Firestore...", "Registrando sua receita na nuvem...");
-          savedId = await withTimeout(saveUserRecipe(finalRecipe), 20000, 'Salvar a receita na nuvem demorou demais.');
-        } else {
-          showLoading("Salvando no navegador...", "Armazenando sua receita localmente...");
-          const localRecipes = JSON.parse(localStorage.getItem('receitas_isa_user_recipes')) || [];
-          savedId = generateSlug(title);
-          finalRecipe.id = savedId;
-          localRecipes.push(finalRecipe);
-          localStorage.setItem('receitas_isa_user_recipes', JSON.stringify(localRecipes));
-        }
-        
-        hideLoading();
-        const successMsg = editId ? `🎉 Receita "${title}" atualizada com sucesso!` : `🎉 Receita "${title}" criada com sucesso!`;
-        showToast(`${successMsg} Redirecionando...`, 3000);
-        setTimeout(() => {
-          window.location.href = `recipe.html?id=${savedId || editId}`;
-        }, 500);
-
-      } catch (err) {
-        console.error("Erro ao salvar:", err);
-        hideLoading();
-        showToast(`❌ Ocorreu um erro ao salvar a receita: ${err.message || err}`);
-      }
 
       } catch (err) {
         // Rede de segurança: garante que a tela de carregamento nunca fique travada,
         // mesmo diante de um erro inesperado não previsto nos blocos acima.
         console.error("Erro inesperado ao criar receita:", err);
-        showToast(`❌ Algo deu errado ao criar a receita: ${err.message || err}`);
+        if (window.showErrorModal) {
+          window.showErrorModal('Erro Inesperado', err.message || err);
+        } else {
+          showToast(`❌ Algo deu errado ao criar a receita: ${err.message || err}`);
+        }
       } finally {
         hideLoading();
         submitBtn.disabled = false;
@@ -1392,5 +1308,7 @@
 
     window.toggleAddRecipeMenu = toggleAddRecipeMenu;
   </script>
+  <script src="js/quick-search.js"></script>
 </body>
+
 </html>

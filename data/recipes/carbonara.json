@@ -11,20 +11,59 @@
   "totalTime": 30,
   "difficulty": "Médio",
   "favorite": true,
-  "categories": ["Almoço", "Jantar"],
-  "tags": ["Dia a dia", "Gostosão"],
+  "categories": [
+    "Almoço",
+    "Jantar"
+  ],
+  "tags": [
+    "Dia a dia",
+    "Gostosão"
+  ],
   "ingredients": [
-    { "item": "Espaguete", "amount": "200g" },
-    { "item": "Pancetta ou guanciale", "amount": "150g" },
-    { "item": "Ovos inteiros", "amount": "2 unidades" },
-    { "item": "Gemas de ovo", "amount": "2 unidades" },
-    { "item": "Queijo Pecorino Romano ralado", "amount": "80g" },
-    { "item": "Queijo Parmesão ralado", "amount": "40g" },
-    { "item": "Azeite", "amount": "2 colheres de sopa" },
-    { "item": "Alho", "amount": "3 dentes" },
-    { "item": "Sal", "amount": "1 colher de chá" },
-    { "item": "Manteiga", "amount": "50g" },
-    { "item": "Pimenta-do-reino", "amount": "1 col chá" }
+    {
+      "item": "Espaguete",
+      "amount": "200g"
+    },
+    {
+      "item": "Pancetta",
+      "amount": "150g"
+    },
+    {
+      "item": "Ovo",
+      "amount": "2 unidades"
+    },
+    {
+      "item": "Gema de ovo",
+      "amount": "2 unidades"
+    },
+    {
+      "item": "Queijo Pecorino",
+      "amount": "80g"
+    },
+    {
+      "item": "Queijo Parmesão",
+      "amount": "40g"
+    },
+    {
+      "item": "Azeite",
+      "amount": "2 colheres de sopa"
+    },
+    {
+      "item": "Alho",
+      "amount": "3 dentes"
+    },
+    {
+      "item": "Sal",
+      "amount": "1 colher de chá"
+    },
+    {
+      "item": "Manteiga",
+      "amount": "50g"
+    },
+    {
+      "item": "Pimenta-do-reino",
+      "amount": "1 col chá"
+    }
   ],
   "steps": [
     "Cozinhe o espaguete em água abundante com sal até ficar al dente. Reserve 1 xícara da água do cozimento.",

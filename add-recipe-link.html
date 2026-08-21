@@ -16,83 +16,121 @@
 <body>
 
   <!-- ===== NAVBAR ===== -->
-  <nav class="navbar" id="navbar" aria-label="Navegação principal">
-    <div style="display: flex; align-items: center;">
-      <a class="nav-logo" href="index.html" aria-label="Receitas da Isa - Início">
-        Receitas da Isa
-      </a>
-      
-    </div>
-    <ul class="nav-links" role="list">
-      <li><a class="nav-link" href="index.html" id="nav-home"><span class="nav-link-icon">🏠</span> <span>Início</span></a></li>
-      <li><a class="nav-link" href="favorites.html" id="nav-favs"><span class="nav-link-icon">♥</span> <span>Favoritas</span></a></li>
-      <li><a class="nav-link" href="planner.html" id="nav-planner"><span class="nav-link-icon">📅</span> <span>Planejador</span></a></li>
-      <li id="nav-auth-container">
-        <button class="nav-login-btn" id="login-btn">
-          <span>🔑</span> <span>Entrar</span>
-        </button>
-      </li>
-    </ul>
-  </nav>
-
-  <!-- ===== CONTENT ===== -->
-  <main>
-    <section class="import-section">
-      <div class="form-header">
-        <h1 class="form-title">Nova Receita por <em>Link</em></h1>
-        <p class="form-subtitle">Insira o link de um vídeo do YouTube ou de um site de receitas público. A IA do Gemini lerá a página ou vídeo para criar a receita completa na sua conta.</p>
+  <header class="navbar" id="navbar" style="display:flex; align-items:center; gap:32px; padding:20px 48px; border-bottom:1px solid #f0ebe3; position:sticky; top:0; background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); z-index:20">
+    <a href="index.html" class="nav-logo" style="display:flex; align-items:center; gap:12px; flex-shrink:0">
+      <div style="width:40px; height:40px; border-radius:13px; background:#ffbf00; display:flex; align-items:center; justify-content:center"><div style="width:14px; height:14px; border-radius:50%; background:#14110d"></div></div>
+      <div style="display:flex; flex-direction:column; line-height:1">
+        <span style="font-size:19px; font-weight:800; letter-spacing:-0.02em">Receitas da Isa</span>
+        <span style="font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:#a39a8c; margin-top:4px">sabores do mundo</span>
       </div>
+    </a>
+    <div style="flex:1"></div>
+    <div style="display:flex; align-items:center; gap:16px; min-width:0; flex-shrink:1">
+      <div style="display:flex; align-items:center; gap:8px; background:#f7f4ee; padding:6px; border-radius:999px;">
+        <a href="add-recipe-manual.html" style="padding:10px 18px; border-radius:999px; font-size:14px; font-weight:700; text-decoration:none; transition:all 0.2s; color:#6b6459; background:transparent; white-space:nowrap">Manualmente</a>
+        <a href="add-recipe-link.html" style="padding:10px 18px; border-radius:999px; font-size:14px; font-weight:700; text-decoration:none; transition:all 0.2s; background:#fff; color:#14110d; box-shadow:0 4px 12px rgba(0,0,0,0.06); white-space:nowrap">Por link</a>
+        <a href="add-recipe-import.html" style="padding:10px 18px; border-radius:999px; font-size:14px; font-weight:700; text-decoration:none; transition:all 0.2s; color:#6b6459; background:transparent; white-space:nowrap">Importar</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; background:#f7f4ee; border-radius:999px; padding:10px 18px; flex:0 1 240px; min-width:44px; overflow:hidden">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;"><circle cx="6.5" cy="6.5" r="4.5" stroke="#ffbf00" stroke-width="2.2"/><path d="M10 10L14 14" stroke="#ffbf00" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <input placeholder="Procurar receitas..." style="border:none; background:transparent; outline:none; font-family:inherit; font-size:14px; font-weight:500; width:100%; color:#14110d" />
+      </div>
+    </div>
+  </header>
 
-      <div id="import-card-container">
-        <div class="link-cards-container">
-          
-          <!-- SEÇÃO 1: VÍDEO (YOUTUBE, INSTAGRAM OU TIKTOK) -->
-          <div class="link-card">
-            <div class="link-card-header">
-              <div class="link-card-icon">🎥</div>
-              <h2 class="link-card-title">Vídeo (YouTube, Instagram ou TikTok)</h2>
-            </div>
-            <p class="link-card-desc">Cole a URL de um vídeo de receita do YouTube, Instagram Reels ou TikTok. A IA analisará o áudio e imagens do vídeo para criar a receita.</p>
-            <div class="link-input-group">
-              <label class="link-input-label" for="youtube-url">URL do Vídeo</label>
-              <input type="url" id="youtube-url" class="form-input" placeholder="https://www.youtube.com/..., instagram.com/reel/..., tiktok.com/@..." required>
-            </div>
-            <button class="btn btn-primary" id="process-youtube-btn" style="margin-top: auto;">🤖 Importar Vídeo</button>
+  <main id="import-card-container">
+    <section style="max-width:1040px; margin:0 auto; padding:56px 48px 0">
+      <div style="display:inline-flex; align-items:center; gap:9px; background:#eaeefe; border-radius:999px; padding:8px 16px; margin-bottom:22px">
+        <div style="width:8px; height:8px; border-radius:50%; background:#6b7ef0"></div>
+        <span style="font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#3a4bc0">Chega de salvar e não fazer</span>
+      </div>
+      <h1 class="form-title" style="margin:0; font-size:60px; font-weight:800; letter-spacing:-0.035em; line-height:1">Nova receita por <em style="color:#6b7ef0; font-weight:700">link</em></h1>
+      <p class="form-subtitle" style="margin:20px 0 0; font-size:18px; line-height:1.6; color:#6b6459; max-width:660px; text-wrap:pretty">Insira o link de um vídeo do YouTube ou de um site de receitas público. A IA do Gemini lerá a página ou vídeo para criar a receita completa na sua conta.</p>
+    </section>
+
+    <section style="max-width:1040px; margin:0 auto; padding:44px 48px 0">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px">
+        <div style="border:2px solid #f0ebe3; border-radius:26px; padding:30px; display:flex; flex-direction:column">
+          <div style="width:48px; height:48px; border-radius:15px; background:#fff6d9; display:flex; align-items:center; justify-content:center; margin-bottom:20px">
+            <div style="width:0; height:0; border-left:13px solid #ffbf00; border-top:9px solid transparent; border-bottom:9px solid transparent; margin-left:3px"></div>
           </div>
-
-          <!-- SEÇÃO 2: SITE DE RECEITAS -->
-          <div class="link-card">
-            <div class="link-card-header">
-              <div class="link-card-icon">🌐</div>
-              <h2 class="link-card-title">Site de Receitas</h2>
+          <h2 style="margin:0; font-size:22px; font-weight:800; letter-spacing:-0.02em">Vídeo</h2>
+          <div style="display:flex; align-items:center; gap:10px; margin-top:12px">
+            <div style="display:flex; align-items:center; gap:8px; border:2px solid #f0ebe3; border-radius:999px; padding:6px 12px 6px 8px">
+              <span style="width:22px; height:16px; border-radius:5px; background:#ff0033; display:flex; align-items:center; justify-content:center; flex-shrink:0">
+                <span style="width:0; height:0; border-left:6px solid #fff; border-top:4px solid transparent; border-bottom:4px solid transparent; margin-left:2px"></span>
+              </span>
+              <span style="font-size:12px; font-weight:800">YouTube</span>
             </div>
-            <p class="link-card-desc">Cole a URL de uma receita de qualquer site público (ex: Panelinha, TudoGostoso, etc.). A IA lerá o texto do site para extrair os ingredientes e etapas.</p>
-            <div class="link-input-group">
-              <label class="link-input-label" for="website-url">URL do Site</label>
-              <input type="url" id="website-url" class="form-input" placeholder="https://..." required>
+            <div style="display:flex; align-items:center; gap:8px; border:2px solid #f0ebe3; border-radius:999px; padding:6px 12px 6px 8px">
+              <span style="width:19px; height:19px; border-radius:6px; border:2.8px solid #c13584; display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0">
+                <span style="width:7px; height:7px; border-radius:50%; border:2px solid #c13584"></span>
+                <span style="position:absolute; top:1.5px; right:1.5px; width:2.5px; height:2.5px; border-radius:50%; background:#c13584"></span>
+              </span>
+              <span style="font-size:12px; font-weight:800">Instagram</span>
             </div>
-            <button class="btn btn-primary" id="process-website-btn" style="margin-top: auto;">🤖 Importar do Site</button>
+            <div style="display:flex; align-items:center; gap:8px; border:2px solid #f0ebe3; border-radius:999px; padding:6px 12px 6px 8px">
+              <span style="width:19px; height:19px; border-radius:50%; background:#14110d; color:#fff; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0">♪</span>
+              <span style="font-size:12px; font-weight:800">TikTok</span>
+            </div>
           </div>
-
+          <p style="margin:14px 0 22px; font-size:15px; line-height:1.6; color:#6b6459">Cole a URL de um vídeo de receita. A IA analisará o áudio e as imagens do vídeo para criar a receita.</p>
+          <label style="display:block; font-size:12px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#6b6459; margin:auto 0 10px" for="youtube-url">URL do vídeo</label>
+          <input type="url" id="youtube-url" placeholder="https://youtube.com/watch?v=…" style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none" style-focus="border-color:#ffbf00" />
+          <button id="process-youtube-btn" style="margin-top:16px; width:100%; background:#ffbf00; border:none; font-family:inherit; font-size:15px; font-weight:800; padding:16px; border-radius:14px; cursor:pointer">Importar vídeo</button>
         </div>
 
-        <!-- CONSOLE DE LOGS DE DIAGNÓSTICO -->
-        <div id="debug-log-console" style="display:none; background: #0d0a07; border: 1.5px solid var(--clr-gold, #e8a838); border-radius: 16px; padding: 1.2rem; margin-top: 2rem; box-shadow: 0 8px 25px rgba(0,0,0,0.6);">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem; border-bottom: 1px solid rgba(255,200,100,0.15); padding-bottom: 0.5rem;">
-            <div style="font-weight: 700; color: var(--clr-gold, #e8a838); font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
-              <span>🐞</span> Diagnóstico do Processamento (Logs em Tempo Real)
-            </div>
-            <button onclick="document.getElementById('debug-log-entries').innerHTML='';" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">Limpar Logs</button>
+        <div style="border:2px solid #f0ebe3; border-radius:26px; padding:30px; display:flex; flex-direction:column">
+          <div style="width:48px; height:48px; border-radius:15px; background:#eaeefe; display:flex; align-items:center; justify-content:center; margin-bottom:20px">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6b7ef0" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"></path></svg>
           </div>
-          <div id="debug-log-entries" style="max-height: 280px; overflow-y: auto; font-family: monospace; font-size: 0.82rem; line-height: 1.5; padding-right: 4px;"></div>
-        </div>
-
-        <div style="display: flex; justify-content: center; margin-top: 2rem;">
-          <a href="index.html" class="btn btn-outline">Cancelar</a>
+          <h2 style="margin:0; font-size:22px; font-weight:800; letter-spacing:-0.02em">Site de receitas</h2>
+          <div style="display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap">
+            <div style="display:flex; align-items:center; border:2px solid #f0ebe3; border-radius:999px; padding:6px 14px; height:34px">
+              <span style="font-size:13px; font-weight:800; letter-spacing:-0.01em; color:#e42313">Panelinha</span>
+            </div>
+            <div style="display:flex; align-items:center; border:2px solid #f0ebe3; border-radius:999px; padding:6px 14px; height:34px">
+              <img src="images/tudogostoso.png" alt="TudoGostoso" style="height:14px; width:auto; display:block" />
+            </div>
+            <div style="display:flex; align-items:center; border:2px solid #f0ebe3; border-radius:999px; padding:6px 14px; height:34px">
+              <span style="font-size:13px; font-weight:800; color:#ffbf00">etc.</span>
+            </div>
+          </div>
+          <p style="margin:14px 0 22px; font-size:15px; line-height:1.6; color:#6b6459">Cole a URL de uma receita de qualquer site público. A IA lerá o texto do site para extrair os ingredientes e etapas.</p>
+          <label style="display:block; font-size:12px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#6b6459; margin:auto 0 10px" for="website-url">URL do site</label>
+          <input type="url" id="website-url" placeholder="https://…" style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none" style-focus="border-color:#6b7ef0" />
+          <button id="process-website-btn" style="margin-top:16px; width:100%; background:#7b4bd1; border:none; color:#fff; font-family:inherit; font-size:15px; font-weight:800; padding:16px; border-radius:14px; cursor:pointer">Importar do site</button>
         </div>
       </div>
     </section>
+
+    <!-- CONSOLE DE LOGS DE DIAGNÓSTICO -->
+    <section style="max-width:1040px; margin:0 auto; padding:20px 48px 0">
+      <div id="debug-log-console" style="display:none; background: #0d0a07; border: 1.5px solid var(--clr-gold, #e8a838); border-radius: 16px; padding: 1.2rem; margin-top: 2rem; box-shadow: 0 8px 25px rgba(0,0,0,0.6);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem; border-bottom: 1px solid rgba(255,200,100,0.15); padding-bottom: 0.5rem;">
+          <div style="font-weight: 700; color: var(--clr-gold, #e8a838); font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>🐞</span> Diagnóstico do Processamento (Logs em Tempo Real)
+          </div>
+          <button onclick="document.getElementById('debug-log-entries').innerHTML='';" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">Limpar Logs</button>
+        </div>
+        <div id="debug-log-entries" style="max-height: 280px; overflow-y: auto; font-family: monospace; font-size: 0.82rem; line-height: 1.5; padding-right: 4px; color:#fff"></div>
+      </div>
+    </section>
+
+    <section style="max-width:1040px; margin:0 auto; padding:20px 48px 0">
+      <div style="display:flex; justify-content:flex-end">
+        <a href="index.html" style="border:2px solid #e5ded2; font-size:15px; font-weight:700; padding:14px 26px; border-radius:999px; text-decoration:none; color:#14110d">Cancelar</a>
+      </div>
+    </section>
   </main>
+
+  <style>
+    .loading-overlay { position: fixed; inset: 0; background: rgba(15, 13, 10, 0.9); backdrop-filter: blur(12px); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; text-align: center; padding: 2rem; }
+    .loading-spinner { width: 60px; height: 60px; border: 4.5px solid rgba(232, 168, 56, 0.12); border-left-color: var(--clr-gold); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1.8rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-family: 'Plus Jakarta Sans', Helvetica, sans-serif; font-size: 1.6rem; color: #fff; margin-bottom: 0.6rem; font-weight: 800; }
+    .loading-subtext { font-size: 0.95rem; color: #a39a8c; max-width: 450px; line-height: 1.5; }
+  </style>
 
   <!-- ===== LOADING OVERLAY ===== -->
   <div class="loading-overlay" id="loading-overlay">
@@ -101,17 +139,19 @@
     <div class="loading-subtext" id="loading-subtext">Isso pode levar alguns segundos. Por favor, aguarde.</div>
   </div>
 
-  <!-- ===== FOOTER ===== -->
-  <footer>
-    <span class="footer-logo">🍴 Receitas da Isa</span>
-    <span class="footer-copy">Feito com <span>♥</span> e muito sabor • 2026</span>
+    <footer class="site-footer">
+    <div style="display:flex; align-items:center; gap:12px">
+      <div style="width:30px; height:30px; border-radius:10px; background:#ffbf00; display:flex; align-items:center; justify-content:center"><div style="width:10px; height:10px; border-radius:50%; background:#14110d"></div></div>
+      <span style="font-size:15px; font-weight:800; color:#14110d">Receitas da Isa</span>
+    </div>
+    <span style="font-size: 14px; color: #a39a8c; font-weight: 500;">Feito com <span style="color:#ffbf00">♥</span> e muito sabor • 2026</span>
   </footer>
-
+\n
   <!-- Scripts -->
   <script type="module" src="js/auth.js?v=8"></script>
   <script type="module" src="js/recipes.js?v=8"></script>
   <script type="module">
-    import { extractRecipeFromYouTube, extractRecipeFromText, extractRecipeFromFile, saveUserRecipe, extractRecipeFromVercelServer } from './js/user-recipes.js?v=8';
+    import { extractRecipeFromYouTube, extractRecipeFromText, extractRecipeFromFile, saveUserRecipe, extractRecipeFromVercelServer } from './js/user-recipes.js?v=10';
     import { getUser, authReady } from './js/auth.js?v=8';
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -166,6 +206,14 @@
       const websiteBtn = document.getElementById('process-website-btn');
       const youtubeInput = document.getElementById('youtube-url');
       const websiteInput = document.getElementById('website-url');
+
+      youtubeInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') youtubeBtn.click();
+      });
+
+      websiteInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') websiteBtn.click();
+      });
 
       // ---- Importação de Vídeo (YouTube, Instagram ou TikTok) ----
       youtubeBtn.addEventListener('click', async () => {
@@ -247,7 +295,16 @@
           addLog(`FALHA CRÍTICA NO VÍDEO: ${err.message || err}`, "error");
           hideLoading();
           disableControls(false);
-          showToast(`❌ Falha ao processar vídeo: ${err.message}`, 6000);
+
+          let userMsg = err.message || 'Falha ao processar vídeo';
+          if (/demand|quota|429|resource|rate limit|too many requests|overload/i.test(userMsg)) {
+            userMsg = 'O Gemini está cheio de demanda agora, você pode tentar de novo em 5 minutinhos? 💛';
+          }
+          if (window.showErrorModal) {
+            window.showErrorModal('Erro na Importação', userMsg);
+          } else {
+            showToast(`❌ ${userMsg}`, 6000);
+          }
         } finally {
           clearTimeout(longVideoTimer);
         }
@@ -291,7 +348,16 @@
           addLog(`FALHA CRÍTICA NO SITE: ${err.message || err}`, "error");
           hideLoading();
           disableControls(false);
-          showToast(`❌ Falha ao importar do site. Veja o Log abaixo!`);
+
+          let userMsg = err.message || 'Falha ao importar do site';
+          if (/demand|quota|429|resource|rate limit|too many requests|overload/i.test(userMsg)) {
+            userMsg = 'O Gemini está cheio de demanda agora, você pode tentar de novo em 5 minutinhos? 💛';
+          }
+          if (window.showErrorModal) {
+            window.showErrorModal('Erro na Importação', userMsg);
+          } else {
+            showToast(`❌ ${userMsg}`, 6000);
+          }
         }
       });
 
@@ -592,5 +658,6 @@
       if (container) container.classList.remove('active');
     });
   </script>
+  <script src="js/quick-search.js"></script>
 </body>
 </html>

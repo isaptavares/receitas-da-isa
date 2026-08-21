@@ -11,23 +11,71 @@
   "totalTime": 110,
   "difficulty": "Médio",
   "favorite": true,
-  "categories": ["Almoço", "Jantar"],
-  "tags": ["Gostosão", "Falta checar"],
+  "categories": [
+    "Almoço",
+    "Jantar"
+  ],
+  "tags": [
+    "Gostosão",
+    "Falta checar"
+  ],
   "ingredients": [
-    { "item": "Frango inteiro cortado em pedaços", "amount": "1,5kg" },
-    { "item": "Vinho tinto seco (Burgundy ou Pinot Noir)", "amount": "750ml" },
-    { "item": "Caldo de frango", "amount": "300ml" },
-    { "item": "Bacon em cubos", "amount": "150g" },
-    { "item": "Cogumelos Paris ou crimini", "amount": "300g" },
-    { "item": "Cebolas pérola", "amount": "200g" },
-    { "item": "Cenoura", "amount": "2 unidades" },
-    { "item": "Alho", "amount": "4 dentes" },
-    { "item": "Extrato de tomate", "amount": "1 colher de sopa" },
-    { "item": "Tomilho fresco", "amount": "4 ramos" },
-    { "item": "Louro", "amount": "2 folhas" },
-    { "item": "Manteiga", "amount": "3 colheres de sopa" },
-    { "item": "Farinha de trigo", "amount": "2 colheres de sopa" },
-    { "item": "Sal e pimenta", "amount": "a gosto" }
+    {
+      "item": "Frango",
+      "amount": "1,5kg"
+    },
+    {
+      "item": "Vinho tinto",
+      "amount": "750ml"
+    },
+    {
+      "item": "Caldo de galinha",
+      "amount": "300ml"
+    },
+    {
+      "item": "Bacon",
+      "amount": "150g"
+    },
+    {
+      "item": "Cogumelos",
+      "amount": "300g"
+    },
+    {
+      "item": "Cebola",
+      "amount": "200g"
+    },
+    {
+      "item": "Cenoura",
+      "amount": "2 unidades"
+    },
+    {
+      "item": "Alho",
+      "amount": "4 dentes"
+    },
+    {
+      "item": "Extrato de tomate",
+      "amount": "1 colher de sopa"
+    },
+    {
+      "item": "Tomilho",
+      "amount": "4 ramos"
+    },
+    {
+      "item": "Louro",
+      "amount": "2 folhas"
+    },
+    {
+      "item": "Manteiga",
+      "amount": "3 colheres de sopa"
+    },
+    {
+      "item": "Farinha de trigo",
+      "amount": "2 colheres de sopa"
+    },
+    {
+      "item": "Pimenta-do-reino",
+      "amount": "a gosto"
+    }
   ],
   "steps": [
     "Tempere os pedaços de frango com sal e pimenta. Em uma panela de fundo grosso, doure o bacon em manteiga e reserve.",

@@ -5,13 +5,15 @@
 import { 
   auth, db, provider, 
   signInWithPopup, signOut, onAuthStateChanged,
-  doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove 
+  doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove,
+  getDocs, collection
 } from './firebase-config.js';
 
 // --- State ---
 let currentUser = null;
 let userFavorites = [];
 let userPlanner = {};
+let userSchedule = {};
 
 // --- UI Elements ---
 const authContainer = document.getElementById('nav-auth-container');
@@ -34,11 +36,12 @@ function initAuth() {
       currentUser = null;
       userFavorites = [];
       userPlanner = {};
+      userSchedule = {};
       updateAuthUI(false);
     }
 
     // Notifica outros scripts que o estado mudou
-    window.dispatchEvent(new CustomEvent('authChange', { detail: { user: currentUser, favorites: userFavorites, planner: userPlanner } }));
+    window.dispatchEvent(new CustomEvent('authChange', { detail: { user: currentUser, favorites: userFavorites, planner: userPlanner, schedule: userSchedule } }));
 
     if (resolveAuthReady) {
       resolveAuthReady();
@@ -62,16 +65,24 @@ async function fetchUserData(uid) {
       const data = userDoc.data();
       userFavorites = data.favorites || [];
       userPlanner = data.planner || {};
-      await updateDoc(userRef, profileData);
+      userSchedule = data.schedule || {};
+      updateDoc(userRef, profileData).catch(e => console.warn("Aviso ao atualizar perfil:", e));
     } else {
-      await setDoc(userRef, {
+      setDoc(userRef, {
         ...profileData,
         favorites: [],
-        planner: {}
-      });
+        planner: {},
+        schedule: {}
+      }).catch(e => console.warn("Aviso ao criar perfil:", e));
       userFavorites = [];
       userPlanner = {};
+      userSchedule = {};
     }
+
+    // Gravação assíncrona em segundo plano no repositório de perfis públicos
+    setDoc(doc(db, 'public_profiles', uid), profileData, { merge: true }).catch(pubErr => {
+      console.warn("Aviso ao atualizar perfil público:", pubErr);
+    });
   } catch (err) {
     console.error("Erro ao buscar dados do usuário:", err);
   }
@@ -193,26 +204,86 @@ export async function cloudClearPlanner() {
   }
 }
 
+const PREDEFINED_FRIENDS = [
+  {
+    uid: 'Q86H7miEjoMPyNs0vfHWd0',
+    displayName: 'Guilherme Cardoso',
+    email: 'gmccardoso01@gmail.com',
+    photoURL: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Guilherme'
+  }
+];
+
 export async function getAllRegisteredUsers() {
+  const usersMap = new Map();
+
+  // 1. Adiciona amigos pré-definidos
+  PREDEFINED_FRIENDS.forEach(u => usersMap.set(u.email.toLowerCase(), u));
+
+  // 2. Busca no diretório público public_profiles
   try {
-    const querySnapshot = await getDocs(collection(db, 'users'));
-    const users = [];
-    querySnapshot.forEach(doc => {
-      const data = doc.data();
-      if (data.uid) {
-        users.push(data);
+    const pubSnap = await getDocs(collection(db, 'public_profiles'));
+    pubSnap.forEach(docSnap => {
+      const data = docSnap.data() || {};
+      const uid = data.uid || docSnap.id;
+      const email = (data.email || '').toLowerCase();
+      if (email || uid) {
+        usersMap.set(email || uid, {
+          uid: uid,
+          displayName: data.displayName || data.email || 'Amigo',
+          email: data.email || '',
+          photoURL: data.photoURL || ''
+        });
       }
     });
-    return users;
+  } catch (e) {}
+
+  // 3. Busca na coleção users (com fallback)
+  try {
+    const querySnapshot = await getDocs(collection(db, 'users'));
+    querySnapshot.forEach(docSnap => {
+      const data = docSnap.data() || {};
+      const uid = data.uid || docSnap.id;
+      const email = (data.email || '').toLowerCase();
+      if (email || uid) {
+        const existing = usersMap.get(email) || {};
+        usersMap.set(email || uid, {
+          uid: uid || existing.uid,
+          displayName: data.displayName || existing.displayName || data.email || 'Amigo',
+          email: data.email || existing.email || '',
+          photoURL: data.photoURL || existing.photoURL || ''
+        });
+      }
+    });
   } catch (err) {
-    console.error("Erro ao listar usuários:", err);
-    return [];
+    console.warn("Consulta na coleção de usuários do Firestore restrita, usando perfis públicos:", err);
+  }
+
+  return Array.from(usersMap.values());
+}
+
+export async function cloudUpdateSchedule(newSchedule) {
+  if (!currentUser) return false;
+  const userRef = doc(db, 'users', currentUser.uid);
+  try {
+    userSchedule = newSchedule || {};
+    await updateDoc(userRef, { schedule: userSchedule });
+    return true;
+  } catch (err) {
+    console.error("Erro ao atualizar schedule na nuvem:", err);
+    return false;
   }
 }
 
 export function getUser() { return currentUser; }
 export function getCloudFavorites() { return userFavorites; }
 export function getCloudPlanner() { return userPlanner; }
+export function getCloudSchedule() { return userSchedule; }
+
+window.getUser = getUser;
+window.getCloudFavorites = getCloudFavorites;
+window.getCloudPlanner = getCloudPlanner;
+window.getCloudSchedule = getCloudSchedule;
+window.cloudUpdateSchedule = cloudUpdateSchedule;
 
 // Sempre pedir para escolher conta ao fazer login
 provider.setCustomParameters({ prompt: 'select_account' });

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  body { margin:0; background:#fff; color:#14110d; font-family:'Plus Jakarta Sans', Helvetica, sans-serif; -webkit-font-smoothing:antialiased; }
+  * { box-sizing:border-box; }
+  a { color:#14110d; text-decoration:none; }
+  a:hover { color:#d99f00; }
+  ::placeholder { color:#6b6459; opacity:1; }
+  input, textarea, select { font-family:inherit; }
+</style>
+</helmet>
+
+<div style="width:100%; background:#fff">
+  <header style="display:flex; align-items:center; gap:32px; padding:20px 48px; border-bottom:1px solid #f0ebe3; position:sticky; top:0; background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); z-index:20">
+    <a href="Receitas%20da%20Isa.dc.html" style="display:flex; align-items:center; gap:12px; flex-shrink:0">
+      <div style="width:40px; height:40px; border-radius:13px; background:#ffbf00; display:flex; align-items:center; justify-content:center"><div style="width:14px; height:14px; border-radius:50%; background:#14110d"></div></div>
+      <div style="display:flex; flex-direction:column; line-height:1">
+        <span style="font-size:19px; font-weight:800; letter-spacing:-0.02em">Receitas da Isa</span>
+        <span style="font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:#a39a8c; margin-top:4px">sabores do mundo</span>
+      </div>
+    </a>
+    <div style="flex:1"></div>
+    <div style="display:flex; align-items:center; gap:10px">
+      <a href="Nova%20Receita%20-%20Manual.dc.html" style="font-size:14px; font-weight:800; background:#fff6d9; color:#8a6a00; padding:11px 20px; border-radius:999px">Manualmente</a>
+      <a href="Nova%20Receita%20-%20Link.dc.html" style="font-size:14px; font-weight:700; color:#6b6459; padding:11px 20px; border-radius:999px">Por link</a>
+      <a href="Nova%20Receita%20-%20Importar.dc.html" style="font-size:14px; font-weight:700; color:#6b6459; padding:11px 20px; border-radius:999px">Importar</a>
+    </div>
+  </header>
+
+  <section style="max-width:1040px; margin:0 auto; padding:56px 48px 0">
+    <div style="display:inline-flex; align-items:center; gap:9px; background:#fff6d9; border-radius:999px; padding:8px 16px; margin-bottom:22px">
+      <div style="width:8px; height:8px; border-radius:50%; background:#ffbf00"></div>
+      <span style="font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#8a6a00">Pra nunca mais esquecer</span>
+    </div>
+    <h1 style="margin:0; font-size:60px; font-weight:800; letter-spacing:-0.035em; line-height:1">Nova receita <em style="color:#7b4bd1; font-weight:700">manualmente</em></h1>
+    <p style="margin:20px 0 0; font-size:18px; line-height:1.6; color:#6b6459; max-width:640px; text-wrap:pretty">Cadastre o coração do seu prato. Preencha os campos obrigatórios e nossa Inteligência Artificial cuidará do preenchimento e estimativas de todo o resto.</p>
+  </section>
+
+  <section style="max-width:1040px; margin:0 auto; padding:44px 48px 0">
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:24px">
+      <span style="width:28px; height:28px; border-radius:9px; background:#ffbf00; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800">1</span>
+      <h2 style="margin:0; font-size:26px; font-weight:800; letter-spacing:-0.02em">Informações obrigatórias</h2>
+    </div>
+
+    <div style="border:2px solid #f0ebe3; border-radius:26px; padding:32px">
+      <label style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:10px">Nome da receita <span style="color:#7b4bd1">*</span></label>
+      <input placeholder="Ex.: Poke bowl de salmão" style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:16px 18px; font-size:16px; font-weight:600; outline:none; background:#fff" style-focus="border-color:#ffbf00" />
+
+      <div style="display:flex; align-items:center; justify-content:space-between; margin:32px 0 12px">
+        <label style="font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459">Ingredientes <span style="color:#7b4bd1">*</span></label>
+        <span style="font-size:13px; font-weight:700; color:#a39a8c">{{ ingCount }} adicionados</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <sc-for list="{{ ingRows }}" as="row" hint-placeholder-count="3">
+          <div style="display:flex; gap:10px; align-items:center">
+            <input placeholder="Quantidade" style="width:140px; border:2px solid #ece5d9; border-radius:12px; padding:13px 16px; font-size:15px; font-weight:600; outline:none" style-focus="border-color:#ffbf00" />
+            <input placeholder="Ingrediente" style="flex:1; border:2px solid #ece5d9; border-radius:12px; padding:13px 16px; font-size:15px; font-weight:600; outline:none" style-focus="border-color:#ffbf00" />
+            <button onClick="{{ removeIng }}" style="width:42px; height:42px; border-radius:12px; border:2px solid #ece5d9; background:#fff; color:#a39a8c; font-family:inherit; font-size:17px; cursor:pointer; flex-shrink:0" style-hover="border-color:#7b4bd1; color:#7b4bd1">✕</button>
+          </div>
+        </sc-for>
+      </div>
+      <button onClick="{{ addIng }}" style="margin-top:14px; border:2px dashed #e5ded2; background:#fffdf6; color:#8a6a00; font-family:inherit; font-size:14px; font-weight:800; padding:13px 22px; border-radius:12px; cursor:pointer; white-space:nowrap" style-hover="border-color:#ffbf00">+ Adicionar ingrediente</button>
+
+      <div style="margin:32px 0 12px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap">
+        <label style="font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459">Modo de preparo <span style="color:#7b4bd1">*</span></label>
+        <span style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#a39a8c">cada linha = 1 etapa · Tab indenta em 1.1, 1.2…</span>
+      </div>
+      <div style="border:2px solid #ece5d9; border-radius:14px; overflow:hidden">
+        <div style="display:flex; gap:14px; padding:18px; background:#fff">
+          <div style="display:flex; flex-direction:column; gap:8px; font-family:'JetBrains Mono', monospace; font-size:13px; color:#c9c0b1; padding-top:2px">
+            <span>1</span><span>2</span><span>3</span><span>4</span>
+          </div>
+          <textarea rows="4" placeholder="Cozinhe o arroz e tempere ainda quente…" style="flex:1; border:none; outline:none; resize:vertical; font-size:16px; line-height:1.7; font-weight:500; color:#14110d"></textarea>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 18px; background:#f7f4ee; border-top:2px solid #ece5d9">
+          <span style="font-size:13px; font-weight:700; color:#6b6459">4 etapas escritas</span>
+          <button style="border:none; background:#14110d; color:#ffbf00; font-family:inherit; font-size:13px; font-weight:800; padding:9px 16px; border-radius:999px; cursor:pointer">Organizar com IA</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1040px; margin:0 auto; padding:44px 48px 0">
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px">
+      <span style="width:28px; height:28px; border-radius:9px; background:#f7f4ee; color:#6b6459; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800">2</span>
+      <h2 style="margin:0; font-size:26px; font-weight:800; letter-spacing:-0.02em">Informações opcionais</h2>
+      <span style="background:#eaeefe; color:#3a4bc0; border-radius:999px; padding:6px 13px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase">Autopreenchível</span>
+    </div>
+    <p style="margin:0 0 24px; font-size:16px; line-height:1.6; color:#6b6459; max-width:720px">Se você não preencher, nossa Inteligência Artificial analisará seu título, ingredientes e modo de preparo para estimar tempos, calorias, culinária e categorias automaticamente.</p>
+
+    <div style="border:2px solid #f0ebe3; border-radius:26px; padding:32px">
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px">
+        <div>
+          <label style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:10px">Culinária / origem</label>
+          <select style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none; background:#fff; color:#14110d">
+            <option>—</option><option>Brasileira</option><option>Italiana</option><option>Japonesa</option><option>Mexicana</option><option>Francesa</option><option>Tailandesa</option><option>Americana</option><option>Indiana</option><option>Espanhola</option><option>Grega</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:10px">Dificuldade</label>
+          <select style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none; background:#fff; color:#14110d">
+            <option>—</option><option>Fácil</option><option>Médio</option><option>Difícil</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:10px">Tempo de preparo</label>
+          <input placeholder="minutos" style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none" style-focus="border-color:#ffbf00" />
+        </div>
+        <div>
+          <label style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:10px">Rendimento</label>
+          <input placeholder="porções" style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none" style-focus="border-color:#ffbf00" />
+        </div>
+        <div>
+          <label style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:10px">Calorias estimadas</label>
+          <input placeholder="kcal por porção" style="width:100%; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none" style-focus="border-color:#ffbf00" />
+        </div>
+      </div>
+
+      <div style="margin-top:32px">
+        <label style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:12px">Categorias</label>
+        <div style="display:flex; gap:10px; flex-wrap:wrap">
+          <sc-for list="{{ cats }}" as="c" hint-placeholder-count="6">
+            <button style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:11px 20px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:9px; white-space:nowrap" style-hover="border-color:#ffbf00; background:#fffdf6">
+              <span style="width:9px; height:9px; border-radius:50%; background:#ffbf00"></span>{{ c }}
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="margin-top:32px">
+        <label style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:12px">Tags</label>
+        <div style="display:flex; gap:9px; flex-wrap:wrap">
+          <sc-for list="{{ tags }}" as="t" hint-placeholder-count="12">
+            <button style="border:2px solid #f0ebe3; background:#fff; border-radius:999px; padding:10px 17px; font-family:inherit; font-size:13px; font-weight:700; color:#6b6459; cursor:pointer; white-space:nowrap" style-hover="border-color:#2f8f7d; color:#1f6b5c">{{ t }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="margin-top:32px">
+        <label style="display:block; font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#6b6459; margin-bottom:12px">Imagem de capa</label>
+        <div style="display:grid; grid-template-columns:minmax(0,1fr) 200px; gap:18px; align-items:stretch">
+          <div style="display:flex; flex-direction:column; gap:14px">
+            <div style="border:2px dashed #e5ded2; border-radius:20px; padding:26px; text-align:center; background:#fffdf6">
+              <div style="width:46px; height:46px; border-radius:14px; background:#ffbf00; margin:0 auto 14px; display:flex; align-items:center; justify-content:center"><div style="width:16px; height:16px; border-radius:50%; border:3.5px solid #14110d"></div></div>
+              <div style="font-size:16px; font-weight:800">Escolher arquivo de imagem</div>
+              <div style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#a39a8c; margin-top:8px">JPG · PNG · WEBP</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:14px">
+              <span style="flex:1; height:1px; background:#f0ebe3"></span>
+              <span style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">ou por URL</span>
+              <span style="flex:1; height:1px; background:#f0ebe3"></span>
+            </div>
+            <div style="display:flex; gap:10px">
+              <input placeholder="https://…/foto-da-receita.jpg" style="flex:1; min-width:0; border:2px solid #ece5d9; border-radius:14px; padding:15px 16px; font-size:15px; font-weight:600; outline:none" style-focus="border-color:#ffbf00" />
+              <button style="border:none; background:#14110d; color:#fff; font-family:inherit; font-size:14px; font-weight:800; padding:15px 22px; border-radius:14px; cursor:pointer; flex-shrink:0">Usar URL</button>
+            </div>
+          </div>
+          <div style="border-radius:20px; background:repeating-linear-gradient(135deg,#f4efe6 0 12px,#efe8dc 12px 24px); display:flex; align-items:center; justify-content:center">
+            <span style="font-family:'JetBrains Mono', monospace; font-size:11px; color:#a39a8c">prévia</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1040px; margin:0 auto; padding:36px 48px 0">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; background:#f7f4ee; border-radius:22px; padding:20px 24px; flex-wrap:wrap">
+      <span style="font-size:14px; font-weight:700; color:#6b6459">Você pode salvar agora e deixar a IA completar o resto.</span>
+      <div style="display:flex; gap:12px">
+        <a href="Receitas%20da%20Isa.dc.html" style="border:2px solid #e5ded2; background:#fff; font-size:15px; font-weight:700; padding:14px 26px; border-radius:999px">Cancelar</a>
+        <button style="background:#ffbf00; border:none; font-family:inherit; font-size:15px; font-weight:800; padding:15px 30px; border-radius:999px; cursor:pointer">Salvar receita</button>
+      </div>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid #f0ebe3; padding:36px 48px; display:flex; align-items:center; justify-content:space-between; max-width:1040px; margin:64px auto 0">
+    <div style="display:flex; align-items:center; gap:12px">
+      <div style="width:30px; height:30px; border-radius:10px; background:#ffbf00; display:flex; align-items:center; justify-content:center"><div style="width:10px; height:10px; border-radius:50%; background:#14110d"></div></div>
+      <span style="font-size:15px; font-weight:800">Receitas da Isa</span>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1040}}">
+class Component extends DCLogic {
+  state = { rows: 3 };
+  renderVals() {
+    return {
+      ingRows: Array.from({ length: this.state.rows }, (_, i) => ({ i: i })),
+      ingCount: this.state.rows,
+      addIng: () => this.setState((s) => ({ rows: Math.min(20, s.rows + 1) })),
+      removeIng: () => this.setState((s) => ({ rows: Math.max(1, s.rows - 1) })),
+      cats: ["Café da Manhã", "Almoço", "Lanche", "Jantar", "Sobremesa", "Acompanhamento"],
+      tags: ["1 panela", "Dia a dia", "Gostosão", "Fritura", "Proteico", "Pouco calórico", "Saudável", "Rápido", "Low Carb", "Vegano", "Sem Glúten", "Falta checar"]
+    };
+  }
+}
+</script>
+</body>
+</html>

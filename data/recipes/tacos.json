@@ -11,23 +11,72 @@
   "totalTime": 55,
   "difficulty": "Fácil",
   "favorite": true,
-  "categories": ["Almoço", "Jantar", "Lanche"],
-  "tags": ["Fritura", "Gostosão"],
+  "categories": [
+    "Almoço",
+    "Jantar",
+    "Lanche"
+  ],
+  "tags": [
+    "Fritura",
+    "Gostosão"
+  ],
   "ingredients": [
-    { "item": "Lombo de porco", "amount": "600g" },
-    { "item": "Abacaxi", "amount": "1/2 unidade" },
-    { "item": "Pimenta chipotle em adobo", "amount": "3 unidades" },
-    { "item": "Páprica defumada", "amount": "2 colheres de chá" },
-    { "item": "Cominho", "amount": "1 colher de chá" },
-    { "item": "Orégano", "amount": "1 colher de chá" },
-    { "item": "Alho", "amount": "4 dentes" },
-    { "item": "Suco de laranja", "amount": "100ml" },
-    { "item": "Vinagre de maçã", "amount": "2 colheres de sopa" },
-    { "item": "Tortilhas de milho", "amount": "12 unidades" },
-    { "item": "Cebola roxa", "amount": "1 unidade" },
-    { "item": "Coentro fresco", "amount": "1 maço" },
-    { "item": "Limão", "amount": "3 unidades" },
-    { "item": "Sal e pimenta", "amount": "a gosto" }
+    {
+      "item": "Lombo de porco",
+      "amount": "600g"
+    },
+    {
+      "item": "Abacaxi",
+      "amount": "1/2 unidade"
+    },
+    {
+      "item": "Pimenta chipotle em adobo",
+      "amount": "3 unidades"
+    },
+    {
+      "item": "Páprica",
+      "amount": "2 colheres de chá"
+    },
+    {
+      "item": "Cominho",
+      "amount": "1 colher de chá"
+    },
+    {
+      "item": "Orégano",
+      "amount": "1 colher de chá"
+    },
+    {
+      "item": "Alho",
+      "amount": "4 dentes"
+    },
+    {
+      "item": "Laranja",
+      "amount": "100ml"
+    },
+    {
+      "item": "Vinagre de maçã",
+      "amount": "2 colheres de sopa"
+    },
+    {
+      "item": "Tortilhas de milho",
+      "amount": "12 unidades"
+    },
+    {
+      "item": "Cebola roxa",
+      "amount": "1 unidade"
+    },
+    {
+      "item": "Coentro",
+      "amount": "1 maço"
+    },
+    {
+      "item": "Limão",
+      "amount": "3 unidades"
+    },
+    {
+      "item": "Pimenta-do-reino",
+      "amount": "a gosto"
+    }
   ],
   "steps": [
     "Misture no liquidificador as pimentas chipotle, páprica, cominho, orégano, alho, suco de laranja e vinagre para fazer a marinada.",

@@ -171,7 +171,8 @@ export async function extractRecipeFromText(text) {
 export async function extractRecipeFromVercelServer(videoUrl) {
   // Se estiver no Vercel production/preview use caminho relativo, se estiver no localhost/python use a URL de produção na Vercel
   const isVercelHost = window.location.hostname.includes('vercel.app');
-  const apiUrl = isVercelHost ? '/api/extract-video' : 'https://receitas-da-isa.vercel.app/api/extract-video';
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const apiUrl = isLocalhost ? 'http://localhost:3000/api/extract-video' : (isVercelHost ? '/api/extract-video' : 'https://receitas-da-isa.vercel.app/api/extract-video');
 
   const response = await fetch(apiUrl, {
     method: 'POST',
@@ -239,6 +240,18 @@ export async function uploadRecipeImage(file, recipeId) {
   return getDownloadURL(ref);
 }
 
+export function dataURLtoBlob(dataurl) {
+  const arr = dataurl.split(',');
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
+}
+
 // ---- Firestore CRUD ----
 
 function getMyRecipesCollection() {
@@ -257,6 +270,9 @@ export async function saveUserRecipe(recipeData) {
   sanitizeRecipeTags(recipeData);
   normalizeRecipeIngredients(recipeData);
 
+  const base64Img = recipeData.imageBase64;
+  delete recipeData.imageBase64;
+
   const col = getMyRecipesCollection();
   const docRef = await addDoc(col, {
     ...recipeData,
@@ -264,6 +280,25 @@ export async function saveUserRecipe(recipeData) {
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp()
   });
+
+  if (base64Img) {
+    try {
+      console.log('Fazendo upload da imagem base64 interceptada...');
+      const blob = dataURLtoBlob(base64Img);
+      const ext = blob.type.split('/')[1] || 'jpg';
+      const file = new File([blob], `cover.${ext}`, { type: blob.type });
+      const permanentUrl = await uploadRecipeImage(file, docRef.id);
+      
+      await updateDoc(docRef, {
+        image: permanentUrl,
+        imageUrl: permanentUrl
+      });
+      console.log('Imagem permanentizada com sucesso no Firebase Storage:', permanentUrl);
+    } catch (e) {
+      console.error('Falha ao fazer upload da imagem base64:', e);
+    }
+  }
+
   return docRef.id;
 }
 

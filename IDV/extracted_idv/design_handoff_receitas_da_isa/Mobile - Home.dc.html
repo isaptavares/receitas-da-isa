@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  body { margin:0; background:#fff; color:#14110d; font-family:'Plus Jakarta Sans', Helvetica, sans-serif; -webkit-font-smoothing:antialiased; }
+  * { box-sizing:border-box; }
+  a { color:#14110d; text-decoration:none; }
+  a:hover { color:#d99f00; }
+  ::placeholder { color:#6b6459; opacity:1; }
+</style>
+</helmet>
+
+<div style="width:390px; margin:0 auto; background:#fff; padding-bottom:96px; position:relative; overflow:hidden">
+  <header style="display:flex; align-items:center; gap:12px; padding:16px 20px; position:sticky; top:0; background:rgba(255,255,255,0.94); backdrop-filter:blur(12px); z-index:20; border-bottom:2px solid #f0ebe3">
+    <div style="width:34px; height:34px; border-radius:11px; background:#ffbf00; display:flex; align-items:center; justify-content:center; flex-shrink:0"><div style="width:12px; height:12px; border-radius:50%; background:#14110d"></div></div>
+    <div style="display:flex; flex-direction:column; line-height:1; flex:1; min-width:0">
+      <span style="font-size:16px; font-weight:800; letter-spacing:-0.02em">Receitas da Isa</span>
+      <span style="font-size:9px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#a39a8c; margin-top:3px">sabores do mundo</span>
+    </div>
+    <a href="#" style="background:#14110d; color:#fff; font-size:13px; font-weight:700; padding:9px 16px; border-radius:999px; flex-shrink:0">Entrar</a>
+  </header>
+
+  <section style="padding:24px 20px 0; position:relative">
+    <div style="position:absolute; top:8px; right:-40px; width:160px; height:160px; border-radius:50%; background:#6b7ef0; opacity:0.14; z-index:0"></div>
+    <div style="position:relative; z-index:1">
+      <div style="display:inline-flex; align-items:center; gap:8px; background:#fff6d9; border-radius:999px; padding:7px 14px; margin-bottom:16px">
+        <div style="width:7px; height:7px; border-radius:50%; background:#ffbf00"></div>
+        <span style="font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#8a6a00">Você é o que você come</span>
+      </div>
+      <h1 style="margin:0; font-size:40px; line-height:1; font-weight:800; letter-spacing:-0.035em"><em style="font-weight:700; color:#7b4bd1">Então, que comamos bem</em></h1>
+      <div style="display:flex; align-items:center; gap:10px; margin-top:20px">
+        <a href="#receitas" style="background:#ffbf00; color:#14110d; font-size:15px; font-weight:800; padding:14px 20px; border-radius:999px">Explorar</a>
+        <a href="#" style="border:2px solid #e5ded2; font-size:15px; font-weight:700; padding:12px 18px; border-radius:999px; display:flex; align-items:center; gap:8px"><span style="color:#e14b3f">♥</span> Favoritas</a>
+        <div style="flex:1"></div>
+        <button onClick="{{ toggleAdd }}" style="width:56px; height:56px; border-radius:50%; border:none; background:#ffbf00; color:#14110d; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 10px 24px rgba(255,191,0,0.5)">
+          <sc-if value="{{ addClosed }}" hint-placeholder-val="{{ true }}">
+            <svg width="26" height="26" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round"><path d="M9 4v10M4 9h10"></path></svg>
+          </sc-if>
+          <sc-if value="{{ addOpen }}" hint-placeholder-val="{{ false }}">
+            <svg width="24" height="24" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round"><path d="M5 5l8 8M13 5l-8 8"></path></svg>
+          </sc-if>
+        </button>
+      </div>
+      <sc-if value="{{ addOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px; margin-top:14px">
+          <a href="Mobile%20-%20Nova%20Receita.dc.html" style="border:2px solid #ffbf00; background:#fffdf6; border-radius:999px; padding:12px 20px; font-size:14px; font-weight:800; display:flex; align-items:center; gap:10px">
+            <span style="width:9px; height:9px; border-radius:50%; background:#ffbf00"></span>Manualmente
+          </a>
+          <a href="Mobile%20-%20Nova%20Receita.dc.html" style="border:2px solid #6b7ef0; background:#f7f8ff; border-radius:999px; padding:12px 20px; font-size:14px; font-weight:800; display:flex; align-items:center; gap:10px">
+            <span style="width:9px; height:9px; border-radius:50%; background:#6b7ef0"></span>Por link
+          </a>
+          <a href="Mobile%20-%20Nova%20Receita.dc.html" style="border:2px solid #2f8f7d; background:#f5fbf9; border-radius:999px; padding:12px 20px; font-size:14px; font-weight:800; display:flex; align-items:center; gap:10px">
+            <span style="width:9px; height:9px; border-radius:50%; background:#2f8f7d"></span>Importar
+          </a>
+        </div>
+      </sc-if>
+      <div style="display:flex; gap:24px; margin-top:28px; padding-top:20px; border-top:2px solid #f0ebe3">
+        <div><div style="font-size:26px; font-weight:800; letter-spacing:-0.03em">248</div><div style="font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#a39a8c; margin-top:3px">Receitas</div></div>
+        <div><div style="font-size:26px; font-weight:800; letter-spacing:-0.03em; color:#2f8f7d">19</div><div style="font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#a39a8c; margin-top:3px">Culinárias</div></div>
+        <div><div style="font-size:26px; font-weight:800; letter-spacing:-0.03em; color:#7b4bd1">36</div><div style="font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#a39a8c; margin-top:3px">Favoritas</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:28px 20px 0">
+    <div style="display:flex; align-items:center; gap:10px; background:#f7f4ee; border-radius:999px; padding:13px 18px">
+      <span style="width:13px; height:13px; border:2.5px solid #ffbf00; border-radius:50%; flex-shrink:0"></span>
+      <input placeholder="Procurar receitas..." style="border:none; background:transparent; outline:none; font-family:inherit; font-size:15px; font-weight:600; width:100%; color:#14110d" />
+    </div>
+  </section>
+
+  <section style="padding:28px 20px 0">
+    <div style="font-size:10px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#d99f00; margin-bottom:10px">O que você deseja?</div>
+    <h2 style="margin:0 0 16px; font-size:26px; font-weight:800; letter-spacing:-0.03em">Explorar por <em style="color:#2f8f7d; font-weight:700">categoria</em></h2>
+    <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:4px">
+      <sc-for list="{{ categories }}" as="c" hint-placeholder-count="6">
+        <a href="Mobile%20-%20Categoria.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:8px; width:84px; flex-shrink:0">
+          <span style="width:84px; height:72px; border-radius:16px; background:repeating-linear-gradient(135deg,#f7f4ee 0 10px,#f1ece2 10px 20px); display:flex; align-items:center; justify-content:center">
+            <span style="width:22px; height:22px; border-radius:7px; background:#ffbf00"></span>
+          </span>
+          <span style="font-size:13px; font-weight:700; text-align:center; line-height:1.2; text-wrap:pretty">{{ c.name }}</span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="receitas" style="padding:28px 20px 0">
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom:16px">
+      <div>
+        <div style="font-size:10px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#d99f00; margin-bottom:10px">Todas as receitas</div>
+        <h2 style="margin:0; font-size:26px; font-weight:800; letter-spacing:-0.03em">O que vamos <em style="color:#7b4bd1; font-weight:700">cozinhar?</em></h2>
+      </div>
+    </div>
+
+    <div style="background:#f7f4ee; border-radius:18px; padding:14px; margin-bottom:18px">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px">
+        <span style="font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#6b6459">Filtrar receitas</span>
+        <button style="border:none; background:transparent; font-family:inherit; font-size:12px; font-weight:800; color:#a39a8c; cursor:pointer">Limpar</button>
+      </div>
+      <button onClick="{{ openIng }}" style="width:100%; border:2px solid #ece5d9; background:#fff; border-radius:12px; padding:13px 15px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:10px; text-align:left">
+        <span style="width:16px; height:16px; border-radius:5px; border:2.5px solid #ffbf00; flex-shrink:0"></span>
+        <span style="flex:1">Ingredientes</span>
+        <span style="font-size:13px; font-weight:800; color:#8a6a00">{{ ingFieldLabel }}</span>
+      </button>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+          <button style="border:2px solid #ece5d9; background:#fff; border-radius:12px; padding:13px 15px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:8px">
+            <span style="white-space:nowrap">{{ f }}</span>
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="#a39a8c" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 7 9 11.5 13.5 7"></path></svg>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px">
+      <sc-for list="{{ recipes }}" as="r" hint-placeholder-count="6">
+        <a href="Mobile%20-%20Receita.dc.html" style="display:flex; flex-direction:column">
+          <div style="position:relative; border-radius:18px; overflow:hidden; aspect-ratio:1/1; background:repeating-linear-gradient(135deg,#f4efe6 0 12px,#efe8dc 12px 24px); display:flex; align-items:center; justify-content:center">
+            <span style="font-family:'JetBrains Mono', monospace; font-size:10px; color:#a39a8c">foto</span>
+            <span style="position:absolute; top:8px; right:8px; width:32px; height:32px; border-radius:50%; background:#fff; color:#e14b3f; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(20,17,13,0.12)">
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 15S3 11.4 3 7.6A2.9 2.9 0 0 1 9 6a2.9 2.9 0 0 1 6 1.6C15 11.4 9 15 9 15Z"></path></svg>
+            </span>
+          </div>
+          <div style="padding:10px 2px 0">
+            <div style="font-size:15px; font-weight:800; letter-spacing:-0.015em; line-height:1.25; text-wrap:pretty">{{ r.name }}</div>
+            <div style="display:flex; align-items:center; gap:10px; margin-top:7px; font-size:11px; font-weight:700; color:#a39a8c">
+              <span style="display:flex; align-items:center; gap:5px"><span style="width:7px; height:7px; border-radius:50%; background:#ffbf00"></span>{{ r.time }}</span>
+              <span>{{ r.kcal }}</span>
+            </div>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <nav style="position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:390px; background:rgba(255,255,255,0.96); backdrop-filter:blur(12px); border-top:2px solid #f0ebe3; display:flex; align-items:center; justify-content:space-around; padding:10px 12px 22px; z-index:30">
+    <a href="Mobile%20-%20Home.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:5px; color:#14110d">
+      <svg width="21" height="21" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7.5 9 3l6 4.5V15H3z"></path></svg>
+      <span style="font-size:10px; font-weight:800">Receitas</span>
+    </a>
+    <a href="Mobile%20-%20Planejador.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:5px; color:#a39a8c">
+      <svg width="21" height="21" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.4 5.4h11.2v9.2H3.4zM3.4 8h11.2M6.4 3.4v2M11.6 3.4v2"></path></svg>
+      <span style="font-size:10px; font-weight:800">Planejador</span>
+    </a>
+    <a href="Mobile%20-%20Nova%20Receita.dc.html" style="width:52px; height:52px; border-radius:50%; background:#ffbf00; display:flex; align-items:center; justify-content:center; margin-top:-24px; box-shadow:0 8px 20px rgba(255,191,0,0.45); color:#14110d">
+      <svg width="24" height="24" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round"><path d="M9 4v10M4 9h10"></path></svg>
+    </a>
+    <a href="#" style="display:flex; flex-direction:column; align-items:center; gap:5px; color:#a39a8c">
+      <svg width="21" height="21" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 4.5h11M3.5 9h11M3.5 13.5h7"></path></svg>
+      <span style="font-size:10px; font-weight:800">Compras</span>
+    </a>
+    <a href="#" style="display:flex; flex-direction:column; align-items:center; gap:5px; color:#a39a8c">
+      <svg width="21" height="21" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 15S3 11.4 3 7.6A2.9 2.9 0 0 1 9 6a2.9 2.9 0 0 1 6 1.6C15 11.4 9 15 9 15Z"></path></svg>
+      <span style="font-size:10px; font-weight:800">Favoritas</span>
+    </a>
+  </nav>
+
+  <sc-if value="{{ ingOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; inset:0; background:rgba(20,17,13,0.55); z-index:60; display:flex; align-items:flex-end; justify-content:center">
+      <div style="background:#fff; border-radius:28px 28px 0 0; width:390px; max-height:82vh; display:flex; flex-direction:column; overflow:hidden">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:18px 20px; border-bottom:2px solid #f0ebe3">
+          <button onClick="{{ closeIng }}" style="width:34px; height:34px; border-radius:50%; border:none; background:#f7f4ee; font-family:inherit; font-size:15px; font-weight:700; cursor:pointer; flex-shrink:0">✕</button>
+          <span style="font-size:15px; font-weight:800">Filtrar por ingredientes</span>
+          <button onClick="{{ clearIng }}" style="border:none; background:transparent; font-family:inherit; font-size:13px; font-weight:800; color:#a39a8c; cursor:pointer; flex-shrink:0">Limpar</button>
+        </div>
+        <div style="padding:16px 20px 0">
+          <div style="display:flex; align-items:center; gap:10px; background:#f7f4ee; border-radius:12px; padding:12px 14px">
+            <span style="width:12px; height:12px; border:2.5px solid #ffbf00; border-radius:50%; flex-shrink:0"></span>
+            <input placeholder="Buscar mais ingredientes" style="border:none; background:transparent; outline:none; font-family:inherit; font-size:14px; font-weight:600; width:100%" />
+          </div>
+        </div>
+        <div style="padding:18px 20px; overflow-y:auto">
+          <sc-if value="{{ hasSelection }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font-size:10px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c; margin-bottom:12px">Selecionados</div>
+              <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding-bottom:18px; border-bottom:2px solid #f0ebe3">
+                <sc-for list="{{ selectedItems }}" as="s" hint-placeholder-count="4">
+                  <button onClick="{{ s.toggle }}" style="border:none; background:transparent; padding:0; cursor:pointer; font-family:inherit; display:flex; flex-direction:column; align-items:center; gap:7px">
+                    <span style="position:relative; width:54px; height:54px; border-radius:16px; background:repeating-linear-gradient(135deg,#f4efe6 0 8px,#efe8dc 8px 16px); border:2.5px solid #ffbf00; display:block">
+                      <span style="position:absolute; top:-6px; right:-6px; width:21px; height:21px; border-radius:50%; background:#14110d; color:#fff; font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center">✕</span>
+                    </span>
+                    <span style="font-size:11px; font-weight:700; text-align:center; line-height:1.2">{{ s.name }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <div style="font-size:10px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c; margin:18px 0 12px">Populares</div>
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px">
+            <sc-for list="{{ ingredientTiles }}" as="t" hint-placeholder-count="12">
+              <button onClick="{{ t.toggle }}" style="border:none; background:transparent; padding:0; cursor:pointer; font-family:inherit; display:flex; flex-direction:column; align-items:center; gap:7px">
+                <sc-if value="{{ t.on }}" hint-placeholder-val="{{ false }}">
+                  <span style="position:relative; width:54px; height:54px; border-radius:16px; background:repeating-linear-gradient(135deg,#fff6d9 0 8px,#ffeeb8 8px 16px); border:2.5px solid #ffbf00; display:block">
+                    <span style="position:absolute; top:-6px; right:-6px; width:21px; height:21px; border-radius:50%; background:#ffbf00; color:#14110d; font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center">✓</span>
+                  </span>
+                </sc-if>
+                <sc-if value="{{ t.off }}" hint-placeholder-val="{{ true }}">
+                  <span style="width:54px; height:54px; border-radius:16px; background:repeating-linear-gradient(135deg,#f7f4ee 0 8px,#f1ece2 8px 16px); border:2.5px solid #f0ebe3; display:block"></span>
+                </sc-if>
+                <span style="font-size:11px; font-weight:700; color:#6b6459; text-align:center; line-height:1.2">{{ t.name }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 20px 26px; border-top:2px solid #f0ebe3">
+          <span style="font-size:13px; font-weight:700; color:#a39a8c">{{ selectionCount }}</span>
+          <button onClick="{{ confirmIng }}" style="background:#ffbf00; border:none; font-family:inherit; font-size:15px; font-weight:800; padding:14px 28px; border-radius:999px; cursor:pointer">Confirmar</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844}}">
+class Component extends DCLogic {
+  state = { ingOpen: false, draft: [], applied: [], addOpen: false };
+  toggle(name) {
+    this.setState((s) => ({ draft: s.draft.includes(name) ? s.draft.filter((x) => x !== name) : s.draft.concat([name]) }));
+  }
+  renderVals() {
+    const pool = ["Azeite", "Alho", "Cebola", "Tomate", "Manjericão", "Arroz", "Frango", "Ovo", "Manteiga", "Limão", "Espinafre", "Queijo"];
+    const draft = this.state.draft, applied = this.state.applied;
+    return {
+      filters: ["Culinária", "Dificuldade", "Calorias", "Tags"],
+      categories: [
+        { name: "Café da Manhã", count: "32 receitas" },
+        { name: "Almoço", count: "68 receitas" },
+        { name: "Lanche", count: "24 receitas" },
+        { name: "Jantar", count: "71 receitas" },
+        { name: "Sobremesa", count: "39 receitas" },
+        { name: "Acompanhamento", count: "14 receitas" }
+      ],
+      recipes: [
+        { name: "Poke bowl de salmão", time: "25 min", kcal: "480 kcal" },
+        { name: "Spaghetti à bolonhesa", time: "45 min", kcal: "620 kcal" },
+        { name: "Creme de abóbora", time: "35 min", kcal: "290 kcal" },
+        { name: "Red curry noodles", time: "30 min", kcal: "540 kcal" },
+        { name: "Cookies de chocolate", time: "40 min", kcal: "210 kcal" },
+        { name: "Feijão branco com espinafre", time: "50 min", kcal: "380 kcal" }
+      ],
+      ingOpen: this.state.ingOpen,
+      openIng: () => this.setState((s) => ({ ingOpen: true, draft: s.applied.slice() })),
+      closeIng: () => this.setState({ ingOpen: false }),
+      clearIng: () => this.setState({ draft: [] }),
+      confirmIng: () => this.setState((s) => ({ applied: s.draft.slice(), ingOpen: false })),
+      ingFieldLabel: applied.length === 0 ? "Todos" : applied.length + " escolhidos",
+      addOpen: this.state.addOpen,
+      addClosed: !this.state.addOpen,
+      toggleAdd: () => this.setState((s) => ({ addOpen: !s.addOpen })),
+      hasSelection: draft.length > 0,
+      selectionCount: draft.length === 0 ? "Nenhum selecionado" : draft.length + " selecionados",
+      selectedItems: draft.map((n) => ({ name: n, toggle: () => this.toggle(n) })),
+      ingredientTiles: pool.map((n) => ({ name: n, on: draft.includes(n), off: !draft.includes(n), toggle: () => this.toggle(n) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

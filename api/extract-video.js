@@ -177,6 +177,24 @@ Regras Estritas:
     recipeData.image = finalCover;
     recipeData.videoUrl = url;
 
+    if (finalCover && finalCover.startsWith('http') && !finalCover.includes('unsplash')) {
+      try {
+        console.log(`[Vercel Serverless] Baixando capa para enviar como Base64...`);
+        const coverRes = await fetch(finalCover, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' } });
+        if (coverRes.ok) {
+          const arrayBuffer = await coverRes.arrayBuffer();
+          const coverBuffer = Buffer.from(arrayBuffer);
+          const mime = coverRes.headers.get('content-type') || 'image/jpeg';
+          recipeData.imageBase64 = `data:${mime};base64,${coverBuffer.toString('base64')}`;
+          console.log(`[Vercel Serverless] Capa baixada com sucesso (${Math.round(coverBuffer.length / 1024)} KB)`);
+        } else {
+          console.log(`[Vercel Serverless] Falha ao baixar capa: status ${coverRes.status}`);
+        }
+      } catch (e) {
+        console.warn('[Vercel Serverless] Erro ao baixar capa:', e.message);
+      }
+    }
+
     return res.status(200).json({
       success: true,
       recipe: recipeData

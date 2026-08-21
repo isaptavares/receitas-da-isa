@@ -11,23 +11,71 @@
   "totalTime": 35,
   "difficulty": "Médio",
   "favorite": false,
-  "categories": ["Almoço", "Jantar"],
-  "tags": ["Gostosão", "Proteico"],
+  "categories": [
+    "Almoço",
+    "Jantar"
+  ],
+  "tags": [
+    "Gostosão",
+    "Proteico"
+  ],
   "ingredients": [
-    { "item": "Macarrão de arroz largo", "amount": "200g" },
-    { "item": "Camarão médio limpo", "amount": "300g" },
-    { "item": "Ovos", "amount": "2 unidades" },
-    { "item": "Brotos de feijão (bean sprouts)", "amount": "100g" },
-    { "item": "Cebolinha verde", "amount": "4 talos" },
-    { "item": "Amendoim torrado sem sal", "amount": "60g" },
-    { "item": "Pasta de tamarindo", "amount": "3 colheres de sopa" },
-    { "item": "Molho de peixe", "amount": "2 colheres de sopa" },
-    { "item": "Açúcar mascavo", "amount": "1 colher de sopa" },
-    { "item": "Óleo de amendoim", "amount": "3 colheres de sopa" },
-    { "item": "Alho picado", "amount": "3 dentes" },
-    { "item": "Pimenta vermelha", "amount": "a gosto" },
-    { "item": "Limão tahiti", "amount": "2 unidades" },
-    { "item": "Coentro", "amount": "para decorar" }
+    {
+      "item": "Macarrão de arroz largo",
+      "amount": "200g"
+    },
+    {
+      "item": "Camarão",
+      "amount": "300g"
+    },
+    {
+      "item": "Ovo",
+      "amount": "2 unidades"
+    },
+    {
+      "item": "Brotos de feijão",
+      "amount": "100g"
+    },
+    {
+      "item": "Cebolinha",
+      "amount": "4 talos"
+    },
+    {
+      "item": "Amendoim",
+      "amount": "60g"
+    },
+    {
+      "item": "Pasta de tamarindo",
+      "amount": "3 colheres de sopa"
+    },
+    {
+      "item": "Molho de peixe",
+      "amount": "2 colheres de sopa"
+    },
+    {
+      "item": "Açúcar mascavo",
+      "amount": "1 colher de sopa"
+    },
+    {
+      "item": "Óleo de amendoim",
+      "amount": "3 colheres de sopa"
+    },
+    {
+      "item": "Alho",
+      "amount": "3 dentes"
+    },
+    {
+      "item": "Pimenta vermelha",
+      "amount": "a gosto"
+    },
+    {
+      "item": "Limão",
+      "amount": "2 unidades"
+    },
+    {
+      "item": "Coentro",
+      "amount": "para decorar"
+    }
   ],
   "steps": [
     "Deixe o macarrão de arroz de molho em água morna por 30 minutos, depois escorra.",

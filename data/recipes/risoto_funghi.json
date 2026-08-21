@@ -10,8 +10,13 @@
   "calories": 600,
   "servings": 2,
   "difficulty": "Médio",
-  "categories": ["Almoço"],
-  "tags": ["Gostosão", "Dia a dia"],
+  "categories": [
+    "Almoço"
+  ],
+  "tags": [
+    "Gostosão",
+    "Dia a dia"
+  ],
   "nutrition": {
     "calories": 600,
     "protein": "12g",
@@ -20,17 +25,50 @@
     "fiber": "4g"
   },
   "ingredients": [
-    { "item": "Arroz arbóreo", "amount": "1 xícara" },
-    { "item": "Funghi secchi", "amount": "50g" },
-    { "item": "Cebola picada", "amount": "1/2 unidade" },
-    { "item": "Vinho branco seco", "amount": "100ml" },
-    { "item": "Caldo de legumes", "amount": "500ml" },
-    { "item": "Queijo Parmesão ralado", "amount": "60g" },
-    { "item": "Azeite", "amount": "30ml" },
-    { "item": "Alho", "amount": "2 dentes" },
-    { "item": "Sal", "amount": "a gosto" },
-    { "item": "Manteiga", "amount": "0,1 kg" },
-    { "item": "Pimenta-do-reino", "amount": "1/2 colher de chá" }
+    {
+      "item": "Arroz",
+      "amount": "1 xícara"
+    },
+    {
+      "item": "Funghi secchi",
+      "amount": "50g"
+    },
+    {
+      "item": "Cebola",
+      "amount": "1/2 unidade"
+    },
+    {
+      "item": "Vinho branco",
+      "amount": "100ml"
+    },
+    {
+      "item": "Caldo de legumes",
+      "amount": "500ml"
+    },
+    {
+      "item": "Queijo Parmesão",
+      "amount": "60g"
+    },
+    {
+      "item": "Azeite",
+      "amount": "30ml"
+    },
+    {
+      "item": "Alho",
+      "amount": "2 dentes"
+    },
+    {
+      "item": "Sal",
+      "amount": "a gosto"
+    },
+    {
+      "item": "Manteiga",
+      "amount": "0,1 kg"
+    },
+    {
+      "item": "Pimenta-do-reino",
+      "amount": "1/2 colher de chá"
+    }
   ],
   "steps": [
     "Hidrate o funghi em água quente por 20 minutos, reserve a água (filtrada).",

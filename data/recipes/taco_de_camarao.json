@@ -12,22 +12,68 @@
   "totalTime": 105,
   "difficulty": "Médio",
   "favorite": true,
-  "categories": ["Almoço", "Jantar", "Lanche"],
-  "tags": ["Gostosão", "Fritura"],
+  "categories": [
+    "Almoço",
+    "Jantar",
+    "Lanche"
+  ],
+  "tags": [
+    "Gostosão",
+    "Fritura"
+  ],
   "ingredients": [
-    { "item": "Camarão médio", "amount": "0,5Kg" },
-    { "item": "Limões", "amount": "3" },
-    { "item": "Farinha de trigo", "amount": "a gosto" },
-    { "item": "Farinha Panko", "amount": "a gosto" },
-    { "item": "Ovos", "amount": "5" },
-    { "item": "Óleo de soja (ou maionese)", "amount": "250ml" },
-    { "item": "Pimenta Dedo de Moça", "amount": "a gosto" },
-    { "item": "Repolho Roxo", "amount": "a gosto" },
-    { "item": "Dentes de alho", "amount": "5" },
-    { "item": "Azeite", "amount": "a gosto" },
-    { "item": "Rap10", "amount": "2 pacotes" },
-    { "item": "Sal", "amount": "a gosto" },
-    { "item": "Pimenta do reino", "amount": "a gosto" }
+    {
+      "item": "Camarão",
+      "amount": "0,5Kg"
+    },
+    {
+      "item": "Limão",
+      "amount": "3"
+    },
+    {
+      "item": "Farinha de trigo",
+      "amount": "a gosto"
+    },
+    {
+      "item": "Farinha de rosca",
+      "amount": "a gosto"
+    },
+    {
+      "item": "Ovo",
+      "amount": "5"
+    },
+    {
+      "item": "Óleo",
+      "amount": "250ml"
+    },
+    {
+      "item": "Pimenta Dedo de Moça",
+      "amount": "a gosto"
+    },
+    {
+      "item": "Repolho Roxo",
+      "amount": "a gosto"
+    },
+    {
+      "item": "Alho",
+      "amount": "5"
+    },
+    {
+      "item": "Azeite",
+      "amount": "a gosto"
+    },
+    {
+      "item": "Rap10",
+      "amount": "2 pacotes"
+    },
+    {
+      "item": "Sal",
+      "amount": "a gosto"
+    },
+    {
+      "item": "Pimenta-do-reino",
+      "amount": "a gosto"
+    }
   ],
   "steps": [
     "Limpe e evicere os camarões.",

@@ -8,9 +8,19 @@
   "calories": 400,
   "servings": 8,
   "difficulty": "Fácil",
-  "categories": ["Sobremesa"],
-  "tags": ["Gostosão"],
-  "ingredients": ["Chocolate meio amargo (70%)", "Manteiga sem sal", "Açúcar mascavo e branco", "Ovos extras", "Cacau em pó"],
+  "categories": [
+    "Sobremesa"
+  ],
+  "tags": [
+    "Gostosão"
+  ],
+  "ingredients": [
+    "Chocolate meio amargo (70%)",
+    "Manteiga sem sal",
+    "Açúcar mascavo e branco",
+    "Ovos extras",
+    "Cacau em pó"
+  ],
   "steps": [
     "Derreta o chocolate com a manteiga em banho-maria.",
     "Bata os ovos com o açúcar até ficar um creme claro.",

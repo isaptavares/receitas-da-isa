@@ -1,48 +1,42 @@
 /* =============================================
-   RECEITAS DA ISA — Design System
+   RECEITAS DA ISA — Design System (IDV)
    ============================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* ----------- CSS Variables ----------- */
+/* ----------- CSS Variables (IDV Tokens) ----------- */
 :root {
-  --clr-bg: #0f0d0a;
-  --clr-surface: #1a1612;
-  --clr-surface-2: #231e18;
-  --clr-surface-3: #2e2720;
-  --clr-border: rgba(255,200,100,0.12);
-  --clr-border-hover: rgba(255,200,100,0.28);
+  --clr-bg: #ffffff;
+  --clr-surface: #f7f4ee;
+  --clr-surface-2: #fff6d9;
+  --clr-surface-3: #eaeefe;
+  --clr-surface-4: #e6f2ef;
+  
+  --clr-border: #f0ebe3;
+  --clr-border-hover: #ece5d9;
 
-  --clr-gold: #e8a838;
-  --clr-gold-light: #f5c76a;
-  --clr-gold-dark: #c88a22;
-  --clr-amber: #d97706;
-  --clr-terracotta: #c0614a;
-  --clr-cream: #f5ead8;
-  --clr-sage: #7a9e7e;
+  --clr-gold: #ffbf00;
+  --clr-gold-light: #fff6d9;
+  --clr-gold-dark: #d99f00;
+  --clr-gold-text: #8a6a00;
+  
+  --clr-purple: #7b4bd1;
+  --clr-red: #e14b3f;
+  
+  --clr-teal: #2f8f7d;
+  --clr-teal-text: #1f6b5c;
+  
+  --clr-blue: #6b7ef0;
+  --clr-blue-text: #3a4bc0;
 
-  --clr-text: #f0e8d8;
-  --clr-text-muted: #a09070;
-  --clr-text-dim: #6b5c42;
+  --clr-text: #14110d;
+  --clr-text-muted: #6b6459;
+  --clr-text-dim: #a39a8c;
 
-  --gradient-gold: linear-gradient(135deg, #e8a838 0%, #f5c76a 50%, #c88a22 100%);
-  --gradient-hero: linear-gradient(160deg, rgba(15,13,10,0.40) 0%, rgba(15,13,10,0.85) 60%, rgba(15,13,10,1) 100%);
-  --gradient-card: linear-gradient(180deg, transparent 40%, rgba(15,13,10,0.95) 100%);
+  --font-display: 'Plus Jakarta Sans', Helvetica, sans-serif;
+  --font-body: 'Plus Jakarta Sans', Helvetica, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
-  --shadow-md: 0 8px 32px rgba(0,0,0,0.5);
-  --shadow-lg: 0 20px 60px rgba(0,0,0,0.6);
-  --shadow-gold: 0 4px 24px rgba(232,168,56,0.25);
-
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-xl: 32px;
-
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-
-  --nav-height: 72px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -56,19 +50,22 @@ body {
   background-color: var(--clr-bg);
   color: var(--clr-text);
   min-height: 100vh;
-  line-height: 1.6;
+  line-height: 1.55;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 img { max-width: 100%; display: block; }
 a { text-decoration: none; color: inherit; }
+a:hover { color: var(--clr-gold-dark); }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
 ul { list-style: none; }
+::placeholder { color: var(--clr-text-dim); }
 
 /* ----------- Scrollbar ----------- */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--clr-surface); }
-::-webkit-scrollbar-thumb { background: var(--clr-gold-dark); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--clr-text-dim); border-radius: 3px; }
 
 /* =============================================
    NAVBAR
@@ -1543,7 +1540,7 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  z-index: 9999;
+  z-index: 999999 !important;
 }
 .toast {
   display: flex;
@@ -2479,3 +2476,27 @@ footer {
   background: var(--clr-surface-3);
 }
 
+
+
+/* =============================================
+   UNIFIED SITE FOOTER
+   ============================================= */
+.site-footer {
+  border-top: 1px solid #ece5d9;
+  padding: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1440px;
+  margin: 120px auto 0;
+  width: 100%;
+  background: transparent;
+}
+@media (max-width: 768px) {
+  .site-footer {
+    flex-direction: column;
+    gap: 24px;
+    margin: 80px auto 0;
+    padding: 32px 24px;
+  }
+}

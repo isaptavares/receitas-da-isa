@@ -11,26 +11,80 @@
   "totalTime": 30,
   "difficulty": "Médio",
   "favorite": false,
-  "categories": ["Almoço", "Lanche"],
-  "tags": ["Proteico", "Gostosão"],
+  "categories": [
+    "Almoço",
+    "Lanche"
+  ],
+  "tags": [
+    "Proteico",
+    "Gostosão"
+  ],
   "source": "https://www.instagram.com/reel/DW2NLTrjhX0/?igsh=MWE1dDk2ZnQxOW55cQ==",
   "ingredients": [
-    { "item": "Acém moído", "amount": "500g" },
-    { "item": "Cebola", "amount": "0,5 unidade" },
-    { "item": "Salsinha", "amount": "1 talo" },
-    { "item": "Castanha de caju", "amount": "2 mãozadas" },
-    { "item": "Páprica", "amount": "2 col chá" },
-    { "item": "Pimenta da jamaica", "amount": "1 col chá" },
-    { "item": "Pimenta calabresa", "amount": "0,5 col chá" },
-    { "item": "Iogurte grego", "amount": "200g" },
-    { "item": "Hortelã picada", "amount": "a gosto" },
-    { "item": "Suco de limão", "amount": "pontinha" },
-    { "item": "Ervas frescas", "amount": "a gosto" },
-    { "item": "Azeite", "amount": "1/2 xícara" },
-    { "item": "Alho", "amount": "4 unidades" },
-    { "item": "Sal", "amount": "0,5 col chá" },
-    { "item": "Manteiga", "amount": "1/4 xícara" },
-    { "item": "Pimenta-do-reino", "amount": "2g" }
+    {
+      "item": "Carne moída",
+      "amount": "500g"
+    },
+    {
+      "item": "Cebola",
+      "amount": "0,5 unidade"
+    },
+    {
+      "item": "Salsinha",
+      "amount": "1 talo"
+    },
+    {
+      "item": "Castanha de caju",
+      "amount": "2 mãozadas"
+    },
+    {
+      "item": "Páprica",
+      "amount": "2 col chá"
+    },
+    {
+      "item": "Pimenta da jamaica",
+      "amount": "1 col chá"
+    },
+    {
+      "item": "Pimenta calabresa",
+      "amount": "0,5 col chá"
+    },
+    {
+      "item": "Iogurte grego",
+      "amount": "200g"
+    },
+    {
+      "item": "Hortelã",
+      "amount": "a gosto"
+    },
+    {
+      "item": "Limão",
+      "amount": "pontinha"
+    },
+    {
+      "item": "Ervas frescas",
+      "amount": "a gosto"
+    },
+    {
+      "item": "Azeite",
+      "amount": "1/2 xícara"
+    },
+    {
+      "item": "Alho",
+      "amount": "4 unidades"
+    },
+    {
+      "item": "Sal",
+      "amount": "0,5 col chá"
+    },
+    {
+      "item": "Manteiga",
+      "amount": "1/4 xícara"
+    },
+    {
+      "item": "Pimenta-do-reino",
+      "amount": "2g"
+    }
   ],
   "steps": [
     "Bata no processador a cebola, salsinha, castanha de caju e alho até obter uma base uniforme.",

@@ -1430,7 +1430,11 @@
         /\s+espremid[oa]s?/gi,
         /\s+em\s+cubos/gi,
         /\s+em\s+rodelas/gi,
+        /\s+em\s+pedaços?/gi,
         /\s+inteir[oa]s?/gi,
+        /\s+mornos?/gi,
+        /\s+derretid[oa]s?/gi,
+        /\s+sem\s+sal/gi,
         /\s+ralado\s+\(molho\)/gi,
         /\s+em\s+pó/gi,
         /\s+frescas?/gi,
@@ -1444,138 +1448,96 @@
         normalizedName = normalizedName.replace(regex, '');
       });
 
+      // Tratar plurais óbvios e padronizações
+      normalizedName = normalizedName.replace(/\bovos\b/gi, 'ovo');
       normalizedName = normalizedName.trim();
-
-      // Tratar caso específico do alho (nome deve ser 'Dentes de alho' e unidade 'unidades')
-      if (normalizedName.toLowerCase().includes('alho') && !normalizedName.toLowerCase().includes('pó')) {
-        normalizedName = 'Dentes de alho';
-      }
-
-      // Tratar caso específico de cebola (cebola picada -> cebola)
-      if (normalizedName.toLowerCase() === 'cebola') {
-        normalizedName = 'Cebola';
-      }
-
       normalizedName = normalizedName.charAt(0).toUpperCase() + normalizedName.slice(1);
 
       // 2. Parse da quantidade e unidade original
       let parsed = parseAmount(amountStr);
       let value = parsed.value;
       let unit = parsed.unit.toLowerCase().trim();
+      
+      // Remover "de " do início da unidade (ex: "de xícara" -> "xícara")
+      unit = unit.replace(/^de\s+/i, '').trim();
 
-      // Normalizar unidades de contagem para 'unidades'
-      if (unit === 'unidade' || unit === 'unidades' || unit === 'u' || unit === 'dente' || unit === 'dentes' || unit === 'talo' || unit === 'talos' || unit === 'mãozada' || unit === 'mãozadas') {
-        unit = 'unidades';
-      }
-
-      // Se for dentes de alho, forçar a unidade para 'unidades'
-      if (normalizedName === 'Dentes de alho') {
-        unit = 'unidades';
-      }
-
-      // Normalização de massa
-      if (unit === 'g' || unit === 'gr' || unit === 'grama' || unit === 'gramas') {
-        unit = 'g';
-      } else if (unit === 'kg' || unit === 'kgs' || unit === 'quilo' || unit === 'quilos') {
-        value *= 1000;
-        unit = 'g';
-      }
-
-      // Normalização de volume / líquidos (ML)
-      const liquidUnitsMap = {
-        'ml': 1,
-        'mls': 1,
-        'l': 1000,
-        'litro': 1000,
-        'litros': 1000,
-        'xícara': 240,
-        'xícaras': 240,
-        'xicara': 240,
-        'xicaras': 240,
-        'colher': 15,
-        'colheres': 15,
-        'colher de sopa': 15,
-        'colheres de sopa': 15,
-        'col de sopa': 15,
-        'col. sopa': 15,
-        'colher de chá': 5,
-        'colheres de chá': 5,
-        'col de chá': 5,
-        'col. chá': 5,
-        'col chá': 5
-      };
-
-      let isLiquid = false;
-      for (const [keyUnit, multiplier] of Object.entries(liquidUnitsMap)) {
-        if (unit === keyUnit) {
-          value *= multiplier;
-          unit = 'ml';
-          isLiquid = true;
-          break;
-        }
-      }
-
-      // 3. Aplicar preferências de conversão 1g = 1ml com base no ingrediente
       const lowerName = normalizedName.toLowerCase();
 
-      // Forçar Sal e Pimenta-do-reino para "a gosto"
-      if (lowerName === 'sal' || lowerName === 'pimenta-do-reino') {
-        value = 0;
-        unit = 'a gosto';
+      // 3. Forçar Sal e Pimenta para "a gosto" (ignorando qualquer valor)
+      if (lowerName === 'sal' || lowerName === 'pimenta' || lowerName === 'pimenta-do-reino' || unit === 'a gosto') {
+        return { name: normalizedName, value: 0, unit: 'a gosto' };
       }
-      
-      const ingredientPreferences = {
-        // Líquidos -> ML
-        'azeite': 'ml',
-        'óleo': 'ml',
-        'vinho': 'ml',
-        'leite': 'ml',
-        'água': 'ml',
-        'suco': 'ml',
-        'caldo': 'ml',
-        'shoyu': 'ml',
-        'vinagre': 'ml',
-        'mel': 'ml',
-        'molho': 'ml',
-        
-        // Sólidos -> G
-        'manteiga': 'g',
-        'queijo': 'g',
-        'parmesão': 'g',
-        'pecorino': 'g',
-        'presunto': 'g',
-        'pancetta': 'g',
-        'guanciale': 'g',
-        'carne': 'g',
-        'frango': 'g',
-        'peixe': 'g',
-        'arroz': 'g',
-        'funghi': 'g',
-        'chocolate': 'g',
-        'farinha': 'g',
-        'açúcar': 'g',
-        'sal': 'g',
-        'pimenta': 'g',
-        'pimenta-do-reino': 'g',
-        'castanha': 'g'
-      };
 
-      // Procurar match de preferência
-      let preferredUnit = null;
-      for (const [prefKey, prefUnit] of Object.entries(ingredientPreferences)) {
-        if (lowerName.includes(prefKey)) {
-          preferredUnit = prefUnit;
-          break;
+      // 4. Tratamento de Unidades Específicas de Contagem (Alho, Ervas)
+      if (lowerName.includes('alho') && !lowerName.includes('pó')) {
+        normalizedName = 'Dentes de alho';
+        if (unit === 'cabeça' || unit === 'cabeças') {
+          value *= 10;
         }
+        unit = 'unidades';
+        return { name: normalizedName, value: value, unit: unit };
       }
 
-      if (preferredUnit) {
-        if (unit === 'ml' && preferredUnit === 'g') {
-          // Converter de ml para g (1:1)
-          unit = 'g';
-        } else if (unit === 'g' && preferredUnit === 'ml') {
-          // Converter de g para ml (1:1)
+      if (unit === 'mãozada' || unit === 'mãozadas' || unit === 'ramo' || unit === 'ramos' || unit === 'ramo grande') {
+        value *= 0.25;
+        unit = 'maço';
+        return { name: normalizedName, value: value, unit: unit };
+      }
+
+      if (unit === 'unidade' || unit === 'unidades' || unit === 'u' || unit === 'dente' || unit === 'dentes' || unit === 'talo' || unit === 'talos') {
+        unit = 'unidades';
+        return { name: normalizedName, value: value, unit: unit };
+      }
+
+      // 5. Função de conversão de volume genérica
+      function convertVolume(val, u, cupFactor, tbspFactor, tspFactor) {
+        if (u === 'xícara' || u === 'xícaras' || u === 'xicara' || u === 'xicaras' || u === 'xícara de chá' || u === 'xícaras de chá') return val * cupFactor;
+        if (u === 'colher de sopa' || u === 'colheres de sopa' || u === 'col de sopa' || u === 'col. sopa' || u === 'colher' || u === 'colheres') return val * tbspFactor;
+        if (u === 'colher de chá' || u === 'colheres de chá' || u === 'col de chá' || u === 'col. chá' || u === 'col chá') return val * tspFactor;
+        if (u === 'ml' || u === 'mls') return val;
+        return null;
+      }
+
+      // 6. Identificar se é Líquido ou Sólido (por catálogo)
+      const liquids = ['água', 'leite', 'óleo', 'azeite', 'vinho', 'caldo', 'vinagre', 'shoyu', 'mel', 'suco', 'molho'];
+      const solidFlour = ['farinha', 'amido', 'fubá', 'polvilho', 'maisena'];
+      const solidSugar = ['açúcar'];
+      const solidButter = ['manteiga', 'margarina'];
+      const solidCheese = ['queijo', 'parmesão', 'pecorino', 'muçarela'];
+
+      const isLiquid = liquids.some(l => lowerName.includes(l));
+
+      if (isLiquid) {
+        // Converter todos os volumes para ML
+        let vol = convertVolume(value, unit, 240, 15, 5);
+        if (vol !== null) {
+          value = vol;
           unit = 'ml';
+        } else if (unit === 'g' || unit === 'gr' || unit === 'grama' || unit === 'gramas') {
+          // Se for líquido mas estiver em gramas, 1g = 1ml
+          unit = 'ml';
+        }
+      } else {
+        // É Sólido/Seco
+        let cupWeight = 150;
+        let tbspWeight = 15;
+        let tspWeight = 5;
+
+        if (solidFlour.some(s => lowerName.includes(s))) { cupWeight = 120; tbspWeight = 10; tspWeight = 3.3; }
+        else if (solidSugar.some(s => lowerName.includes(s))) { cupWeight = 200; tbspWeight = 15; tspWeight = 5; }
+        else if (solidButter.some(s => lowerName.includes(s))) { cupWeight = 200; tbspWeight = 15; tspWeight = 5; }
+        else if (solidCheese.some(s => lowerName.includes(s))) { cupWeight = 100; tbspWeight = 10; tspWeight = 3.3; }
+        
+        let volAsGrams = convertVolume(value, unit, cupWeight, tbspWeight, tspWeight);
+        if (volAsGrams !== null) {
+          // Era uma unidade de volume, converteu para gramas usando densidade
+          value = volAsGrams;
+          unit = 'g';
+        } else {
+          // Já era uma unidade de massa (ou não reconhecida)
+          if (unit === 'g' || unit === 'gr' || unit === 'grama' || unit === 'gramas') {
+            unit = 'g';
+          }
         }
       }
 
@@ -1599,25 +1561,29 @@
       }
       
       // Convert common decimals to fractions
+      const metricUnits = ['g', 'kg', 'ml', 'l', 'litro', 'litros', 'quilo', 'quilos'];
+      const isMetric = metricUnits.includes(unit.toLowerCase());
+      
       let numStr = "";
       const intPart = Math.floor(value);
       const fracPart = value - intPart;
       const epsilon = 0.01;
       
       let fracStr = "";
-      if (Math.abs(fracPart - 0.5) < epsilon) fracStr = "1/2";
-      else if (Math.abs(fracPart - 0.25) < epsilon) fracStr = "1/4";
-      else if (Math.abs(fracPart - 0.75) < epsilon) fracStr = "3/4";
-      else if (Math.abs(fracPart - 1/3) < epsilon) fracStr = "1/3";
-      else if (Math.abs(fracPart - 2/3) < epsilon) fracStr = "2/3";
-      else {
-        const rounded = Math.round(value * 100) / 100;
-        numStr = rounded.toString().replace('.', ',');
+      if (!isMetric) {
+        if (Math.abs(fracPart - 0.5) < epsilon) fracStr = "1/2";
+        else if (Math.abs(fracPart - 0.25) < epsilon) fracStr = "1/4";
+        else if (Math.abs(fracPart - 0.75) < epsilon) fracStr = "3/4";
+        else if (Math.abs(fracPart - 1/3) < epsilon) fracStr = "1/3";
+        else if (Math.abs(fracPart - 2/3) < epsilon) fracStr = "2/3";
       }
 
       if (fracStr) {
-        if (intPart > 0) numStr = `${intPart} ${fracStr}`;
+        if (intPart > 0) numStr = `${intPart}&ensp;${fracStr}`;
         else numStr = fracStr;
+      } else {
+        const rounded = Math.round(value * 100) / 100;
+        numStr = rounded.toString().replace('.', ',');
       }
 
       // Se for unidades, tratar singular/plural bonito
@@ -1673,11 +1639,26 @@
       });
 
       // Convert map to sorted array
-      const list = [];
+      let list = [];
       itemsMap.forEach((totalValue, key) => {
         const [name, unit] = key.split('|');
         list.push({ name, totalValue, unit });
       });
+
+      // Post-process: if an ingredient has an "a gosto" entry, it overrides all other quantities
+      const hasAgosto = new Set();
+      list.forEach(item => {
+         if (item.unit === 'a gosto') hasAgosto.add(item.name);
+      });
+      
+      if (hasAgosto.size > 0) {
+         list = list.filter(item => {
+            if (hasAgosto.has(item.name)) {
+               return item.unit === 'a gosto'; // Keep only the "a gosto" entry
+            }
+            return true;
+         });
+      }
 
       list.sort((a, b) => {
         const aIsAgosto = a.unit === 'a gosto';

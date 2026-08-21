@@ -49,8 +49,14 @@
       "totalTime": 30,
       "difficulty": "Médio",
       "favorite": true,
-      "categories": ["Almoço", "Jantar"],
-      "tags": ["Dia a dia", "Gostosão"],
+      "categories": [
+        "Almoço",
+        "Jantar"
+      ],
+      "tags": [
+        "Dia a dia",
+        "Gostosão"
+      ],
       "file": "data/recipes/carbonara.json",
       "createdAt": "2026-04-01T12:00:00Z"
     },
@@ -65,8 +71,14 @@
       "totalTime": 60,
       "difficulty": "Difícil",
       "favorite": false,
-      "categories": ["Almoço", "Jantar"],
-      "tags": ["Saudável", "Pouco calórico"],
+      "categories": [
+        "Almoço",
+        "Jantar"
+      ],
+      "tags": [
+        "Saudável",
+        "Pouco calórico"
+      ],
       "file": "data/recipes/sushi.json",
       "createdAt": "2026-03-25T15:30:00Z"
     },
@@ -81,8 +93,15 @@
       "totalTime": 55,
       "difficulty": "Fácil",
       "favorite": true,
-      "categories": ["Almoço", "Jantar", "Lanche"],
-      "tags": ["Fritura", "Gostosão"],
+      "categories": [
+        "Almoço",
+        "Jantar",
+        "Lanche"
+      ],
+      "tags": [
+        "Fritura",
+        "Gostosão"
+      ],
       "file": "data/recipes/tacos.json",
       "createdAt": "2026-04-02T10:00:00Z"
     },
@@ -97,8 +116,14 @@
       "totalTime": 110,
       "difficulty": "Médio",
       "favorite": true,
-      "categories": ["Almoço", "Jantar"],
-      "tags": ["Gostosão", "Falta checar"],
+      "categories": [
+        "Almoço",
+        "Jantar"
+      ],
+      "tags": [
+        "Gostosão",
+        "Falta checar"
+      ],
       "file": "data/recipes/coq_au_vin.json",
       "createdAt": "2026-03-20T18:00:00Z"
     },
@@ -113,8 +138,14 @@
       "totalTime": 35,
       "difficulty": "Médio",
       "favorite": false,
-      "categories": ["Almoço", "Jantar"],
-      "tags": ["Gostosão", "Proteico"],
+      "categories": [
+        "Almoço",
+        "Jantar"
+      ],
+      "tags": [
+        "Gostosão",
+        "Proteico"
+      ],
       "file": "data/recipes/padthai.json",
       "createdAt": "2026-03-28T14:00:00Z"
     },
@@ -129,8 +160,15 @@
       "totalTime": 105,
       "difficulty": "Médio",
       "favorite": true,
-      "categories": ["Almoço", "Jantar", "Lanche"],
-      "tags": ["Gostosão", "Fritura"],
+      "categories": [
+        "Almoço",
+        "Jantar",
+        "Lanche"
+      ],
+      "tags": [
+        "Gostosão",
+        "Fritura"
+      ],
       "file": "data/recipes/taco_de_camarao.json",
       "createdAt": "2026-04-07T16:00:00Z"
     },
@@ -145,8 +183,13 @@
       "totalTime": 10,
       "difficulty": "Fácil",
       "favorite": false,
-      "categories": ["Café da Manhã"],
-      "tags": ["Proteico", "Saudável"],
+      "categories": [
+        "Café da Manhã"
+      ],
+      "tags": [
+        "Proteico",
+        "Saudável"
+      ],
       "file": "data/recipes/crepioca_banana.json",
       "createdAt": "2026-04-07T16:55:00Z"
     },
@@ -161,8 +204,12 @@
       "totalTime": 5,
       "difficulty": "Fácil",
       "favorite": false,
-      "categories": ["Café da Manhã"],
-      "tags": ["Saudável"],
+      "categories": [
+        "Café da Manhã"
+      ],
+      "tags": [
+        "Saudável"
+      ],
       "file": "data/recipes/bowl_frutas.json",
       "createdAt": "2026-04-07T16:56:00Z"
     },
@@ -177,8 +224,13 @@
       "totalTime": 12,
       "difficulty": "Fácil",
       "favorite": false,
-      "categories": ["Café da Manhã"],
-      "tags": ["Saudável", "Pouco calórico"],
+      "categories": [
+        "Café da Manhã"
+      ],
+      "tags": [
+        "Saudável",
+        "Pouco calórico"
+      ],
       "file": "data/recipes/omelete_verde.json",
       "createdAt": "2026-04-07T16:57:00Z"
     },
@@ -193,8 +245,13 @@
       "totalTime": 30,
       "difficulty": "Médio",
       "favorite": false,
-      "categories": ["Almoço"],
-      "tags": ["Gostosão", "Proteico"],
+      "categories": [
+        "Almoço"
+      ],
+      "tags": [
+        "Gostosão",
+        "Proteico"
+      ],
       "file": "data/recipes/picanha_grelhada.json",
       "createdAt": "2026-04-07T16:58:00Z"
     },
@@ -209,8 +266,13 @@
       "totalTime": 20,
       "difficulty": "Fácil",
       "favorite": false,
-      "categories": ["Almoço"],
-      "tags": ["Saudável", "Gostosão"],
+      "categories": [
+        "Almoço"
+      ],
+      "tags": [
+        "Saudável",
+        "Gostosão"
+      ],
       "file": "data/recipes/salmao_teriyaki.json",
       "createdAt": "2026-04-07T16:59:00Z"
     },
@@ -225,8 +287,13 @@
       "totalTime": 40,
       "difficulty": "Médio",
       "favorite": false,
-      "categories": ["Almoço"],
-      "tags": ["Gostosão", "Dia a dia"],
+      "categories": [
+        "Almoço"
+      ],
+      "tags": [
+        "Gostosão",
+        "Dia a dia"
+      ],
       "file": "data/recipes/risoto_funghi.json",
       "createdAt": "2026-04-07T17:00:00Z"
     },
@@ -241,8 +308,12 @@
       "totalTime": 10,
       "difficulty": "Fácil",
       "favorite": false,
-      "categories": ["Lanche"],
-      "tags": ["Saudável"],
+      "categories": [
+        "Lanche"
+      ],
+      "tags": [
+        "Saudável"
+      ],
       "file": "data/recipes/sanduiche_natural.json",
       "createdAt": "2026-04-07T17:01:00Z"
     },
@@ -257,8 +328,13 @@
       "totalTime": 15,
       "difficulty": "Fácil",
       "favorite": false,
-      "categories": ["Lanche"],
-      "tags": ["Proteico", "Saudável"],
+      "categories": [
+        "Lanche"
+      ],
+      "tags": [
+        "Proteico",
+        "Saudável"
+      ],
       "file": "data/recipes/wrap_frango.json",
       "createdAt": "2026-04-07T17:02:00Z"
     },
@@ -273,8 +349,13 @@
       "totalTime": 60,
       "difficulty": "Difícil",
       "favorite": false,
-      "categories": ["Jantar"],
-      "tags": ["Gostosão", "Falta checar"],
+      "categories": [
+        "Jantar"
+      ],
+      "tags": [
+        "Gostosão",
+        "Falta checar"
+      ],
       "file": "data/recipes/moussaka.json",
       "createdAt": "2026-04-07T17:03:00Z"
     },
@@ -289,8 +370,13 @@
       "totalTime": 35,
       "difficulty": "Médio",
       "favorite": false,
-      "categories": ["Jantar"],
-      "tags": ["Saudável", "Proteico"],
+      "categories": [
+        "Jantar"
+      ],
+      "tags": [
+        "Saudável",
+        "Proteico"
+      ],
       "file": "data/recipes/frango_curry.json",
       "createdAt": "2026-04-07T17:04:00Z"
     },
@@ -305,8 +391,13 @@
       "totalTime": 50,
       "difficulty": "Difícil",
       "favorite": false,
-      "categories": ["Jantar"],
-      "tags": ["Gostosão", "Dia a dia"],
+      "categories": [
+        "Jantar"
+      ],
+      "tags": [
+        "Gostosão",
+        "Dia a dia"
+      ],
       "file": "data/recipes/paella_mariscos.json",
       "createdAt": "2026-04-07T17:05:00Z"
     },
@@ -321,8 +412,12 @@
       "totalTime": 45,
       "difficulty": "Fácil",
       "favorite": false,
-      "categories": ["Sobremesa"],
-      "tags": ["Gostosão"],
+      "categories": [
+        "Sobremesa"
+      ],
+      "tags": [
+        "Gostosão"
+      ],
       "file": "data/recipes/brownie_chocolate.json",
       "createdAt": "2026-04-07T17:06:00Z"
     },
@@ -337,8 +432,13 @@
       "totalTime": 15,
       "difficulty": "Médio",
       "favorite": false,
-      "categories": ["Sobremesa"],
-      "tags": ["Gostosão", "Dia a dia"],
+      "categories": [
+        "Sobremesa"
+      ],
+      "tags": [
+        "Gostosão",
+        "Dia a dia"
+      ],
       "file": "data/recipes/petit_gateau.json",
       "createdAt": "2026-04-07T17:07:00Z"
     },
@@ -353,8 +453,12 @@
       "totalTime": 25,
       "difficulty": "Fácil",
       "favorite": false,
-      "categories": ["Acompanhamento"],
-      "tags": ["Saudável"],
+      "categories": [
+        "Acompanhamento"
+      ],
+      "tags": [
+        "Saudável"
+      ],
       "file": "data/recipes/batata_rustica.json",
       "createdAt": "2026-04-07T17:08:00Z"
     },
@@ -369,8 +473,13 @@
       "totalTime": 20,
       "difficulty": "Fácil",
       "favorite": false,
-      "categories": ["Acompanhamento"],
-      "tags": ["1 panela", "Saudável"],
+      "categories": [
+        "Acompanhamento"
+      ],
+      "tags": [
+        "1 panela",
+        "Saudável"
+      ],
       "file": "data/recipes/arroz_basmati.json",
       "createdAt": "2026-04-07T17:09:00Z"
     },
@@ -385,133 +494,133 @@
       "totalTime": 30,
       "difficulty": "Médio",
       "favorite": false,
-      "categories": ["Almoço", "Lanche"],
-      "tags": ["Proteico", "Gostosão"],
+      "categories": [
+        "Almoço",
+        "Lanche"
+      ],
+      "tags": [
+        "Proteico",
+        "Gostosão"
+      ],
       "file": "data/recipes/kebab_airfryer.json",
       "createdAt": "2026-04-20T02:30:00Z"
     }
   ],
   "allIngredients": [
-    "Abacate maduro",
+    "Abacate",
     "Abacaxi",
-    "Alho",
-    "Alho picado",
-    "Amendoim torrado sem sal",
-    "Arroz para sushi",
-    "Azeite",
+    "Açafrão",
     "Açúcar",
     "Açúcar mascavo",
-    "Bacon em cubos",
-    "Brotos de feijão (bean sprouts)",
-    "Caldo de frango",
-    "Camarão médio",
-    "Camarão tempurá",
+    "Alecrim",
+    "Alface",
+    "Alho",
+    "Alho esmagado",
+    "Amendoim",
+    "Arroz",
+    "Arroz bomba",
+    "Azeite",
+    "Bacon",
+    "Banana",
+    "Banana prata",
+    "Batata",
+    "Berinjela",
+    "Brotos de feijão",
+    "Cacau em pó",
+    "Caldo de galinha",
+    "Caldo de legumes",
+    "Caldo de peixe",
+    "Camarão",
+    "Canela",
+    "Canela em pó",
+    "Cardamomo",
+    "Carne  de cordeiro",
+    "Carne moída",
+    "Castanha de caju",
+    "Cebola",
     "Cebola roxa",
-    "Cebolas pérola",
-    "Cebolinha verde",
+    "Cebola, alho e gengibre",
+    "Cebolinha",
     "Cenoura",
+    "Chocolate meio amargo",
     "Coentro",
-    "Coentro fresco",
-    "Cogumelos Paris ou crimini",
+    "Cogumelos",
     "Cominho",
+    "Cravo-da-índia",
     "Cream cheese",
-    "Dentes de alho",
+    "Curry em pó",
+    "Ervas frescas",
     "Espaguete",
+    "Espinafre",
     "Extrato de tomate",
-    "Farinha Panko",
+    "Farinha de rosca",
     "Farinha de trigo",
     "Folhas de nori",
-    "Frango inteiro cortado em pedaços",
-    "Gemas de ovo",
-    "Gengibre em conserva",
+    "Frango",
+    "Frutas fresca",
+    "Funghi secchi",
+    "Gema de ovo",
+    "Gengibre",
     "Gergelim",
+    "Gergelim preto e branco",
+    "Granola crocante",
+    "Hortelã",
+    "Iogurte grego",
+    "Laranja",
+    "Leite",
+    "Leite de coco",
     "Limão",
-    "Limão tahiti",
     "Lombo de porco",
     "Louro",
+    "Lulas fatiada",
     "Macarrão de arroz largo",
+    "Maionese",
     "Manteiga",
+    "Mel",
+    "Mexilhõe",
+    "Molho Béchamel",
+    "Molho de hortelã",
     "Molho de peixe",
-    "Molho shoyu",
+    "Molho de soja",
+    "Molho de tomate",
+    "Morango",
+    "Óleo",
+    "Óleo de amendoim",
     "Orégano",
-    "Ovas de peixe (tobiko)",
-    "Ovos",
-    "Ovos inteiros",
-    "Pancetta ou guanciale",
+    "Ovas de peixe",
+    "Ovo",
+    "Ovos extra",
+    "Pancetta",
+    "Pão",
+    "Pão de forma integral",
+    "Páprica",
     "Pasta de tamarindo",
-    "Pimenta Dedo de Moça",
+    "Pau de canela",
+    "Peito de frango",
+    "Picanha",
+    "Pimenta calabresa",
     "Pimenta chipotle em adobo",
+    "Pimenta da jamaica",
+    "Pimenta Dedo de Moça",
     "Pimenta vermelha",
-    "Pimenta do reino",
-    "Pimenta-do-reino preta moída na hora",
-    "Páprica defumada",
-    "Queijo Parmesão ralado",
-    "Queijo Pecorino Romano ralado",
+    "Pimenta-do-reino",
+    "Queijo branco",
+    "Queijo Parmesão",
+    "Queijo Pecorino",
     "Rap10",
     "Repolho Roxo",
     "Sal",
-    "Sal e pimenta",
-    "Salmão fresco",
-    "Suco de laranja",
-    "Tomilho fresco",
+    "Sal grosso",
+    "Salmão",
+    "Salsinha",
+    "Tapioca",
+    "Tomate-cereja",
+    "Tomilho",
     "Tortilhas de milho",
     "Vinagre de arroz",
     "Vinagre de maçã",
-    "Vinho tinto seco (Burgundy ou Pinot Noir)",
-    "Wasabi",
-    "Óleo de amendoim",
-    "Óleo de soja",
-    "Banana prata",
-    "Goma de tapioca",
-    "Canela",
-    "Mel",
-    "Frutas vermelhas",
-    "Banana congelada",
-    "Leite vegetal",
-    "Granola",
-    "Espinafre fresco",
-    "Parmesão",
-    "Queijo branco",
-    "Picanha maturada",
-    "Sal grosso",
-    "Alecrim fresco",
-    "Salmão",
-    "Gengibre",
-    "Arroz arbóreo",
-    "Funghi secchi",
-    "Vinho branco seco",
-    "Caldo de legumes",
-    "Frango desfiado",
-    "Maionese light",
-    "Iogurte grego",
-    "Cenoura ralada",
-    "Alface",
-    "Tortilha de trigo",
-    "Avocado",
-    "Tomate cereja",
-    "Hortelã",
-    "Cordero",
-    "Carne moída",
-    "Molho Béchamel",
-    "Curry",
-    "Leite de coco",
-    "Arroz bomba",
-    "Lulas",
-    "Mexilhões",
-    "Açafrão",
-    "Caldo de Peixe",
-    "Cacau em pó",
-    "Batatas",
-    "Cardamomo",
-    "Cravo-da-índia",
-    "Pau de canela",
-    "Acém moído",
-    "Castanha de caju",
-    "Pimenta da jamaica",
-    "Pimenta calabresa",
-    "Iogurte grego",
-    "Hortelã",
-    "Pepino",
-    "Tortilha"
+    "Vinho branco",
+    "Vinho tinto",
+    "Wasabi"
   ]
 }

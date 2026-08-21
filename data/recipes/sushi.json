@@ -11,23 +11,71 @@
   "totalTime": 60,
   "difficulty": "Difícil",
   "favorite": false,
-  "categories": ["Almoço", "Jantar"],
-  "tags": ["Saudável", "Pouco calórico"],
+  "categories": [
+    "Almoço",
+    "Jantar"
+  ],
+  "tags": [
+    "Saudável",
+    "Pouco calórico"
+  ],
   "ingredients": [
-    { "item": "Arroz para sushi", "amount": "2 xícaras" },
-    { "item": "Vinagre de arroz", "amount": "4 colheres de sopa" },
-    { "item": "Açúcar", "amount": "2 colheres de sopa" },
-    { "item": "Sal", "amount": "1 colher de chá" },
-    { "item": "Salmão fresco", "amount": "200g" },
-    { "item": "Camarão tempurá", "amount": "8 unidades" },
-    { "item": "Abacate maduro", "amount": "1 unidade" },
-    { "item": "Folhas de nori", "amount": "4 folhas" },
-    { "item": "Cream cheese", "amount": "100g" },
-    { "item": "Ovas de peixe (tobiko)", "amount": "50g" },
-    { "item": "Gergelim", "amount": "a gosto" },
-    { "item": "Molho shoyu", "amount": "para servir" },
-    { "item": "Wasabi", "amount": "para servir" },
-    { "item": "Gengibre em conserva", "amount": "para servir" }
+    {
+      "item": "Arroz",
+      "amount": "2 xícaras"
+    },
+    {
+      "item": "Vinagre de arroz",
+      "amount": "4 colheres de sopa"
+    },
+    {
+      "item": "Açúcar",
+      "amount": "2 colheres de sopa"
+    },
+    {
+      "item": "Sal",
+      "amount": "1 colher de chá"
+    },
+    {
+      "item": "Salmão",
+      "amount": "200g"
+    },
+    {
+      "item": "Camarão",
+      "amount": "8 unidades"
+    },
+    {
+      "item": "Abacate",
+      "amount": "1 unidade"
+    },
+    {
+      "item": "Folhas de nori",
+      "amount": "4 folhas"
+    },
+    {
+      "item": "Cream cheese",
+      "amount": "100g"
+    },
+    {
+      "item": "Ovas de peixe",
+      "amount": "50g"
+    },
+    {
+      "item": "Gergelim",
+      "amount": "a gosto"
+    },
+    {
+      "item": "Molho de soja",
+      "amount": "para servir"
+    },
+    {
+      "item": "Wasabi",
+      "amount": "para servir"
+    },
+    {
+      "item": "Gengibre",
+      "amount": "para servir"
+    }
   ],
   "steps": [
     "Cozinhe o arroz de sushi conforme as instruções. Misture o vinagre de arroz com açúcar e sal aquecido, e incorpore ao arroz ainda quente. Reserve.",

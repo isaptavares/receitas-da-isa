@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  body { margin:0; background:#fff; color:#14110d; font-family:'Plus Jakarta Sans', Helvetica, sans-serif; -webkit-font-smoothing:antialiased; }
+  * { box-sizing:border-box; }
+  a { color:#14110d; text-decoration:none; }
+  a:hover { color:#d99f00; }
+</style>
+</helmet>
+
+<div style="width:390px; margin:0 auto; background:#fff; padding-bottom:100px; position:relative; overflow:hidden">
+  <header style="display:flex; align-items:center; gap:12px; padding:16px 20px; position:sticky; top:0; background:rgba(255,255,255,0.94); backdrop-filter:blur(12px); z-index:20; border-bottom:2px solid #f0ebe3">
+    <div style="width:34px; height:34px; border-radius:11px; background:#ffbf00; display:flex; align-items:center; justify-content:center; flex-shrink:0"><div style="width:12px; height:12px; border-radius:50%; background:#14110d"></div></div>
+    <span style="flex:1; font-size:16px; font-weight:800; letter-spacing:-0.02em">Receitas da Isa</span>
+  </header>
+
+  <section style="padding:22px 20px 0">
+    <div style="display:inline-flex; align-items:center; gap:8px; background:#fff6d9; border-radius:999px; padding:7px 14px; margin-bottom:14px">
+      <div style="width:7px; height:7px; border-radius:50%; background:#ffbf00"></div>
+      <span style="font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#8a6a00">Menu da semana</span>
+    </div>
+    <h1 style="margin:0; font-size:40px; font-weight:800; letter-spacing:-0.035em; line-height:1">Meu <em style="color:#2f8f7d; font-weight:700">planejador</em></h1>
+    <p style="margin:12px 0 0; font-size:16px; color:#6b6459; line-height:1.5">Planeje suas refeições e gere sua lista de compras automaticamente.</p>
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; border:2px solid #f0ebe3; border-radius:999px; padding:10px 18px; margin-top:18px">
+      <button style="border:none; background:transparent; padding:0; color:#14110d; cursor:pointer; display:flex; align-items:center">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12.5 4.5 7 10l5.5 5.5"></path></svg>
+      </button>
+      <span style="font-size:14px; font-weight:800">10 – 16 ago</span>
+      <button style="border:none; background:transparent; padding:0; color:#14110d; cursor:pointer; display:flex; align-items:center">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M7.5 4.5 13 10l-5.5 5.5"></path></svg>
+      </button>
+    </div>
+  </section>
+
+  <section style="padding:18px 20px 0">
+    <div style="display:flex; gap:8px; background:#f7f4ee; border-radius:14px; padding:5px">
+      <button onClick="{{ showPlan }}" style="flex:1; border:none; border-radius:11px; padding:11px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; background:transparent; color:#6b6459">Semana</button>
+      <button onClick="{{ showList }}" style="flex:1; border:none; border-radius:11px; padding:11px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; background:transparent; color:#6b6459">Lista de compras</button>
+    </div>
+    <div style="font-family:'JetBrains Mono', monospace; font-size:11px; color:#a39a8c; margin-top:8px; text-align:center">{{ tabHint }}</div>
+  </section>
+
+  <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ true }}">
+    <section style="padding:16px 20px 0; display:flex; flex-direction:column; gap:12px">
+      <sc-for list="{{ days }}" as="d" hint-placeholder-count="7">
+        <div style="border:2px solid #f0ebe3; border-radius:20px; overflow:hidden">
+          <div style="display:flex; align-items:center; gap:10px; padding:13px 18px; background:#f7f4ee">
+            <span style="font-size:15px; font-weight:800">{{ d.name }}</span>
+            <span style="font-family:'JetBrains Mono', monospace; font-size:11px; color:#a39a8c">{{ d.date }}</span>
+            <sc-if value="{{ d.today }}" hint-placeholder-val="{{ false }}">
+              <span style="background:#ffbf00; border-radius:999px; padding:3px 10px; font-size:10px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase">Hoje</span>
+            </sc-if>
+          </div>
+          <div style="display:flex; flex-direction:column">
+            <sc-for list="{{ d.meals }}" as="m" hint-placeholder-count="2">
+              <div style="display:flex; align-items:center; gap:14px; padding:13px 18px; border-top:2px solid #f0ebe3">
+                <sc-if value="{{ m.filled }}" hint-placeholder-val="{{ true }}">
+                  <div style="width:52px; height:52px; border-radius:14px; background:repeating-linear-gradient(135deg,#f4efe6 0 10px,#efe8dc 10px 20px); flex-shrink:0"></div>
+                </sc-if>
+                <div style="flex:1; min-width:0">
+                  <div style="font-size:10px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">{{ m.slot }}</div>
+                  <div style="font-size:15px; font-weight:800; margin-top:5px; letter-spacing:-0.015em; line-height:1.25; text-wrap:pretty">{{ m.title }}</div>
+                </div>
+                <button style="width:32px; height:32px; border-radius:11px; border:2px solid #ece5d9; background:#fff; font-family:inherit; font-size:16px; font-weight:700; color:#8a6a00; cursor:pointer; flex-shrink:0">+</button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ false }}">
+    <section style="padding:16px 20px 0">
+      <div style="border:2px solid #f0ebe3; border-radius:22px; overflow:hidden">
+        <div style="padding:18px 20px; background:#ffbf00">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px">
+            <h2 style="margin:0; font-size:19px; font-weight:800; letter-spacing:-0.02em">Lista de compras</h2>
+            <span style="font-size:12px; font-weight:700; color:#8a6a00">{{ progress }}</span>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:14px">
+            <button style="flex:1; border:none; background:#fff; font-family:inherit; font-size:13px; font-weight:800; padding:11px; border-radius:12px; cursor:pointer">Copiar texto</button>
+            <button style="flex:1; border:none; background:#fff; font-family:inherit; font-size:13px; font-weight:800; padding:11px; border-radius:12px; cursor:pointer">Salvar PDF</button>
+          </div>
+        </div>
+        <sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+          <div>
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 20px; background:#f7f4ee">
+              <div style="display:flex; align-items:center; gap:9px">
+                <span style="width:8px; height:8px; border-radius:50%; background:#ffbf00"></span>
+                <span style="font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase">{{ g.name }}</span>
+              </div>
+              <span style="font-family:'JetBrains Mono', monospace; font-size:11px; color:#a39a8c">{{ g.count }}</span>
+            </div>
+            <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+              <div style="display:flex; align-items:center; gap:12px; padding:13px 20px; border-bottom:2px solid #f7f4ee">
+                <sc-if value="{{ it.done }}" hint-placeholder-val="{{ false }}">
+                  <span style="width:22px; height:22px; border-radius:8px; background:#2f8f7d; color:#fff; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0">✓</span>
+                </sc-if>
+                <sc-if value="{{ it.open }}" hint-placeholder-val="{{ true }}">
+                  <span style="width:22px; height:22px; border-radius:8px; border:2.5px solid #e5ded2; flex-shrink:0"></span>
+                </sc-if>
+                <div style="flex:1; min-width:0">
+                  <div style="font-size:14px; font-weight:800">{{ it.name }}</div>
+                  <div style="font-size:11px; font-weight:600; color:#a39a8c; margin-top:2px">{{ it.from }}</div>
+                </div>
+                <span style="background:#f7f4ee; border-radius:999px; padding:4px 10px; font-family:'JetBrains Mono', monospace; font-size:10px; color:#6b6459; flex-shrink:0">{{ it.qty }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </sc-if>
+
+  <nav style="position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:390px; background:rgba(255,255,255,0.96); backdrop-filter:blur(12px); border-top:2px solid #f0ebe3; display:flex; align-items:center; justify-content:space-around; padding:10px 12px 22px; z-index:30">
+    <a href="Mobile%20-%20Home.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:5px; color:#a39a8c">
+      <svg width="21" height="21" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7.5 9 3l6 4.5V15H3z"></path></svg>
+      <span style="font-size:10px; font-weight:800">Receitas</span>
+    </a>
+    <a href="Mobile%20-%20Planejador.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:5px; color:#14110d">
+      <svg width="21" height="21" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.4 5.4h11.2v9.2H3.4zM3.4 8h11.2M6.4 3.4v2M11.6 3.4v2"></path></svg>
+      <span style="font-size:10px; font-weight:800">Planejador</span>
+    </a>
+    <a href="Mobile%20-%20Nova%20Receita.dc.html" style="width:52px; height:52px; border-radius:50%; background:#ffbf00; display:flex; align-items:center; justify-content:center; margin-top:-24px; box-shadow:0 8px 20px rgba(255,191,0,0.45); color:#14110d">
+      <svg width="24" height="24" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round"><path d="M9 4v10M4 9h10"></path></svg>
+    </a>
+    <a href="#" style="display:flex; flex-direction:column; align-items:center; gap:5px; color:#a39a8c">
+      <svg width="21" height="21" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 4.5h11M3.5 9h11M3.5 13.5h7"></path></svg>
+      <span style="font-size:10px; font-weight:800">Compras</span>
+    </a>
+    <a href="#" style="display:flex; flex-direction:column; align-items:center; gap:5px; color:#a39a8c">
+      <svg width="21" height="21" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 15S3 11.4 3 7.6A2.9 2.9 0 0 1 9 6a2.9 2.9 0 0 1 6 1.6C15 11.4 9 15 9 15Z"></path></svg>
+      <span style="font-size:10px; font-weight:800">Favoritas</span>
+    </a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844}}">
+class Component extends DCLogic {
+  state = { tab: "plan" };
+  renderVals() {
+    const meal = (slot, title, filled) => ({ slot: slot, title: title || "Adicionar " + slot.toLowerCase(), filled: !!filled });
+    const groups = [
+      { name: "Legumes", count: "3/5", items: [
+        { name: "cebola", from: "feijão branco com espinafre", qty: "1 un", done: false },
+        { name: "dente de alho", from: "feijão branco com espinafre", qty: "1 un", done: false },
+        { name: "manjericão", from: "spaghetti à bolonhesa", qty: "1 maço", done: false },
+        { name: "agrião", from: "rabanada com bacon e ovo", qty: "25 g", done: true },
+        { name: "espinafre", from: "feijão branco com espinafre", qty: "200 g", done: true }
+      ] },
+      { name: "Frutas", count: "1/1", items: [
+        { name: "limão siciliano", from: "poke bowl de salmão", qty: "1 un", done: false }
+      ] },
+      { name: "Proteínas", count: "0/3", items: [
+        { name: "salmão fresco", from: "poke bowl de salmão", qty: "400 g", done: false },
+        { name: "carne moída", from: "spaghetti à bolonhesa", qty: "500 g", done: false },
+        { name: "bacon em cubos", from: "rabanada com bacon e ovo", qty: "150 g", done: false }
+      ] }
+    ];
+    return {
+      isPlan: this.state.tab === "plan",
+      isList: this.state.tab === "list",
+      tabHint: this.state.tab === "plan" ? "mostrando: semana" : "mostrando: lista de compras",
+      showPlan: () => this.setState({ tab: "plan" }),
+      showList: () => this.setState({ tab: "list" }),
+      progress: "4 de 22 comprados",
+      days: [
+        { name: "Segunda", date: "10.08", today: false, meals: [meal("Almoço", "Feijão branco com espinafre", true), meal("Jantar", "Rabanada com bacon e ovo", true)] },
+        { name: "Terça", date: "11.08", today: true, meals: [meal("Almoço", "Poke bowl de salmão", true), meal("Jantar", "Creme de abóbora com gengibre", true)] },
+        { name: "Quarta", date: "12.08", today: false, meals: [meal("Almoço"), meal("Jantar")] },
+        { name: "Quinta", date: "13.08", today: false, meals: [meal("Almoço", "Spaghetti à bolonhesa", true), meal("Jantar")] },
+        { name: "Sexta", date: "14.08", today: false, meals: [meal("Almoço"), meal("Jantar", "Red curry noodles", true)] },
+        { name: "Sábado", date: "15.08", today: false, meals: [meal("Almoço", "Tacos de carnitas", true), meal("Jantar")] },
+        { name: "Domingo", date: "16.08", today: false, meals: [meal("Almoço"), meal("Jantar")] }
+      ],
+      groups: groups.map((g) => ({ name: g.name, count: g.count, items: g.items.map((i) => ({ name: i.name, from: "para " + i.from, qty: i.qty, done: i.done, open: !i.done })) }))
+    };
+  }
+}
+</script>
+</body>
+</html>
