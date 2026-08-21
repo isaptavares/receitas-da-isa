@@ -2492,11 +2492,99 @@ footer {
   width: 100%;
   background: transparent;
 }
+
+/* =============================================
+   MOBILE RESPONSIVENESS
+   ============================================= */
 @media (max-width: 768px) {
+  /* Site Footer */
   .site-footer {
     flex-direction: column;
     gap: 24px;
     margin: 80px auto 0;
     padding: 32px 24px;
   }
+
+  /* Global Adjustments */
+  section {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* Navbar */
+  .navbar {
+    padding: 16px 20px !important;
+  }
+  .nav-links, .desktop-search-container {
+    display: none !important;
+  }
+
+  /* Hero Section */
+  .hero, .recipe-hero {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    padding: 24px 20px 48px !important;
+  }
+  .hero-title {
+    font-size: 40px !important;
+    line-height: 1 !important;
+  }
+  .hero-stats {
+    gap: 24px !important;
+    padding-top: 20px !important;
+    margin-top: 28px !important;
+  }
+  .hero-stat-number {
+    font-size: 26px !important;
+  }
+  .hero-stat-label {
+    font-size: 10px !important;
+  }
+
+  /* Grids */
+  .recipes-grid, #recipes-grid, .recipe-content, .planner-grid, .add-recipe-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Categories Carousel */
+  .category-grid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    padding-bottom: 8px !important;
+    gap: 10px !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .category-grid > a {
+    width: 84px !important;
+    flex-shrink: 0 !important;
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  /* Specific elements */
+  .modal-content {
+    width: calc(100% - 40px) !important;
+    padding: 24px !important;
+  }
+
+  .hide-on-mobile {
+    display: none !important;
+  }
+  .show-on-mobile-block {
+    display: block !important;
+  }
+  .show-on-mobile-flex {
+    display: flex !important;
+  }
 }
+
+/* Desktop utility hiding */
+@media (min-width: 769px) {
+  .hide-on-desktop {
+    display: none !important;
+  }
+}
+
+

@@ -44,7 +44,7 @@
     </ul>
     <div style="flex:1"></div>
     <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-shrink:1">
-      <div
+      <div class="desktop-search-container"
         style="display:flex; align-items:center; gap:10px; background:#f7f4ee; border-radius:999px; padding:10px 18px; flex:0 1 260px; min-width:44px; position:relative">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;">
           <circle cx="6.5" cy="6.5" r="4.5" stroke="#ffbf00" stroke-width="2.2" />
@@ -86,6 +86,21 @@
             stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
             <path d="M9 15S3 11.4 3 7.6A2.9 2.9 0 0 1 9 6a2.9 2.9 0 0 1 6 1.6C15 11.4 9 15 9 15Z"></path>
           </svg> Minhas favoritas
+        </a>
+        <div class="hide-on-desktop show-on-mobile-flex" style="flex:1; display:none"></div>
+        <button class="hide-on-desktop show-on-mobile-flex" onclick="toggleMobileAddMenu()" style="width:56px; height:56px; border-radius:50%; border:none; background:#ffbf00; color:#14110d; cursor:pointer; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 10px 24px rgba(255,191,0,0.5); display:none" id="mobile-add-btn">
+          <svg width="26" height="26" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M9 4v10M4 9h10"></path></svg>
+        </button>
+      </div>
+      <div id="mobile-add-menu" class="hide-on-desktop" style="display:none; flex-direction:column; align-items:flex-end; gap:10px; margin-top:14px">
+        <a href="add-recipe-manual.html" style="border:2px solid #ffbf00; background:#fffdf6; border-radius:999px; padding:12px 20px; font-size:14px; font-weight:800; display:flex; align-items:center; gap:10px; text-decoration:none; color:#14110d">
+          <span style="width:9px; height:9px; border-radius:50%; background:#ffbf00"></span>Manualmente
+        </a>
+        <a href="add-recipe-link.html" style="border:2px solid #6b7ef0; background:#f7f8ff; border-radius:999px; padding:12px 20px; font-size:14px; font-weight:800; display:flex; align-items:center; gap:10px; text-decoration:none; color:#14110d">
+          <span style="width:9px; height:9px; border-radius:50%; background:#6b7ef0"></span>Por link
+        </a>
+        <a href="add-recipe-import.html" style="border:2px solid #2f8f7d; background:#f5fbf9; border-radius:999px; padding:12px 20px; font-size:14px; font-weight:800; display:flex; align-items:center; gap:10px; text-decoration:none; color:#14110d">
+          <span style="width:9px; height:9px; border-radius:50%; background:#2f8f7d"></span>Importar
         </a>
       </div>
       <div class="hero-stats"
@@ -185,8 +200,17 @@
     </div>
   </section>
 
+  <!-- MOBILE SEARCH BAR -->
+  <section class="hide-on-desktop show-on-mobile-block" style="padding: 28px 20px 0; display: none;">
+    <div style="display:flex; align-items:center; gap:10px; background:#f7f4ee; border-radius:999px; padding:13px 18px">
+      <span style="width:13px; height:13px; border:2.5px solid #ffbf00; border-radius:50%; flex-shrink:0"></span>
+      <input placeholder="Procurar receitas..."
+        style="border:none; background:transparent; outline:none; font-family:inherit; font-size:15px; font-weight:600; width:100%; color:#14110d" />
+    </div>
+  </section>
+
   <!-- ADD RECIPE ROW -->
-  <section style="padding:16px 48px 120px; max-width:1440px; margin:0 auto">
+  <section class="hide-on-mobile" style="padding:16px 48px 120px; max-width:1440px; margin:0 auto">
     <div
       style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; background:#fff; border:2px solid #f0ebe3; border-radius:26px; padding:16px; box-shadow:0 12px 48px rgba(20,17,13,0.06)">
       <a href="add-recipe-manual.html"
