@@ -999,18 +999,18 @@ window.addEventListener('authChange', () => {
     window.applyFilters();
   }
 });
-f u n c t i o n   t o g g l e M o b i l e A d d M e n u ( )   {   c o n s t   m e n u   =   d o c u m e n t . g e t E l e m e n t B y I d ( ' m o b i l e - a d d - m e n u ' ) ;   c o n s t   b t n   =   d o c u m e n t . g e t E l e m e n t B y I d ( ' m o b i l e - a d d - b t n ' ) ;   i f ( m e n u . s t y l e . d i s p l a y   = = =   ' n o n e ' )   {   m e n u . s t y l e . d i s p l a y   =   ' f l e x ' ;   b t n . i n n e r H T M L   =   ' < s v g   w i d t h = \  
- 2 4 \   h e i g h t = \ 2 4 \   v i e w B o x = \ 0  
- 0  
- 1 8  
- 1 8 \   f i l l = \ n o n e \   s t r o k e = \ c u r r e n t C o l o r \   s t r o k e - w i d t h = \ 2 . 8 \   s t r o k e - l i n e c a p = \ r o u n d \ > < p a t h   d = \ M 5  
- 5 l 8  
- 8 M 1 3  
- 5 l - 8  
- 8 \ > < / p a t h > < / s v g > ' ;   }   e l s e   {   m e n u . s t y l e . d i s p l a y   =   ' n o n e ' ;   b t n . i n n e r H T M L   =   ' < s v g   w i d t h = \ 2 6 \   h e i g h t = \ 2 6 \   v i e w B o x = \ 0  
- 0  
- 1 8  
- 1 8 \   f i l l = \ n o n e \   s t r o k e = \ c u r r e n t C o l o r \   s t r o k e - w i d t h = \ 2 . 8 \   s t r o k e - l i n e c a p = \ r o u n d \ > < p a t h   d = \ M 9  
- 4 v 1 0 M 4  
- 9 h 1 0 \ > < / p a t h > < / s v g > ' ;   }   }   w i n d o w . t o g g l e M o b i l e A d d M e n u   =   t o g g l e M o b i l e A d d M e n u ;  
- 
+
+function toggleMobileAddMenu() {
+  const menu = document.getElementById('mobile-add-menu');
+  const btn = document.getElementById('mobile-add-btn');
+  if (menu && btn) {
+    if (menu.style.display === 'none') {
+      menu.style.display = 'flex';
+      btn.innerHTML = '<svg width="24" height="24" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M5 5l8 8M13 5l-8 8"></path></svg>';
+    } else {
+      menu.style.display = 'none';
+      btn.innerHTML = '<svg width="26" height="26" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M9 4v10M4 9h10"></path></svg>';
+    }
+  }
+}
+window.toggleMobileAddMenu = toggleMobileAddMenu;
