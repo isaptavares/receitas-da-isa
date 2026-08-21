@@ -1186,6 +1186,10 @@
             } else {
               showToast("⚠️ " + userMsg + " Salvando com valores padrão...");
             }
+            let heuristicNutrition = null;
+            if (window.estimateNutritionFallback) {
+              heuristicNutrition = window.estimateNutritionFallback(partialRecipe.title, partialRecipe.ingredients);
+            }
             // Fallback seguro em caso de falha da API
             finalRecipe = {
               ...partialRecipe,
@@ -1196,7 +1200,8 @@
               cookTime: partialRecipe.cookTime || 20,
               totalTime: partialRecipe.totalTime || ((partialRecipe.prepTime || 15) + (partialRecipe.cookTime || 20)),
               servings: partialRecipe.servings || 2,
-              calories: partialRecipe.calories || 350,
+              calories: partialRecipe.calories || (heuristicNutrition ? heuristicNutrition.calories : 350),
+              nutrition: partialRecipe.nutrition || heuristicNutrition || { calories: 350, protein: "10g", carbs: "25g", fat: "12g" },
               categories: partialRecipe.categories.length > 0 ? partialRecipe.categories : ['Almoço'],
               tags: partialRecipe.tags.length > 0 ? partialRecipe.tags : ['Dia a dia']
             };

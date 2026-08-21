@@ -406,12 +406,14 @@
       const safeTitle = (recipe.title || '').replace(/'/g, "\'");
       const safeImage = recipe.image || '';
 
-      const n = recipe.nutrition || {
-        calories: recipe.calories || 0,
-        protein: "0g",
-        carbs: "0g",
-        fat: "0g"
-      };
+      let n = recipe.nutrition;
+      if (!n || !n.calories || n.calories === "0" || n.calories === 0) {
+        if (window.estimateNutritionFallback) {
+          n = window.estimateNutritionFallback(recipe.title, recipe.ingredients);
+        } else {
+          n = { calories: recipe.calories || 0, protein: "0g", carbs: "0g", fat: "0g" };
+        }
+      }
 
       const rawCal = n.calories || recipe.calories || '0';
       const cleanCalories = String(rawCal).replace(/kcal/gi, '').replace(/cal/gi, '').trim();

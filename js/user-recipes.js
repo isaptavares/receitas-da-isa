@@ -687,3 +687,50 @@ window.extractRecipeFromText = extractRecipeFromText;
 window.uploadRecipeImage = uploadRecipeImage;
 window.autocompleteRecipeWithAI = autocompleteRecipeWithAI;
 window.extractRecipeFromFile = extractRecipeFromFile;
+
+export function estimateNutritionFallback(title = '', ingredients = []) {
+  const t = (title || '').toLowerCase();
+  const ingStr = (Array.isArray(ingredients) ? ingredients.join(' ') : String(ingredients || '')).toLowerCase();
+  
+  let cal = 280;
+  let p = 10, c = 25, f = 12;
+  
+  // Regras baseadas no título
+  if (t.includes('bolo') || t.includes('torta doce') || t.includes('brownie') || t.includes('doce')) {
+    cal = 340; p = 5; c = 48; f = 15;
+  } else if (t.includes('salada') && !ingStr.includes('maionese')) {
+    cal = 120; p = 4; c = 15; f = 6;
+  } else if (t.includes('frango') || t.includes('carne') || t.includes('peixe') || t.includes('salmão') || t.includes('bife')) {
+    cal = 320; p = 35; c = 8; f = 16;
+  } else if (t.includes('massa') || t.includes('macarrão') || t.includes('lasanha') || t.includes('risoto')) {
+    cal = 420; p = 15; c = 60; f = 12;
+  } else if (t.includes('fubá') || t.includes('fuba')) {
+    cal = 310; p = 6; c = 45; f = 12;
+  } else if (t.includes('pão') || t.includes('pao')) {
+    cal = 250; p = 8; c = 40; f = 6;
+  } else if (t.includes('omelete') || t.includes('ovo')) {
+    cal = 180; p = 14; c = 4; f = 12;
+  }
+  
+  // Regras adicionais baseadas nos ingredientes
+  if (ingStr.includes('queijo') || ingStr.includes('creme de leite') || ingStr.includes('manteiga') || ingStr.includes('bacon')) {
+    cal += 90; f += 8; p += 4;
+  }
+  if (ingStr.includes('açúcar') || ingStr.includes('leite condensado') || ingStr.includes('chocolate')) {
+    cal += 110; c += 22; f += 4;
+  }
+  if (ingStr.includes('azeite') || ingStr.includes('óleo')) {
+    cal += 45; f += 5;
+  }
+  if (ingStr.includes('batata') || ingStr.includes('arroz')) {
+    cal += 80; c += 18; p += 2;
+  }
+  
+  return {
+    calories: cal,
+    protein: p + 'g',
+    carbs: c + 'g',
+    fat: f + 'g'
+  };
+}
+window.estimateNutritionFallback = estimateNutritionFallback;
