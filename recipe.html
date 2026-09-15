@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" id="meta-desc" content="Receita detalhada — Receitas da Isa">
   <title id="page-title">Receita — Receitas da Isa</title>
-  <link rel="stylesheet" href="css/main.css?v=2">
+  <link rel="stylesheet" href="css/main.css?v=20">
   <style>
     /* Recipe detail extra styles */
     .recipe-detail-tags {
@@ -395,12 +395,20 @@
       document.title = `${recipe.title} — Receitas da Isa`;
       document.getElementById('meta-desc').setAttribute('content', recipe.subtitle || '');
 
-      const categoriesHtml = (recipe.categories || []).map(c =>
+      const desktopCategoriesHtml = (recipe.categories || []).map(c =>
         `<span style="background:#fff0f3; color:#c72a50; border-radius:999px; padding:7px 15px; font-size:12px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase">${c}</span>`
       ).join('');
 
-      const tagsHtml = (recipe.tags || []).map(t =>
+      const desktopTagsHtml = (recipe.tags || []).map(t =>
         `<span style="background:#e6f2ef; color:#1f6b5c; border-radius:999px; padding:7px 15px; font-size:12px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase">${t}</span>`
+      ).join('');
+
+      const mobileCategoriesHtml = (recipe.categories || []).map(c =>
+        `<span class="recipe-pill-badge" style="background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); color:#14110d; border-radius:999px; padding:5px 12px; font-size:10.5px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.6)">${c}</span>`
+      ).join('');
+
+      const mobileTagsHtml = (recipe.tags || []).map(t =>
+        `<span class="recipe-pill-badge" style="background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); color:#14110d; border-radius:999px; padding:5px 12px; font-size:10.5px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.6)">${t}</span>`
       ).join('');
       
       const safeTitle = (recipe.title || '').replace(/'/g, "\'");
@@ -439,67 +447,74 @@
       document.getElementById('recipe-main').innerHTML = `
         <article class="recipe-page" aria-label="${recipe.title}">
           <section style="max-width:1280px; margin:0 auto; padding:40px 48px 0">
-            <div style="display:flex; align-items:center; gap:10px; font-size:13px; font-weight:600; color:#a39a8c; margin-bottom:26px">
+            <div class="recipe-breadcrumb" style="display:flex; align-items:center; gap:10px; font-size:13px; font-weight:600; color:#a39a8c; margin-bottom:26px">
               <a href="index.html" style="color:#a39a8c; text-decoration:none">Início</a><span>/</span><span style="color:#14110d">${recipe.title}</span>
             </div>
 
             <div class="recipe-hero" style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start">
-              <div>
-                <div style="display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap">
+              <div class="recipe-hero-left">
+                <div class="recipe-desktop-tags" style="display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap">
                   <span style="background:#fff6d9; color:#8a6a00; border-radius:999px; padding:7px 15px; font-size:12px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase">${recipe.cuisine || 'Geral'}</span>
-                  ${categoriesHtml}
-                  ${tagsHtml}
+                  ${desktopCategoriesHtml}
+                  ${desktopTagsHtml}
                 </div>
+
                 <h1 style="margin:0; font-size:58px; font-weight:800; letter-spacing:-0.035em; line-height:1.02; text-wrap:balance">${recipe.title}</h1>
                 <p style="margin:20px 0 0; font-size:18px; line-height:1.6; color:#6b6459; text-wrap:pretty">${recipe.subtitle || ''}</p>
 
-                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#f0ebe3; border:1px solid #f0ebe3; border-radius:20px; overflow:hidden; margin-top:32px">
-                  <div style="background:#fff; padding:20px 18px">
-                    <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Tempo</div>
-                    <div style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em">${recipe.totalTime || recipe.prepTime || '-'} min</div>
+                <div class="recipe-stats-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#f0ebe3; border:1px solid #f0ebe3; border-radius:20px; overflow:hidden; margin-top:32px">
+                  <div class="recipe-stat-card" style="background:#fff; padding:20px 18px">
+                    <div class="stat-label" style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Tempo</div>
+                    <div class="stat-value" style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em">${recipe.totalTime || recipe.prepTime || '-'} min</div>
                   </div>
-                  <div style="background:#fff; padding:20px 18px">
-                    <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Dificul.</div>
-                    <div style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em">${recipe.difficulty || '-'}</div>
+                  <div class="recipe-stat-card" style="background:#fff; padding:20px 18px">
+                    <div class="stat-label" style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Dificul.</div>
+                    <div class="stat-value" style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em">${recipe.difficulty || '-'}</div>
                   </div>
-                  <div style="background:#fff; padding:20px 18px">
-                    <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Rendim.</div>
-                    <div style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em" id="meta-rendimento">${currentServings * (parseInt(recipe.servings, 10) || 1)} porç.</div>
+                  <div class="recipe-stat-card" style="background:#fff; padding:20px 18px">
+                    <div class="stat-label" style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Rendim.</div>
+                    <div class="stat-value" style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em" id="meta-rendimento">${currentServings * (parseInt(recipe.servings, 10) || 1)} porç.</div>
                   </div>
-                  <div style="background:#fff; padding:20px 18px">
-                    <div style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Calorias</div>
-                    <div style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em">${cleanCalories ? cleanCalories + ' kcal' : '-'}</div>
+                  <div class="recipe-stat-card stat-calories-card" style="background:#fff; padding:20px 18px">
+                    <div class="stat-label" style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Calorias</div>
+                    <div class="stat-value" style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em">${cleanCalories ? cleanCalories + ' kcal' : '-'}</div>
                   </div>
                 </div>
 
-                <div style="display:flex; gap:12px; margin-top:28px; flex-wrap:wrap">
+                <div class="recipe-actions-row" style="display:flex; gap:12px; margin-top:28px; flex-wrap:wrap">
                   <button id="detail-fav-btn" data-fav="${fav?'true':'false'}" onclick="handleDetailFav('${recipe.id}')" style="background:${fav?'#ffbf00':'#fff'}; border:${fav?'2px solid #ffbf00':'2px solid #e5ded2'}; font-family:inherit; color:#14110d; font-size:15px; font-weight:${fav?'800':'700'}; padding:14px 26px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:10px; transition:all 0.3s" onmouseover="if(this.getAttribute('data-fav')!=='true') this.style.borderColor='#ffbf00'" onmouseout="if(this.getAttribute('data-fav')!=='true') this.style.borderColor='#e5ded2'">
                     <svg width="17" height="17" viewBox="0 0 18 18" fill="${fav?'#14110d':'none'}" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 15S3 11.4 3 7.6A2.9 2.9 0 0 1 9 6a2.9 2.9 0 0 1 6 1.6C15 11.4 9 15 9 15Z"></path></svg>
-                    <span id="fav-text">${fav ? 'Favoritada' : 'Favoritar'}</span>
+                    <span id="fav-text" class="btn-text">${fav ? 'Favoritada' : 'Favoritar'}</span>
                   </button>
                   <a href="add-recipe-manual.html?edit=${recipe.id}" style="background:#fff; border:2px solid #e5ded2; color:#14110d; text-decoration:none; font-family:inherit; font-size:15px; font-weight:700; padding:14px 26px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:10px" onmouseover="this.style.borderColor='#ffbf00'" onmouseout="this.style.borderColor='#e5ded2'">
-                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M11.6 3.9l2.5 2.5M4 14h2.6l7.5-7.5-2.6-2.6L4 11.4V14Z"></path></svg>Editar
+                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M11.6 3.9l2.5 2.5M4 14h2.6l7.5-7.5-2.6-2.6L4 11.4V14Z"></path></svg><span class="btn-text">Editar</span>
                   </a>
                   <button id="detail-delete-btn" onclick="handleDetailDelete('${recipe.id}', '${safeTitle}')" style="background:#fff; border:2px solid #e5ded2; font-family:inherit; font-size:15px; font-weight:700; color:#14110d; padding:14px 26px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:10px" onmouseover="this.style.borderColor='#ffbf00'" onmouseout="this.style.borderColor='#e5ded2'">
-                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.6 5.4h10.8M7.4 5.4V3.8h3.2v1.6M5.4 5.4l.7 8.4h5.8l.7-8.4"></path></svg>Apagar
+                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.6 5.4h10.8M7.4 5.4V3.8h3.2v1.6M5.4 5.4l.7 8.4h5.8l.7-8.4"></path></svg><span class="btn-text">Apagar</span>
                   </button>
                   <button id="detail-planner-btn" onclick="openPlannerModal('${recipe.id}')" style="background:#fff; border:2px solid #e5ded2; font-family:inherit; font-size:15px; font-weight:700; color:#14110d; padding:14px 26px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:10px" onmouseover="this.style.borderColor='#ffbf00'" onmouseout="this.style.borderColor='#e5ded2'">
-                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.4 5.4h11.2v9.2H3.4zM3.4 8h11.2M6.4 3.4v2M11.6 3.4v2M9 10v3M7.5 11.5h3"></path></svg>Planejador
+                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.4 5.4h11.2v9.2H3.4zM3.4 8h11.2M6.4 3.4v2M11.6 3.4v2M9 10v3M7.5 11.5h3"></path></svg><span class="btn-text">Planejador</span>
                   </button>
                   <button onclick="openShareModal('${recipe.id}', '${safeTitle}', '${safeImage}')" style="background:#fff; border:2px solid #e5ded2; font-family:inherit; font-size:15px; font-weight:700; color:#14110d; padding:14px 26px; border-radius:999px; cursor:pointer; display:flex; align-items:center; gap:10px" onmouseover="this.style.borderColor='#ffbf00'" onmouseout="this.style.borderColor='#e5ded2'">
-                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12V3.6M9 3.6 6.2 6.4M9 3.6l2.8 2.8M4.2 10.4v3.4a.8.8 0 0 0 .8.8h8a.8.8 0 0 0 .8-.8v-3.4"></path></svg>Compartilhar
+                    <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12V3.6M9 3.6 6.2 6.4M9 3.6l2.8 2.8M4.2 10.4v3.4a.8.8 0 0 0 .8.8h8a.8.8 0 0 0 .8-.8v-3.4"></path></svg><span class="btn-text">Compartilhar</span>
                   </button>
                 </div>
               </div>
 
-              <div style="position:relative; padding:0 0 96px">
+              <div class="recipe-hero-right" style="position:relative; padding:0 0 96px">
                 <div style="position:absolute; top:-32px; right:-24px; width:220px; height:220px; border-radius:50%; background:#6b7ef0; opacity:0.15; z-index:0"></div>
                 <div style="position:absolute; top:120px; left:-40px; width:140px; height:140px; border-radius:0 100% 0 0; background:#7b4bd1; opacity:0.16; z-index:0"></div>
                 <div style="position:absolute; bottom:20px; right:-20px; width:170px; height:170px; border-radius:50% 50% 0 50%; background:#ffbf00; opacity:0.28; z-index:0"></div>
-                <div style="position:relative; z-index:1; margin:32px 40px 0 24px; border-radius:28px; overflow:hidden; aspect-ratio:1/1; background:repeating-linear-gradient(135deg,#f4efe6 0 12px,#efe8dc 12px 24px); display:flex; align-items:center; justify-content:center; box-shadow:0 28px 64px rgba(20,17,13,0.16)">
+                <div class="recipe-hero-image-box" style="position:relative; z-index:1; margin:32px 40px 0 24px; border-radius:28px; overflow:hidden; aspect-ratio:1/1; background:repeating-linear-gradient(135deg,#f4efe6 0 12px,#efe8dc 12px 24px); display:flex; align-items:center; justify-content:center; box-shadow:0 28px 64px rgba(20,17,13,0.16)">
                   ${recipe.image && recipe.image !== 'images/placeholder_recipe.png' ? `<img src="${recipe.image}" alt="${recipe.title}" style="width:100%; height:100%; object-fit:cover;">` : `<span style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#a39a8c">sem foto</span>`}
+                  
+                  <div class="recipe-mobile-tags-overlay" style="position:absolute; bottom:12px; left:12px; z-index:10; display:none; gap:6px; flex-wrap:wrap; max-width:calc(100% - 24px)">
+                    <span class="recipe-pill-badge" style="background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); color:#14110d; border-radius:999px; padding:5px 12px; font-size:10.5px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.6)">${recipe.cuisine || 'Geral'}</span>
+                    ${mobileCategoriesHtml}
+                    ${mobileTagsHtml}
+                  </div>
                 </div>
-                <div style="position:absolute; bottom:0; left:-24px; z-index:2; background:#fff; border-radius:24px; padding:22px 24px; width:320px; box-shadow:0 22px 54px rgba(20,17,13,0.18)">
+                <div class="recipe-nutrition-card" style="position:absolute; bottom:0; left:-24px; z-index:2; background:#fff; border-radius:24px; padding:22px 24px; width:320px; box-shadow:0 22px 54px rgba(20,17,13,0.18)">
                   <div style="font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#6b7ef0">Nutrição</div>
                   <div style="font-size:12px; color:#a39a8c; font-weight:500; margin-top:3px">Por porção</div>
                   <div style="display:flex; align-items:center; gap:22px; margin-top:18px">

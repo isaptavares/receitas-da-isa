@@ -302,9 +302,10 @@ function toggleDropdown(id) {
 }
 
 document.addEventListener('click', e => {
-  if (!e.target.closest('.custom-dropdown')) {
-    document.querySelectorAll('.dropdown-panel').forEach(p => p.style.display = 'none');
+  if (!document.body.contains(e.target) || e.target.closest('.custom-dropdown')) {
+    return;
   }
+  document.querySelectorAll('.dropdown-panel').forEach(p => p.style.display = 'none');
 });
 
 function toggleCuisineFilter(val) {
@@ -357,14 +358,49 @@ function updateDropdownUI(ddId, activeArr, defaultLabel) {
 
 function renderTagChips() {
   const container = document.getElementById('tags-filter');
-  if (!container) return;
-  if (categoryTags.length === 0) { container.style.display = 'none'; return; }
-  container.style.display = 'flex';
-  container.innerHTML = categoryTags.map(t => {
-    const active = activeTags.includes(t);
-    return `<button onclick="window.toggleTag('${t.replace(/'/g, "\\'")}')"
-      style="padding:8px 16px; border-radius:999px; border:2px solid ${active ? '#ffbf00' : '#e5ded2'}; background:${active ? '#fff6d9' : '#fff'}; font-family:inherit; font-size:13px; font-weight:700; color:${active ? '#8a6a00' : '#6b6459'}; cursor:pointer; white-space:nowrap; transition:all 0.18s;">${t}${active ? ' <span style="font-size:11px;">✕</span>' : ''}</button>`;
-  }).join('');
+  if (container) {
+    if (categoryTags.length === 0) {
+      container.style.display = 'none';
+    } else {
+      container.innerHTML = categoryTags.map(t => {
+        const active = activeTags.includes(t);
+        return `<button onclick="window.toggleTag('${t.replace(/'/g, "\\'")}')"
+          style="padding:8px 16px; border-radius:999px; border:2px solid ${active ? '#ffbf00' : '#e5ded2'}; background:${active ? '#fff6d9' : '#fff'}; font-family:inherit; font-size:13px; font-weight:700; color:${active ? '#8a6a00' : '#6b6459'}; cursor:pointer; white-space:nowrap; transition:all 0.18s;">${t}${active ? ' <span style="font-size:11px;">✕</span>' : ''}</button>`;
+      }).join('');
+    }
+  }
+
+  const ddPanel = document.getElementById('dd-tags-options');
+  if (ddPanel) {
+    ddPanel.innerHTML = categoryTags.map(t => {
+      const active = activeTags.includes(t);
+      const safeTag = t.replace(/'/g, "\\'");
+      return `
+        <button class="dd-option" onclick="toggleTag('${safeTag}')" id="ddopt-tag-${t.replace(/\s+/g, '-')}"
+          style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; border:none; background:${active ? '#fff6d9' : 'transparent'}; font-family:inherit; font-size:14px; font-weight:600; color:#14110d; cursor:pointer; text-align:left; width:100%; transition:background 0.15s;">
+          <span class="dd-check" style="width:18px; height:18px; border-radius:6px; border:2px solid ${active ? '#ffbf00' : '#e5ded2'}; background:${active ? '#ffbf00' : 'transparent'}; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+            ${active ? '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.8 7L9 1" stroke="#14110d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
+          </span>
+          ${t}
+        </button>
+      `;
+    }).join('');
+  }
+
+  const label = document.getElementById('dd-tags-label');
+  if (label) {
+    if (activeTags.length === 0) {
+      label.textContent = 'Tags';
+    } else if (activeTags.length === 1) {
+      label.textContent = activeTags[0];
+    } else {
+      label.textContent = `Tags (${activeTags.length})`;
+    }
+  }
+  const tagsBtn = document.getElementById('dd-tags-btn');
+  if (tagsBtn) {
+    tagsBtn.style.background = activeTags.length ? '#fff6d9' : '#fff';
+  }
 }
 
 function toggleTag(tag) {
@@ -423,7 +459,7 @@ function renderModalIngredientsGrid(filterTerm = '') {
     return `
       <div onclick="toggleModalIngredient('${safeName}')" style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px 6px; border-radius:18px; border:2px solid ${isSelected ? '#ffbf00' : '#f0ebe3'}; background:${isSelected ? '#fff6d9' : '#fff'}; cursor:pointer; transition:all 0.2s; text-align:center;">
         <div style="width:46px; height:46px; border-radius:14px; background:${isSelected ? '#fff' : '#f7f4ee'}; display:flex; align-items:center; justify-content:center; font-size:22px;">${icon}</div>
-        <span style="font-size:12px; font-weight:700; color:#14110d; line-height:1.2; word-break:break-word;">${name}</span>
+        <span style="font-size:12px; font-weight:700; color:#14110d; line-height:1.2; word-break:normal; overflow-wrap:break-word;">${name}</span>
       </div>
     `;
   }).join('');

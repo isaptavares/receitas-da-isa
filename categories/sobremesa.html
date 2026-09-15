@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Receitas da Isa — Doces e sobremesas irresistíveis.">
   <title>Sobremesa — Receitas da Isa</title>
-  <link rel="stylesheet" href="../css/main.css?v=6">
+  <link rel="stylesheet" href="../css/main.css?v=11">
 </head>
 <body data-category="Sobremesa">
 
@@ -128,6 +128,21 @@
         </div>
       </div>
 
+      <!-- Tags custom dropdown (Mobile only) -->
+      <div class="custom-dropdown hide-on-desktop show-on-mobile-inline-block" id="dd-tags" style="position:relative;">
+        <button class="filter-pill-btn" id="dd-tags-btn" type="button" onclick="toggleDropdown('dd-tags')"
+          style="display:flex; align-items:center; gap:8px; height:46px; padding:0 14px 0 16px; border-radius:16px; background:#fff; border:none; font-family:inherit; font-size:14px; font-weight:700; color:#14110d; cursor:pointer; white-space:nowrap;">
+          <span id="dd-tags-label">Tags</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style="flex-shrink:0; transition:transform 0.2s">
+            <path d="M1 1L5 5L9 1" stroke="#a39a8c" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+        <div class="dropdown-panel" id="dd-tags-panel"
+          style="display:none; position:absolute; top:calc(100% + 6px); left:0; min-width:180px; max-height:280px; overflow-y:auto; background:#fff; border-radius:16px; box-shadow:0 8px 32px rgba(20,17,13,0.13); z-index:100; padding:8px;">
+          <div id="dd-tags-options" style="display:flex; flex-direction:column; gap:2px;"></div>
+        </div>
+      </div>
+
       <!-- Ingredientes da geladeira -->
       <button id="open-ingredients-modal-btn" type="button" style="border:none; background:#fff; border-radius:16px; height:46px; padding:0 18px; font-family:inherit; font-size:14px; font-weight:800; color:#14110d; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; outline:none; transition:all 0.2s; white-space:nowrap;">
         <span id="ingredients-btn-dot" style="width:8px; height:8px; border-radius:50%; background:#ffbf00; flex-shrink:0; display:none;"></span>
@@ -171,7 +186,7 @@
       </div>
       <div id="modal-selected-ingredients-chips" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-height:0;"></div>
       <div style="font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#a39a8c;">Populares</div>
-      <div id="modal-ingredients-grid" style="display:grid; grid-template-columns:repeat(6,1fr); gap:12px; overflow-y:auto; padding-right:4px; max-height:280px;"></div>
+      <div id="modal-ingredients-grid" class="modal-ingredients-grid" style="display:grid; gap:12px; overflow-y:auto; padding-right:4px; max-height:280px;"></div>
       <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #f0ebe3; padding-top:16px; margin-top:auto;">
         <span id="modal-selected-count-text" style="font-size:14px; font-weight:700; color:#a39a8c;">Nenhum ingrediente selecionado</span>
         <button id="modal-confirm-ingredients-btn" style="background:#ffbf00; border:none; border-radius:999px; padding:14px 36px; font-size:15px; font-weight:800; color:#14110d; cursor:pointer; box-shadow:0 8px 20px rgba(255,191,0,0.3); transition:all 0.2s" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">Confirmar</button>
