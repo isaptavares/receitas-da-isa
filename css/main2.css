@@ -3087,7 +3087,19 @@ footer {
     display: inline-block !important;
   }
 
+  /* Hide 'O que você deseja?' label on mobile */
+  #category-section-label {
+    display: none !important;
+  }
+
+  /* Enlarge 'Explorar por categoria' heading on mobile to match original label size */
+  #category-section-heading {
+    font-size: 24px !important;
+    letter-spacing: -0.01em !important;
+  }
+
   /* Mobile Filter Bar with Popup Button */
+
   .filter-bar {
     display: flex !important;
     flex-wrap: nowrap !important;
