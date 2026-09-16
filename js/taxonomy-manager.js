@@ -521,7 +521,84 @@ function applyFilters() {
   if (countEl) {
     countEl.textContent = `(${filtered.length} receita${filtered.length !== 1 ? 's' : ''})`;
   }
+  if (window.renderMobileFilterChips) window.renderMobileFilterChips();
 }
+
+function renderMobileFilterChips() {
+  // 1. Cuisines
+  const cuisineContainer = document.getElementById('mobile-cuisine-chips');
+  if (cuisineContainer) {
+    const allCuisines = (categoryRecipes || []).reduce((acc, r) => {
+      if (r.cuisine && !acc.includes(r.cuisine)) acc.push(r.cuisine);
+      return acc;
+    }, []).sort();
+    
+    cuisineContainer.innerHTML = allCuisines.map(c => {
+      const active = activeCuisines.includes(c);
+      return `<button type="button" onclick="toggleCuisineFilter('${c}')" style="padding:7px 14px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; border:1.5px solid ${active ? '#ffbf00' : '#e5ded2'}; background:${active ? '#fff6d9' : '#fff'}; color:#14110d; cursor:pointer; transition:all 0.15s;">${c}</button>`;
+    }).join('');
+  }
+
+  // 2. Difficulties
+  const diffContainer = document.getElementById('mobile-diff-chips');
+  if (diffContainer) {
+    const diffs = ['Fácil', 'Médio', 'Difícil'];
+    diffContainer.innerHTML = diffs.map(d => {
+      const active = activeDifficulties.includes(d);
+      return `<button type="button" onclick="toggleDiffFilter('${d}')" style="padding:7px 14px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; border:1.5px solid ${active ? '#ffbf00' : '#e5ded2'}; background:${active ? '#fff6d9' : '#fff'}; color:#14110d; cursor:pointer; transition:all 0.15s;">${d}</button>`;
+    }).join('');
+  }
+
+  // 3. Calories
+  const calContainer = document.getElementById('mobile-cal-chips');
+  if (calContainer) {
+    const cals = [300, 500, 700, 900];
+    calContainer.innerHTML = cals.map(v => {
+      const active = activeCalMax === v;
+      return `<button type="button" onclick="setCalFilter(${v})" style="padding:7px 14px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; border:1.5px solid ${active ? '#ffbf00' : '#e5ded2'}; background:${active ? '#fff6d9' : '#fff'}; color:#14110d; cursor:pointer; transition:all 0.15s;">Até ${v} kcal</button>`;
+    }).join('');
+  }
+
+  // 4. Ingredients badge
+  const ingBadge = document.getElementById('mobile-ing-count-badge');
+  if (ingBadge) {
+    if (activeIngredients && activeIngredients.length > 0) {
+      ingBadge.textContent = activeIngredients.length;
+      ingBadge.style.display = 'inline-block';
+    } else {
+      ingBadge.style.display = 'none';
+    }
+  }
+
+  // 5. Main mobile filter button badge
+  const hasActive = activeCuisines.length > 0 || activeDifficulties.length > 0 || activeCalMax !== null || (activeIngredients && activeIngredients.length > 0);
+  const mainBadge = document.getElementById('mobile-filter-badge');
+  if (mainBadge) mainBadge.style.display = hasActive ? 'inline-block' : 'none';
+}
+
+function openMobileFiltersModal() {
+  const modal = document.getElementById('mobile-filters-modal-overlay');
+  if (modal) {
+    modal.style.display = 'flex';
+    renderMobileFilterChips();
+  }
+}
+
+function closeMobileFiltersModal() {
+  const modal = document.getElementById('mobile-filters-modal-overlay');
+  if (modal) modal.style.display = 'none';
+}
+
+function clearAllFiltersMobile() {
+  const resetBtn = document.getElementById('filter-reset-btn');
+  if (resetBtn) resetBtn.click();
+  renderMobileFilterChips();
+}
+
+window.openMobileFiltersModal = openMobileFiltersModal;
+window.closeMobileFiltersModal = closeMobileFiltersModal;
+window.clearAllFiltersMobile = clearAllFiltersMobile;
+window.renderMobileFilterChips = renderMobileFilterChips;
 
 function renderGrid(recipes) {
   const grid = document.getElementById('recipe-grid');

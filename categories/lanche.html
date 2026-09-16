@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
   <meta name="description" content="Receitas da Isa — Lanches rápidos e saborosos para o seu dia.">
   <title>Lanche — Receitas da Isa</title>
-  <link rel="stylesheet" href="../css/main.css?v=11">
+  <link rel="stylesheet" href="../css/main2.css?v=110">
 </head>
 <body data-category="Lanche">
 
@@ -71,6 +72,14 @@
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;"><circle cx="6.5" cy="6.5" r="4.5" stroke="#ffbf00" stroke-width="2.2"/><path d="M10 10L14 14" stroke="#ffbf00" stroke-width="2.2" stroke-linecap="round"/></svg>
         <input class="filter-search" type="search" id="filter-search" placeholder="Pesquise por nome" style="border:none; outline:none; background:transparent; font-family:inherit; font-size:14px; font-weight:500; width:100%; color:#14110d" aria-label="Buscar receitas" />
       </div>
+
+      <!-- Mobile Filter Popup Trigger Button -->
+      <button id="open-mobile-filters-btn" type="button" class="hide-on-desktop show-on-mobile-flex" onclick="openMobileFiltersModal()"
+        style="display:none; align-items:center; justify-content:center; gap:6px; height:42px; padding:0 14px; border-radius:14px; background:#fff; border:none; font-family:inherit; font-size:13.5px; font-weight:700; color:#14110d; cursor:pointer; white-space:nowrap; flex-shrink:0;">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 4h12M4 8h8M6 12h4"/></svg>
+        <span>Filtros</span>
+        <span id="mobile-filter-badge" style="width:7px; height:7px; border-radius:50%; background:#ffbf00; display:none;"></span>
+      </button>
 
       <!-- Culinária custom dropdown -->
       <div class="custom-dropdown" id="dd-cuisine" style="position:relative;">
@@ -172,8 +181,67 @@
 
   <div class="toast-container" id="toast-container"></div>
 
+  <!-- ===== MOBILE FILTERS MODAL ===== -->
+  <div id="mobile-filters-modal-overlay"
+    style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(20,17,13,0.5); z-index:1000; align-items:flex-end; justify-content:center; backdrop-filter:blur(4px);"
+    onclick="closeMobileFiltersModal()">
+    <div
+      style="background:#fff; width:100%; max-width:500px; max-height:85vh; border-top-left-radius:24px; border-top-right-radius:24px; padding:20px 18px 28px 18px; box-shadow:0 -10px 40px rgba(0,0,0,0.25); display:flex; flex-direction:column; gap:16px; overflow-y:auto; position:relative;"
+      onclick="event.stopPropagation()">
+      
+      <!-- Header -->
+      <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #f0ebe3; padding-bottom:12px;">
+        <h3 style="margin:0; font-size:18px; font-weight:800; color:#14110d;">Filtros de busca</h3>
+        <button onclick="closeMobileFiltersModal()"
+          style="width:34px; height:34px; border-radius:50%; background:#f7f4ee; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:15px; font-weight:700; color:#14110d;">✕</button>
+      </div>
+
+      <!-- Filters List inside popup -->
+      <div id="mobile-filters-content" style="display:flex; flex-direction:column; gap:16px;">
+        
+        <!-- Culinária -->
+        <div>
+          <div style="margin-bottom:10px;"><span style="display:inline-block; background:#fff6d9; color:#8a6a00; border-radius:999px; padding:4px 12px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase;">Culinária</span></div>
+          <div id="mobile-cuisine-chips" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+        </div>
+
+        <!-- Dificuldade -->
+        <div>
+          <div style="margin-bottom:10px;"><span style="display:inline-block; background:#e6f2ef; color:#1f6b5c; border-radius:999px; padding:4px 12px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase;">Dificuldade</span></div>
+          <div id="mobile-diff-chips" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+        </div>
+
+        <!-- Calorias -->
+        <div>
+          <div style="margin-bottom:10px;"><span style="display:inline-block; background:#eaeefe; color:#3a4bc0; border-radius:999px; padding:4px 12px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase;">Calorias Máximas</span></div>
+          <div id="mobile-cal-chips" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+        </div>
+
+        <!-- Ingredientes da Geladeira -->
+        <div>
+          <div style="margin-bottom:10px;"><span style="display:inline-block; background:#f3ebfc; color:#7b4bd1; border-radius:999px; padding:4px 12px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase;">Ingredientes da Geladeira</span></div>
+          <button onclick="openIngredientsModal()"
+            style="width:100%; height:40px; border-radius:12px; background:#f7f4ee; border:1px solid #ece5d9; font-family:inherit; font-size:13.5px; font-weight:700; color:#14110d; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+            <span>🍎 Clique aqui para escolher ingredientes</span>
+            <span id="mobile-ing-count-badge" style="background:#ffbf00; color:#14110d; border-radius:999px; padding:2px 8px; font-size:11px; font-weight:800; display:none;"></span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Action Footer -->
+      <div style="display:flex; gap:10px; margin-top:8px; border-top:1px solid #f0ebe3; padding-top:14px;">
+        <button onclick="clearAllFiltersMobile()"
+          style="flex:1; height:44px; border-radius:12px; background:#f7f4ee; border:none; font-family:inherit; font-size:13.5px; font-weight:700; color:#6b6459; cursor:pointer;">Limpar tudo</button>
+        <button onclick="closeMobileFiltersModal()"
+          style="flex:1.4; height:44px; border-radius:12px; background:#ffbf00; border:none; font-family:inherit; font-size:14px; font-weight:800; color:#14110d; cursor:pointer;">Ver resultados</button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ===== INGREDIENTS MODAL ===== -->
-  <div id="ingredients-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(20,17,13,0.5); z-index:1000; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px);" onclick="closeIngredientsModal()">
+  <div id="ingredients-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(20,17,13,0.5); z-index:1050; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px);" onclick="closeIngredientsModal()">
     <div style="background:#fff; width:100%; max-width:640px; max-height:88vh; border-radius:28px; padding:28px; box-shadow:0 30px 80px rgba(0,0,0,0.25); display:flex; flex-direction:column; gap:18px; overflow:hidden; position:relative;" onclick="event.stopPropagation()">
       <div style="display:flex; align-items:center; justify-content:space-between;">
         <button id="close-ingredients-modal-btn" style="width:38px; height:38px; border-radius:50%; background:#f7f4ee; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; font-weight:700; color:#14110d;">✕</button>
@@ -187,9 +255,9 @@
       <div id="modal-selected-ingredients-chips" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-height:0;"></div>
       <div style="font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#a39a8c;">Populares</div>
       <div id="modal-ingredients-grid" class="modal-ingredients-grid" style="display:grid; gap:12px; overflow-y:auto; padding-right:4px; max-height:280px;"></div>
-      <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #f0ebe3; padding-top:16px; margin-top:auto;">
-        <span id="modal-selected-count-text" style="font-size:14px; font-weight:700; color:#a39a8c;">Nenhum ingrediente selecionado</span>
-        <button id="modal-confirm-ingredients-btn" style="background:#ffbf00; border:none; border-radius:999px; padding:14px 36px; font-size:15px; font-weight:800; color:#14110d; cursor:pointer; box-shadow:0 8px 20px rgba(255,191,0,0.3); transition:all 0.2s" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">Confirmar</button>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; border-top:1px solid #f0ebe3; padding-top:16px; margin-top:auto;">
+        <span id="modal-selected-count-text" style="font-size:12.5px; font-weight:700; color:#a39a8c; line-height:1.3; flex:1; min-width:0;">Nenhum ingrediente selecionado</span>
+        <button id="modal-confirm-ingredients-btn" style="background:#ffbf00; border:none; border-radius:999px; padding:12px 24px; font-size:14px; font-weight:800; color:#14110d; cursor:pointer; box-shadow:0 8px 20px rgba(255,191,0,0.3); transition:all 0.2s; flex-shrink:0;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">Confirmar</button>
       </div>
     </div>
   </div>

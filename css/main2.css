@@ -6,6 +6,9 @@
 
 /* ----------- CSS Variables (IDV Tokens) ----------- */
 :root {
+  color-scheme: light only !important;
+  supported-color-schemes: light !important;
+
   --clr-bg: #ffffff;
   --clr-surface: #f7f4ee;
   --clr-surface-2: #fff6d9;
@@ -51,9 +54,11 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: light only !important;
 }
 
 body {
+  color-scheme: light only !important;
   font-family: var(--font-body);
   background-color: var(--clr-bg);
   color: var(--clr-text);
@@ -2086,24 +2091,84 @@ footer {
   }
 
   .category-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.75rem !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 16px 2px !important;
+    padding: 12px 0 16px 0 !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
   }
 
-  .category-card {
-    height: 140px !important;
+  .category-grid::-webkit-scrollbar {
+    display: none !important;
   }
 
-  .category-card-name {
-    font-size: 1rem !important;
+  .category-grid > a {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    text-decoration: none !important;
+    width: 100% !important;
+    min-height: 0 !important;
   }
 
-  .category-card-overlay {
-    padding: 0.8rem !important;
+
+  .category-grid > a > div:first-child {
+    width: 58px !important;
+    height: 58px !important;
+    border-radius: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    margin: 0 auto !important;
   }
 
-  .category-card-name.long-text {
-    font-size: 0.82rem !important;
+  .category-grid > a > div:first-child svg {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .category-grid > a > div:last-child {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  .category-grid > a > div:last-child > div {
+    font-size: 10.5px !important;
+    line-height: 1.2 !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    color: #14110d !important;
+    white-space: nowrap !important;
+    word-break: normal !important;
+    margin: 0 auto !important;
+  }
+
+  #category-section {
+    padding: 0 24px 8px !important;
+  }
+  #category-section > div:first-child {
+    margin-bottom: 20px !important;
+  }
+
+  #bulk-edit-bar {
+    gap: 8px !important;
+    padding: 10px 14px !important;
+  }
+
+  #receitas {
+    padding: 0px 24px 40px !important;
+  }
+  #receitas > div:first-child {
+    margin-bottom: 20px !important;
   }
 
   .filter-bar {
@@ -2999,23 +3064,6 @@ footer {
     grid-template-columns: 1fr !important;
   }
 
-  /* Categories Carousel */
-  .category-grid {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    padding-bottom: 8px !important;
-    gap: 10px !important;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .category-grid>a {
-    width: 84px !important;
-    flex-shrink: 0 !important;
-    border: none !important;
-    padding: 0 !important;
-    background: transparent !important;
-  }
 
   /* Specific elements */
   .modal-content {
@@ -3039,47 +3087,70 @@ footer {
     display: inline-block !important;
   }
 
-  /* Compact Mobile Filter Bar */
+  /* Mobile Filter Bar with Popup Button */
   .filter-bar {
-    padding: 10px 12px !important;
-    gap: 6px !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 8px 10px !important;
     border-radius: 20px !important;
+    box-sizing: border-box !important;
+    margin-bottom: 20px !important;
   }
 
   .filter-bar>div:first-child {
-    flex: 1 1 100% !important;
-    height: 40px !important;
-    min-width: 100% !important;
+    flex: 1 1 0% !important;
+    height: 42px !important;
+    min-width: 0 !important;
     border-radius: 14px !important;
-  }
-
-  .filter-bar .filter-pill-btn,
-  .filter-bar #open-ingredients-modal-btn,
-  .filter-bar .filter-reset {
-    height: 36px !important;
-    font-size: 13px !important;
     padding: 0 12px !important;
-    border-radius: 12px !important;
   }
 
-  .filter-bar .filter-reset {
-    margin-left: 0 !important;
+  .filter-bar .filter-search {
+    font-size: 13.5px !important;
+  }
+
+  .filter-bar > .custom-dropdown,
+  .filter-bar > #open-ingredients-modal-btn,
+  .filter-bar > .filter-reset {
+    display: none !important;
+  }
+
+  #open-mobile-filters-btn {
+    display: flex !important;
+    flex: 0 0 auto !important;
   }
 
   #tags-filter {
     display: none !important;
   }
 
-  /* Mobile Ingredients Modal */
-  #ingredients-modal-overlay {
-    padding: 12px !important;
+  /* Mobile Filters Modal Popup */
+  #mobile-filters-modal-overlay {
+    align-items: flex-end !important;
   }
 
-  #ingredients-modal-overlay>div {
-    padding: 20px 16px !important;
-    border-radius: 22px !important;
-    max-height: 90vh !important;
-    gap: 12px !important;
+  #mobile-filters-modal-overlay > div {
+    padding: 22px 18px 48px 18px !important;
+    border-top-left-radius: 28px !important;
+    border-top-right-radius: 28px !important;
+    max-height: 85vh !important;
+  }
+
+  /* Mobile Ingredients Modal */
+  #ingredients-modal-overlay {
+    padding: 16px 12px 24px 12px !important;
+  }
+
+  #ingredients-modal-overlay > div {
+    padding: 22px 18px 32px 18px !important;
+    border-radius: 26px !important;
+    max-height: 86vh !important;
+    gap: 14px !important;
+    margin-bottom: 12px !important;
   }
 
   #modal-ingredients-grid {
@@ -3294,6 +3365,101 @@ footer {
   .recipe-content h2 {
     font-size: 24px !important;
   }
+
+  /* Mobile Bulk Edit Bar Overrides - CSS ONLY to protect Desktop HTML */
+  #bulk-edit-bar {
+    bottom: 64px !important;
+    background: #ffbf00 !important;
+    border: none !important;
+    padding: 12px 20px !important;
+    border-radius: 26px !important;
+    box-shadow: 0 12px 32px rgba(255,191,0,0.35) !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 12px !important;
+  }
+  
+  #bulk-selected-count-label {
+    width: 100% !important;
+    text-align: center !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #14110d !important;
+  }
+
+  /* Hide the divider on mobile */
+  #bulk-edit-bar > div:first-of-type {
+    display: none !important;
+  }
+
+  /* Adjust button text safely */
+  #bulk-edit-bar button[onclick="selectAllVisibleRecipes()"] {
+    font-size: 0 !important;
+    color: #14110d !important;
+  }
+  #bulk-edit-bar button[onclick="selectAllVisibleRecipes()"]::after {
+    content: "Todas" !important;
+    font-size: 13px !important;
+  }
+
+  #bulk-edit-bar button[onclick="deselectAllRecipes()"] {
+    font-size: 0 !important;
+    color: #14110d !important;
+  }
+  #bulk-edit-bar button[onclick="deselectAllRecipes()"]::after {
+    content: "Limpar" !important;
+    font-size: 13px !important;
+  }
+
+  /* Edit Button SVG */
+  #open-bulk-modal-btn {
+    font-size: 0 !important;
+    background: #ffffff !important;
+    color: #14110d !important;
+    transition: all 0.15s !important;
+  }
+  #open-bulk-modal-btn::after {
+    content: "Editar" !important;
+    font-size: 14px !important;
+    margin-left: 6px;
+  }
+  #open-bulk-modal-btn::before {
+    content: "";
+    display: inline-block;
+    width: 15px; height: 15px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2314110d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>') center/contain no-repeat;
+    vertical-align: middle;
+  }
+
+  /* Delete Button */
+  #bulk-delete-btn {
+    font-size: 0 !important;
+    background: #ffffff !important;
+    color: #14110d !important;
+  }
+  #bulk-delete-btn::after {
+    content: "Excluir" !important;
+    font-size: 14px !important;
+    margin-left: 7px;
+  }
+  #bulk-delete-btn svg {
+    display: inline-block !important;
+    stroke: currentColor !important;
+  }
+
+  #bulk-edit-bar button[onclick="toggleBulkSelectMode(false)"] {
+    color: #14110d !important;
+  }
+
+  /* Handle Disabled States via CSS */
+  #open-bulk-modal-btn:disabled,
+  #bulk-delete-btn:disabled {
+    opacity: 1 !important;
+    background: #d4d0c7 !important;
+  }
+
+
 }
 
 /* Desktop utility hiding */

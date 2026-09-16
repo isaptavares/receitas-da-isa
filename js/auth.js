@@ -24,6 +24,7 @@ const authContainer = document.getElementById('nav-auth-container');
 // para não tratar um usuário logado como deslogado por causa da corrida assíncrona.
 let resolveAuthReady;
 export const authReady = new Promise(resolve => { resolveAuthReady = resolve; });
+window.authReady = authReady;
 
 // --- Initialization ---
 function initAuth() {

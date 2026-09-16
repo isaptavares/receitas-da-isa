@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light only">
   <meta name="description" id="meta-desc" content="Receita detalhada — Receitas da Isa">
   <title id="page-title">Receita — Receitas da Isa</title>
-  <link rel="stylesheet" href="css/main.css?v=20">
+  <link rel="stylesheet" href="css/main2.css?v=100">
   <style>
     /* Recipe detail extra styles */
     .recipe-detail-tags {
@@ -182,6 +183,11 @@
         min-width: 50px !important;
       }
       /* Mobile compact steps / Modo de preparo with corner badge */
+      .recipe-steps-column {
+        max-width: 275px !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+      }
       .recipe-content h2 {
         font-size: 22px !important;
         margin-bottom: 16px !important;
@@ -672,7 +678,7 @@
                 </div>
               </div>
 
-              <div>
+              <div class="recipe-steps-column">
                 <h2 style="margin:0 0 26px; font-size:32px; font-weight:800; letter-spacing:-0.025em">Modo de preparo</h2>
                 <div style="display:flex; flex-direction:column; gap:16px">
                   ${(() => {

@@ -7,7 +7,7 @@
   <meta name="description"
     content="Receitas da Isa — receitas deliciosas de todo o mundo, com amor e muito sabor. Filtre por cozinha, ingredientes, calorias e muito mais.">
   <title>Receitas da Isa — Sabores do Mundo</title>
-  <link rel="stylesheet" href="css/main.css?v=14">
+  <link rel="stylesheet" href="css/main2.css?v=14">
 </head>
 
 <body>
@@ -405,11 +405,11 @@
             style="color:#7b4bd1; font-weight:700; font-style:normal;">cozinhar hoje?</em></h2>
       </div>
       <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
-        <button type="button" id="toggle-bulk-select-btn" onclick="toggleBulkSelectMode()"
+        <button type="button" id="toggle-bulk-select-btn" class="hide-on-mobile" onclick="toggleBulkSelectMode()"
           style="border:2px solid #e5ded2; background:#fff; font-family:inherit; font-size:14px; font-weight:700; color:#14110d; padding:10px 18px; border-radius:999px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s;"
           onmouseover="if(typeof isBulkSelectActive !== 'undefined' && !isBulkSelectActive) this.style.borderColor='#ffbf00'"
           onmouseout="if(typeof isBulkSelectActive !== 'undefined' && !isBulkSelectActive) this.style.borderColor='#e5ded2'">
-          <span>☑</span> Selecionar
+          <span>☑️</span> Selecionar
         </button>
         <a href="favorites.html"
           style="font-size:15px; font-weight:700; display:flex; align-items:center; gap:8px; color:#14110d; text-decoration:none;">Ver
@@ -557,6 +557,15 @@
 
 
     <p class="results-count" id="results-count" aria-live="polite"></p>
+    
+    <div class="hide-on-desktop show-on-mobile-flex" style="margin-bottom: 20px; align-items:center; justify-content:flex-start;">
+      <button type="button" onclick="toggleBulkSelectMode()"
+        style="border:2px solid #e5ded2; background:#fff; font-family:inherit; font-size:14px; font-weight:700; color:#14110d; padding:10px 18px; border-radius:999px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s;"
+        onmouseover="if(typeof isBulkSelectActive !== 'undefined' && !isBulkSelectActive) this.style.borderColor='#ffbf00'"
+        onmouseout="if(typeof isBulkSelectActive !== 'undefined' && !isBulkSelectActive) this.style.borderColor='#e5ded2'">
+        <span>☑️</span> Selecionar receitas
+      </button>
+    </div>
 
     <!-- RECIPE GRID -->
     <div class="recipe-grid" id="recipe-grid" role="list" aria-label="Lista de receitas">
