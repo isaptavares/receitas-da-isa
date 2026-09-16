@@ -3418,18 +3418,21 @@ footer {
     background: #ffffff !important;
     color: #14110d !important;
     transition: all 0.15s !important;
+    padding: 10px !important;
+    border-radius: 50% !important;
+    width: 42px !important;
+    height: 42px !important;
+    justify-content: center !important;
   }
   #open-bulk-modal-btn::after {
-    content: "Editar" !important;
-    font-size: 14px !important;
-    margin-left: 6px;
+    content: none !important;
   }
   #open-bulk-modal-btn::before {
     content: "";
     display: inline-block;
-    width: 15px; height: 15px;
+    width: 18px; height: 18px;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2314110d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>') center/contain no-repeat;
-    vertical-align: middle;
+    margin: 0 !important;
   }
 
   /* Delete Button */
@@ -3437,15 +3440,21 @@ footer {
     font-size: 0 !important;
     background: #ffffff !important;
     color: #14110d !important;
+    padding: 10px !important;
+    border-radius: 50% !important;
+    width: 42px !important;
+    height: 42px !important;
+    justify-content: center !important;
   }
   #bulk-delete-btn::after {
-    content: "Excluir" !important;
-    font-size: 14px !important;
-    margin-left: 7px;
+    content: none !important;
   }
   #bulk-delete-btn svg {
     display: inline-block !important;
     stroke: currentColor !important;
+    width: 18px !important;
+    height: 18px !important;
+    margin: 0 !important;
   }
 
   #bulk-edit-bar button[onclick="toggleBulkSelectMode(false)"] {
