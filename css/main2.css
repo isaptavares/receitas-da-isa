@@ -3134,23 +3134,25 @@ footer {
   }
 
   #mobile-filters-modal-overlay > div {
-    padding: 22px 18px 48px 18px !important;
-    border-top-left-radius: 28px !important;
-    border-top-right-radius: 28px !important;
-    max-height: 85vh !important;
+    padding: 22px 18px 32px 18px !important;
+    border-radius: 28px !important;
+    max-height: 78vh !important;
+    margin-bottom: 80px !important;
   }
 
   /* Mobile Ingredients Modal */
   #ingredients-modal-overlay {
-    padding: 16px 12px 24px 12px !important;
+    padding: 0 !important;
+    z-index: 1050 !important;
+    align-items: flex-end !important;
   }
 
   #ingredients-modal-overlay > div {
     padding: 22px 18px 32px 18px !important;
     border-radius: 26px !important;
-    max-height: 86vh !important;
+    max-height: 78vh !important;
     gap: 14px !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 80px !important;
   }
 
   #modal-ingredients-grid {

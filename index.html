@@ -433,6 +433,14 @@
           aria-label="Buscar receitas" />
       </div>
 
+      <!-- Mobile Filter Popup Trigger Button -->
+      <button id="open-mobile-filters-btn" type="button" class="hide-on-desktop show-on-mobile-flex" onclick="window.openMobileFiltersModal()"
+        style="display:none; align-items:center; justify-content:center; gap:6px; height:42px; padding:0 14px; border-radius:14px; background:#fff; border:none; font-family:inherit; font-size:13.5px; font-weight:700; color:#14110d; cursor:pointer; white-space:nowrap; flex-shrink:0;">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 4h12M4 8h8M6 12h4"/></svg>
+        <span>Filtros</span>
+        <span id="mobile-filter-badge" style="width:7px; height:7px; border-radius:50%; background:#ffbf00; display:none;"></span>
+      </button>
+
       <!-- Culinária custom dropdown -->
       <div class="custom-dropdown" id="dd-cuisine" style="position:relative;">
         <button class="filter-pill-btn" id="dd-cuisine-btn" type="button" onclick="toggleDropdown('dd-cuisine')"
@@ -557,7 +565,7 @@
 
 
     <p class="results-count" id="results-count" aria-live="polite"></p>
-
+    
     <div class="hide-on-desktop show-on-mobile-flex" style="margin-bottom: 20px; align-items:center; justify-content:flex-start;">
       <button type="button" onclick="toggleBulkSelectMode()"
         style="border:2px solid #e5ded2; background:#fff; font-family:inherit; font-size:14px; font-weight:700; color:#14110d; padding:10px 18px; border-radius:999px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s;"
@@ -1154,12 +1162,13 @@
     // INGREDIENTS MODAL CONTROLLER
     // =============================================
     function openIngredientsModal() {
+      // Do NOT focus the search input on mobile - prevents keyboard from popping up
+      if (document.activeElement) document.activeElement.blur();
       const modal = document.getElementById('ingredients-modal-overlay');
       if (modal) {
         modal.style.display = 'flex';
         renderModalIngredientsGrid('');
         renderModalSelectedChips();
-        setTimeout(() => document.getElementById('modal-ingredient-search')?.focus(), 50);
       }
     }
 
@@ -1278,12 +1287,14 @@
       if (idx === -1) activeCuisines.push(val); else activeCuisines.splice(idx, 1);
       updateDropdownUI('cuisine', activeCuisines, 'Culinária');
       applyFilters();
+      if (window.renderMobileFilterChips) renderMobileFilterChips();
     }
     function toggleDiffFilter(val) {
       const idx = activeDifficulties.indexOf(val);
       if (idx === -1) activeDifficulties.push(val); else activeDifficulties.splice(idx, 1);
       updateDropdownUI('diff', activeDifficulties, 'Dificuldade');
       applyFilters();
+      if (window.renderMobileFilterChips) renderMobileFilterChips();
     }
     function setCalFilter(val) {
       activeCalMax = activeCalMax === val ? null : val;
@@ -1297,6 +1308,7 @@
       const calBtn = document.getElementById('dd-cal-btn');
       if (calBtn) calBtn.style.background = activeCalMax ? '#fff6d9' : '#fff';
       applyFilters();
+      if (window.renderMobileFilterChips) renderMobileFilterChips();
     }
     function updateCheckbox(btn, active) {
       const check = btn.querySelector('.dd-check');
@@ -1418,13 +1430,98 @@
       });
     }
 
-    if (document.readyState === 'loading') {
+    
+    window.toggleCuisineFilter = toggleCuisineFilter;
+    window.toggleDiffFilter = toggleDiffFilter;
+    window.setCalFilter = setCalFilter;
+    window.toggleTag = toggleTag;
+    window.openIngredientsModal = openIngredientsModal;
+    window.closeIngredientsModal = closeIngredientsModal;
+    window.toggleModalIngredient = toggleModalIngredient;
+    window.applyFilters = applyFilters;
+
+    function renderMobileFilterChips() {
+      // 1. Cuisines
+      const cuisineContainer = document.getElementById('mobile-cuisine-chips');
+      if (cuisineContainer) {
+        const allCuisines = (allRecipes || []).reduce((acc, r) => {
+          if (r.cuisine && !acc.includes(r.cuisine)) acc.push(r.cuisine);
+          return acc;
+        }, []).sort();
+        
+        cuisineContainer.innerHTML = allCuisines.map(c => {
+          const active = activeCuisines.includes(c);
+          return `<button type="button" onclick="toggleCuisineFilter('${c}')" style="padding:7px 14px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; border:1.5px solid ${active ? '#ffbf00' : '#e5ded2'}; background:${active ? '#fff6d9' : '#fff'}; color:#14110d; cursor:pointer; transition:all 0.15s;">${c}</button>`;
+        }).join('');
+      }
+
+      // 2. Difficulties
+      const diffContainer = document.getElementById('mobile-diff-chips');
+      if (diffContainer) {
+        const diffs = ['Fácil', 'Médio', 'Difícil'];
+        diffContainer.innerHTML = diffs.map(d => {
+          const active = activeDifficulties.includes(d);
+          return `<button type="button" onclick="toggleDiffFilter('${d}')" style="padding:7px 14px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; border:1.5px solid ${active ? '#ffbf00' : '#e5ded2'}; background:${active ? '#fff6d9' : '#fff'}; color:#14110d; cursor:pointer; transition:all 0.15s;">${d}</button>`;
+        }).join('');
+      }
+
+      // 3. Calories
+      const calContainer = document.getElementById('mobile-cal-chips');
+      if (calContainer) {
+        const cals = [300, 500, 700, 900];
+        calContainer.innerHTML = cals.map(v => {
+          const active = activeCalMax === v;
+          return `<button type="button" onclick="setCalFilter(${v})" style="padding:7px 14px; border-radius:999px; font-family:inherit; font-size:13px; font-weight:700; border:1.5px solid ${active ? '#ffbf00' : '#e5ded2'}; background:${active ? '#fff6d9' : '#fff'}; color:#14110d; cursor:pointer; transition:all 0.15s;">Até ${v} kcal</button>`;
+        }).join('');
+      }
+
+      // 4. Ingredients badge
+      const ingBadge = document.getElementById('mobile-ing-count-badge');
+      if (ingBadge) {
+        if (activeIngredients && activeIngredients.length > 0) {
+          ingBadge.textContent = activeIngredients.length;
+          ingBadge.style.display = 'inline-block';
+        } else {
+          ingBadge.style.display = 'none';
+        }
+      }
+
+      // 5. Main mobile filter button badge
+      const hasActive = activeCuisines.length > 0 || activeDifficulties.length > 0 || activeCalMax !== null || (activeIngredients && activeIngredients.length > 0);
+      const mainBadge = document.getElementById('mobile-filter-badge');
+      if (mainBadge) mainBadge.style.display = hasActive ? 'inline-block' : 'none';
+    }
+
+    function openMobileFiltersModal() {
+      // Blur any focused input to prevent keyboard from opening
+      if (document.activeElement) document.activeElement.blur();
+      const modal = document.getElementById('mobile-filters-modal-overlay');
+      if (modal) {
+        modal.style.display = 'flex';
+        renderMobileFilterChips();
+      }
+    }
+    function closeMobileFiltersModal() {
+      const modal = document.getElementById('mobile-filters-modal-overlay');
+      if (modal) modal.style.display = 'none';
+    }
+    function clearAllFiltersMobile() {
+      const resetBtn = document.getElementById('filter-reset-btn');
+      if (resetBtn) resetBtn.click();
+      renderMobileFilterChips();
+    }
+    window.openMobileFiltersModal = openMobileFiltersModal;
+    window.closeMobileFiltersModal = closeMobileFiltersModal;
+    window.clearAllFiltersMobile = clearAllFiltersMobile;
+    window.renderMobileFilterChips = renderMobileFilterChips;
+
+if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', setupEvents);
     } else {
       setupEvents();
     }
 
-    // Lógica para o menu expansível de adicionar receita
+    // L├│gica para o menu expans├¡vel de adicionar receita
     function toggleAddRecipeMenu(event) {
       event.stopPropagation();
       const container = document.getElementById('add-recipe-menu-container');
@@ -1456,7 +1553,7 @@
         toggleBtn.style.background = isBulkSelectActive ? '#fff6d9' : '#fff';
         toggleBtn.style.borderColor = isBulkSelectActive ? '#ffbf00' : '#e5ded2';
         toggleBtn.style.color = isBulkSelectActive ? '#8a6a00' : '#14110d';
-        toggleBtn.innerHTML = isBulkSelectActive ? '<span>✓</span> Modo seleção ativo' : '<span>☑</span> Selecionar';
+        toggleBtn.innerHTML = isBulkSelectActive ? '<span>Ô£ô</span> Modo sele├º├úo ativo' : '<span>Ôÿæ</span> Selecionar';
       }
 
       const bulkBar = document.getElementById('bulk-edit-bar');
@@ -1485,31 +1582,49 @@
       const count = selectedRecipeIds.size;
 
       if (countLabel) {
-        countLabel.textContent = count === 0
-          ? 'Nenhuma receita selecionada'
-          : `${count} receita${count !== 1 ? 's' : ''} selecionada${count !== 1 ? 's' : ''}`;
+        if (window.innerWidth <= 900) {
+          countLabel.textContent = count === 0 ? '0 selecionadas' : `${count} selecionada${count !== 1 ? 's' : ''}`;
+        } else {
+          countLabel.textContent = count === 0 ? 'Nenhuma receita selecionada' : `${count} receita${count !== 1 ? 's' : ''} selecionada${count !== 1 ? 's' : ''}`;
+        }
       }
       if (openModalBtn) {
         openModalBtn.disabled = count === 0;
-        openModalBtn.style.opacity = count === 0 ? '0.5' : '1';
         openModalBtn.style.cursor = count === 0 ? 'not-allowed' : 'pointer';
+        if (window.innerWidth <= 900) {
+          openModalBtn.style.opacity = '1';
+          openModalBtn.style.background = count === 0 ? '#d4d0c7' : '#ffffff';
+          openModalBtn.style.color = '#14110d';
+        } else {
+          openModalBtn.style.opacity = count === 0 ? '0.5' : '1';
+          openModalBtn.style.background = '';
+          openModalBtn.style.color = '';
+        }
       }
       if (deleteBtn) {
         deleteBtn.disabled = count === 0;
-        deleteBtn.style.opacity = count === 0 ? '0.5' : '1';
         deleteBtn.style.cursor = count === 0 ? 'not-allowed' : 'pointer';
+        if (window.innerWidth <= 900) {
+          deleteBtn.style.opacity = '1';
+          deleteBtn.style.background = count === 0 ? '#d4d0c7' : '#ffffff';
+          deleteBtn.style.color = '#14110d';
+        } else {
+          deleteBtn.style.opacity = count === 0 ? '0.5' : '1';
+          deleteBtn.style.background = '';
+          deleteBtn.style.color = '';
+        }
       }
     }
 
     async function executeBulkDelete() {
       const ids = Array.from(selectedRecipeIds);
       if (ids.length === 0) {
-        showToast('⚠️ Selecione ao menos uma receita para excluir.');
+        showToast('ÔÜá´©Å Selecione ao menos uma receita para excluir.');
         return;
       }
 
       const count = ids.length;
-      if (!confirm(`Tem certeza que deseja excluir ${count} receita${count !== 1 ? 's' : ''} selecionada${count !== 1 ? 's' : ''}? Esta ação não poderá ser desfeita.`)) {
+      if (!confirm(`Tem certeza que deseja excluir ${count} receita${count !== 1 ? 's' : ''} selecionada${count !== 1 ? 's' : ''}? Esta a├º├úo n├úo poder├í ser desfeita.`)) {
         return;
       }
 
@@ -1519,10 +1634,10 @@
         deleteBtn.disabled = true;
         deleteBtn.style.opacity = '0.5';
         deleteBtn.style.cursor = 'wait';
-        deleteBtn.innerHTML = '⏳ Apagando...';
+        deleteBtn.innerHTML = 'ÔÅ│ Apagando...';
       }
 
-      // Força a atualização visual do botão antes da operação pesada
+      // For├ºa a atualiza├º├úo visual do bot├úo antes da opera├º├úo pesada
       await new Promise(r => setTimeout(r, 50));
 
       try {
@@ -1549,7 +1664,7 @@
           deletedCount++;
         }
 
-        showToast(`🗑️ ${deletedCount} receita(s) excluída(s) com sucesso!`);
+        showToast(`­ƒùæ´©Å ${deletedCount} receita(s) exclu├¡da(s) com sucesso!`);
         toggleBulkSelectMode(false);
         applyFilters();
 
@@ -1561,7 +1676,7 @@
           deleteBtn.style.cursor = 'pointer';
           deleteBtn.innerHTML = originalHtml;
         }
-        showToast(`❌ Erro ao excluir: ${e.message || e}`);
+        showToast(`ÔØî Erro ao excluir: ${e.message || e}`);
       }
     }
 
@@ -1582,7 +1697,7 @@
       const label = document.getElementById('dd-bulk-cat-label');
       const btn = document.getElementById('dd-bulk-cat-btn');
       if (hiddenInput) hiddenInput.value = val;
-      if (label) label.textContent = val ? val : '-- Não alterar categoria --';
+      if (label) label.textContent = val ? val : '-- N├úo alterar categoria --';
       if (btn) btn.style.background = val ? '#fff6d9' : '#fff';
       const panel = document.getElementById('dd-bulk-cat-panel');
       if (panel) panel.style.display = 'none';
@@ -1596,7 +1711,7 @@
       const customInput = document.getElementById('bulk-tag-custom-input');
 
       if (hiddenInput) hiddenInput.value = cleanVal;
-      if (label) label.textContent = cleanVal ? `🏷️ ${cleanVal}` : '-- Não alterar tag --';
+      if (label) label.textContent = cleanVal ? `­ƒÅÀ´©Å ${cleanVal}` : '-- N├úo alterar tag --';
       if (btn) btn.style.background = cleanVal ? '#fff6d9' : '#fff';
       if (customInput) customInput.value = cleanVal;
 
@@ -1613,7 +1728,7 @@
 
       let html = `
         <button type="button" class="dd-option" onclick="setBulkTag('')" style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:10px; border:none; background:transparent; font-family:inherit; font-size:13.5px; font-weight:600; color:#a39a8c; cursor:pointer; text-align:left; width:100%;">
-          -- Não alterar tag --
+          -- N├úo alterar tag --
         </button>
       `;
 
@@ -1623,7 +1738,7 @@
           const safeTerm = term.replace(/'/g, "\\'");
           html += `
             <button type="button" class="dd-option" onclick="setBulkTag('${safeTerm}')" style="display:flex; align-items:center; gap:8px; padding:9px 12px; border-radius:10px; border:none; background:#fff6d9; font-family:inherit; font-size:13.5px; font-weight:800; color:#8a6a00; cursor:pointer; text-align:left; width:100%;">
-              <span>✨ Usar tag:</span> "${filterText}"
+              <span>Ô£¿ Usar tag:</span> "${filterText}"
             </button>
           `;
         }
@@ -1636,8 +1751,8 @@
         const isSelected = currentVal.toLowerCase() === t.toLowerCase();
         return `
           <button type="button" class="dd-option" onclick="setBulkTag('${safeTag}')" style="display:flex; align-items:center; justify-content:space-between; padding:9px 12px; border-radius:10px; border:none; background:${isSelected ? '#fff6d9' : 'transparent'}; font-family:inherit; font-size:13.5px; font-weight:700; color:#14110d; cursor:pointer; text-align:left; width:100%;">
-            <span>🏷️ ${t}</span>
-            ${isSelected ? '<span style="color:#8a6a00; font-weight:800;">✓</span>' : ''}
+            <span>­ƒÅÀ´©Å ${t}</span>
+            ${isSelected ? '<span style="color:#8a6a00; font-weight:800;">Ô£ô</span>' : ''}
           </button>
         `;
       }).join('');
@@ -1660,7 +1775,7 @@
           const flagHtml = code ? `<img src="https://flagcdn.com/24x18/${code}.png" width="20" height="15" alt="${val}" style="border-radius:3px; object-fit:cover; display:inline-block; vertical-align:middle; margin-right:8px; box-shadow:0 1px 3px rgba(0,0,0,0.18);" />` : '';
           label.innerHTML = `${flagHtml}${val}`;
         } else {
-          label.textContent = '-- Manter culinária atual --';
+          label.textContent = '-- Manter culin├íria atual --';
         }
       }
       if (btn) btn.style.background = val ? '#fff6d9' : '#fff';
@@ -1670,7 +1785,7 @@
 
     function openBulkEditModal() {
       if (selectedRecipeIds.size === 0) {
-        showToast('⚠️ Selecione ao menos uma receita para editar.');
+        showToast('ÔÜá´©Å Selecione ao menos uma receita para editar.');
         return;
       }
 
@@ -1700,7 +1815,7 @@
       const newCuisine = document.getElementById('bulk-change-cuisine')?.value || '';
 
       if (!newCategory && !newTag && !newCuisine) {
-        showToast('⚠️ Selecione pelo menos uma alteração para aplicar.');
+        showToast('ÔÜá´©Å Selecione pelo menos uma altera├º├úo para aplicar.');
         return;
       }
 
@@ -1710,7 +1825,7 @@
       const saveBtn = document.getElementById('save-bulk-edit-btn');
       if (saveBtn) {
         saveBtn.disabled = true;
-        saveBtn.textContent = '💾 Salvando...';
+        saveBtn.textContent = '­ƒÆ¥ Salvando...';
       }
 
       try {
@@ -1719,7 +1834,7 @@
           let recipe = allRecipes.find(r => r.id === id);
           if (!recipe) continue;
 
-          // Se a receita não tiver os passos/ingredientes carregados na lista da home, carrega a receita completa
+          // Se a receita n├úo tiver os passos/ingredientes carregados na lista da home, carrega a receita completa
           if (window.loadRecipe && (!recipe.steps || !recipe.ingredients)) {
             try {
               const fullDetails = await window.loadRecipe(id);
@@ -1757,7 +1872,7 @@
             recipe.cuisine = newCuisine;
           }
 
-          // Mesclar a receita completa com as novas alterações para persistir todos os campos no detalhe (recipe.html)
+          // Mesclar a receita completa com as novas altera├º├Áes para persistir todos os campos no detalhe (recipe.html)
           const fullRecipeToSave = {
             ...recipe,
             ...updatePayload
@@ -1769,7 +1884,7 @@
           }
         }
 
-        showToast(`✓ ${updatedCount} receita(s) atualizada(s) com sucesso!`);
+        showToast(`Ô£ô ${updatedCount} receita(s) atualizada(s) com sucesso!`);
         closeBulkEditModal();
         toggleBulkSelectMode(false);
 
@@ -1781,17 +1896,17 @@
         applyFilters();
 
       } catch (e) {
-        console.error("Erro ao salvar alterações em lote:", e);
-        showToast(`❌ Erro ao salvar: ${e.message || e}`);
+        console.error("Erro ao salvar altera├º├Áes em lote:", e);
+        showToast(`ÔØî Erro ao salvar: ${e.message || e}`);
       } finally {
         if (saveBtn) {
           saveBtn.disabled = false;
-          saveBtn.textContent = '💾 Salvar alterações';
+          saveBtn.textContent = '­ƒÆ¥ Salvar altera├º├Áes';
         }
       }
     }
 
-    // Expor funções usadas em onclick dinâmicos para o escopo global
+    // Expor fun├º├Áes usadas em onclick din├ómicos para o escopo global
     window.toggleAddRecipeMenu = toggleAddRecipeMenu;
     window.selectCuisineStrip = selectCuisineStrip;
     window.toggleTag = toggleTag;
@@ -1861,6 +1976,118 @@
           selecionado</span>
         <button id="modal-confirm-ingredients-btn"
           style="background:#ffbf00; border:none; border-radius:999px; padding:14px 36px; font-size:15px; font-weight:800; color:#14110d; cursor:pointer; box-shadow:0 8px 20px rgba(255,191,0,0.3); transition:all 0.2s"
+          onmouseover="this.style.transform='scale(1.03)'"
+          onmouseout="this.style.transform='scale(1)'">Confirmar</button>
+      </div>
+
+    </div>
+  </div>
+
+<!-- ===== MOBILE FILTERS MODAL ===== -->
+  <div id="mobile-filters-modal-overlay"
+    style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(20,17,13,0.5); z-index:1000; align-items:flex-end; justify-content:center; backdrop-filter:blur(4px);"
+    onclick="closeMobileFiltersModal()">
+    <div
+      style="background:#fff; width:100%; max-width:500px; max-height:85vh; border-top-left-radius:24px; border-top-right-radius:24px; padding:20px 18px 28px 18px; box-shadow:0 -10px 40px rgba(0,0,0,0.25); display:flex; flex-direction:column; gap:16px; overflow-y:auto; position:relative;"
+      onclick="event.stopPropagation()">
+      
+      <!-- Header -->
+      <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #f0ebe3; padding-bottom:12px;">
+        <h3 style="margin:0; font-size:18px; font-weight:800; color:#14110d;">Filtros de busca</h3>
+        <button onclick="closeMobileFiltersModal()"
+          style="width:34px; height:34px; border-radius:50%; background:#f7f4ee; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:15px; font-weight:700; color:#14110d;">✕</button>
+      </div>
+
+      <!-- Filters List inside popup -->
+      <div id="mobile-filters-content" style="display:flex; flex-direction:column; gap:16px;">
+        
+        <!-- Culinária -->
+        <div>
+          <div style="margin-bottom:10px;"><span style="display:inline-block; background:#fff6d9; color:#8a6a00; border-radius:999px; padding:4px 12px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase;">Culinária</span></div>
+          <div id="mobile-cuisine-chips" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+        </div>
+
+        <!-- Dificuldade -->
+        <div>
+          <div style="margin-bottom:10px;"><span style="display:inline-block; background:#e6f2ef; color:#1f6b5c; border-radius:999px; padding:4px 12px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase;">Dificuldade</span></div>
+          <div id="mobile-diff-chips" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+        </div>
+
+        <!-- Calorias -->
+        <div>
+          <div style="margin-bottom:10px;"><span style="display:inline-block; background:#eaeefe; color:#3a4bc0; border-radius:999px; padding:4px 12px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase;">Calorias Máximas</span></div>
+          <div id="mobile-cal-chips" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+        </div>
+
+        <!-- Ingredientes da Geladeira -->
+        <div>
+          <div style="margin-bottom:10px;"><span style="display:inline-block; background:#f3ebfc; color:#7b4bd1; border-radius:999px; padding:4px 12px; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase;">Ingredientes da Geladeira</span></div>
+          <button onclick="openIngredientsModal()"
+            style="width:100%; height:40px; border-radius:12px; background:#f7f4ee; border:1px solid #ece5d9; font-family:inherit; font-size:13.5px; font-weight:700; color:#14110d; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+            <span>🍎 Clique aqui para escolher ingredientes</span>
+            <span id="mobile-ing-count-badge" style="background:#ffbf00; color:#14110d; border-radius:999px; padding:2px 8px; font-size:11px; font-weight:800; display:none;"></span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Action Footer -->
+      <div style="display:flex; gap:10px; margin-top:8px; border-top:1px solid #f0ebe3; padding-top:14px;">
+        <button onclick="clearAllFiltersMobile()"
+          style="flex:1; height:44px; border-radius:12px; background:#f7f4ee; border:none; font-family:inherit; font-size:13.5px; font-weight:700; color:#6b6459; cursor:pointer;">Limpar tudo</button>
+        <button onclick="closeMobileFiltersModal()"
+          style="flex:1.4; height:44px; border-radius:12px; background:#ffbf00; border:none; font-family:inherit; font-size:14px; font-weight:800; color:#14110d; cursor:pointer;">Ver resultados</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== INGREDIENTS MODAL ===== -->
+  <div id="ingredients-modal-overlay"
+    style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(20,17,13,0.5); z-index:1050; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px);"
+    onclick="closeIngredientsModal()">
+    <div
+      style="background:#fff; width:100%; max-width:640px; max-height:88vh; border-radius:28px; padding:28px; box-shadow:0 30px 80px rgba(0,0,0,0.25); display:flex; flex-direction:column; gap:18px; overflow:hidden; position:relative;"
+      onclick="event.stopPropagation()">
+
+      <!-- Modal Header -->
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <button id="close-ingredients-modal-btn"
+          style="width:38px; height:38px; border-radius:50%; background:#f7f4ee; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; font-weight:700; color:#14110d;">Ô£ò</button>
+        <h3 style="margin:0; font-size:18px; font-weight:800; color:#14110d;">Filtrar por ingredientes</h3>
+        <button id="modal-clear-ingredients-btn"
+          style="background:none; border:none; color:#a39a8c; font-weight:700; font-size:14px; cursor:pointer;">Limpar</button>
+      </div>
+
+      <!-- Search Bar -->
+      <div
+        style="display:flex; align-items:center; gap:12px; background:#f7f4ee; border-radius:16px; padding:14px 18px;">
+        <span style="font-size:14px; color:#d99f00;">­ƒöì</span>
+        <input type="search" id="modal-ingredient-search" placeholder="Buscar mais ingredientes..."
+          style="border:none; outline:none; background:transparent; font-family:inherit; font-size:14px; font-weight:500; width:100%; color:#14110d;" />
+      </div>
+
+      <!-- Selected Chips Area -->
+      <div id="modal-selected-ingredients-chips"
+        style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-height:0;"></div>
+
+      <!-- Popular Label -->
+      <div style="font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#a39a8c;">
+        Populares</div>
+
+      <!-- Ingredients Grid -->
+      <div id="modal-ingredients-grid" class="modal-ingredients-grid"
+        style="display:grid; gap:12px; overflow-y:auto; padding-right:4px; max-height:280px;">
+        <!-- Populated via JS -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div
+        style="display:flex; align-items:center; justify-content:space-between; gap:12px; border-top:1px solid #f0ebe3; padding-top:16px; margin-top:auto;">
+        <span id="modal-selected-count-text" style="font-size:12.5px; font-weight:700; color:#a39a8c; line-height:1.3; flex:1; min-width:0;">Nenhum ingrediente
+          selecionado</span>
+        <button id="modal-confirm-ingredients-btn"
+          style="background:#ffbf00; border:none; border-radius:999px; padding:12px 24px; font-size:14px; font-weight:800; color:#14110d; cursor:pointer; box-shadow:0 8px 20px rgba(255,191,0,0.3); transition:all 0.2s; flex-shrink:0;"
           onmouseover="this.style.transform='scale(1.03)'"
           onmouseout="this.style.transform='scale(1)'">Confirmar</button>
       </div>
