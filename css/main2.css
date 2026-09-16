@@ -3094,8 +3094,20 @@ footer {
 
   /* Enlarge 'Explorar por categoria' heading on mobile to match original label size */
   #category-section-heading {
-    font-size: 24px !important;
-    letter-spacing: -0.01em !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.14em !important;
+    text-transform: uppercase !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Mobile spacing adjustments for category section */
+  #category-header-container {
+    margin-bottom: 16px !important;
+  }
+
+  #category-section {
+    padding-bottom: 12px !important;
   }
 
   /* Mobile Filter Bar with Popup Button */
@@ -3148,7 +3160,7 @@ footer {
   #mobile-filters-modal-overlay > div {
     padding: 22px 18px 32px 18px !important;
     border-radius: 28px !important;
-    max-height: 78vh !important;
+    max-height: calc(100vh - 100px) !important;
     margin-bottom: 80px !important;
   }
 
@@ -3162,7 +3174,7 @@ footer {
   #ingredients-modal-overlay > div {
     padding: 22px 18px 32px 18px !important;
     border-radius: 26px !important;
-    max-height: 78vh !important;
+    max-height: calc(100vh - 100px) !important;
     gap: 14px !important;
     margin-bottom: 80px !important;
   }
