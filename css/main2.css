@@ -3036,9 +3036,61 @@ footer {
     position: relative;
   }
 
+  .mobile-menu-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: #f7f4ee;
+    color: #14110d;
+    font-size: 20px;
+    padding: 0;
+    transition: background 0.15s ease;
+  }
+
+  .mobile-menu-btn:active {
+    background: #ece5d9;
+  }
+
   .mobile-dropdown {
-    top: calc(100% + 8px);
+    top: calc(100% + 10px);
     right: 0;
+    background: #ffffff;
+    border: 1px solid #f0ebe3;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(20, 17, 13, 0.13);
+    padding: 8px;
+    min-width: 196px;
+    gap: 2px;
+  }
+
+  .mobile-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #14110d;
+    text-decoration: none;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .mobile-nav-link:hover {
+    background: #f7f4ee;
+    color: #14110d;
+  }
+
+  .mobile-nav-link.active {
+    background: #fff6d9;
+    color: #8a6a00;
+    font-weight: 800;
   }
 
   .mobile-inbox-badge {

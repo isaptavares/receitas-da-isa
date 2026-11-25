@@ -458,7 +458,7 @@ function initNavbar() {
 
     mobileMenu.innerHTML = `
       <a class="mobile-nav-link" href="${prefix}index.html"><span>🏠</span> Início</a>
-      <a class="mobile-nav-link" href="${prefix}favorites.html"><span>♥</span> Favoritas</a>
+      <a class="mobile-nav-link" href="${prefix}favorites.html"><svg width="16" height="16" viewBox="0 0 18 18" fill="#e14b3f" stroke="#e14b3f" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M9 15S3 11.4 3 7.6A2.9 2.9 0 0 1 9 6a2.9 2.9 0 0 1 6 1.6C15 11.4 9 15 9 15Z"></path></svg> Favoritas</a>
       <a class="mobile-nav-link" href="${prefix}planner.html"><span>📅</span> Planejador</a>
       <button class="mobile-nav-link" id="mobile-nav-inbox" type="button"><span>📩</span> Recebidas <span class="mobile-inbox-badge" id="mobile-inbox-badge" style="display:none;">0</span></button>
     `;
