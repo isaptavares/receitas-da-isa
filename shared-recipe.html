@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light only">
+  <meta name="description" id="meta-desc" content="Receita compartilhada — Receitas da Isa">
+  <title id="page-title">Receita Compartilhada — Receitas da Isa</title>
+  <link rel="stylesheet" href="css/main2.css?v=100">
+  <style>
+    body {
+      background: #fcfaf6;
+      padding-bottom: 90px;
+    }
+
+    /* Landing Page Top Bar (fora da navegação normal do site) */
+    .landing-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid #f0ebe3;
+      padding: 14px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .landing-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #14110d;
+    }
+
+    .landing-badge-shared {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #fff6d9;
+      color: #8a6a00;
+      border: 1px solid #f5e2a8;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    /* Exclusive Landing CTA Button */
+    .landing-cta-wrap {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-add-to-site {
+      background: #ffbf00;
+      color: #14110d;
+      border: none;
+      border-radius: 999px;
+      padding: 15px 28px;
+      font-family: inherit;
+      font-size: 15.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 10px 26px rgba(255, 191, 0, 0.32);
+      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
+    }
+
+    .btn-add-to-site:hover {
+      transform: translateY(-2px);
+      background: #f2b400;
+      box-shadow: 0 14px 30px rgba(255, 191, 0, 0.42);
+    }
+
+    .btn-add-to-site.added {
+      background: #2f8f7d !important;
+      color: #ffffff !important;
+      box-shadow: 0 10px 24px rgba(47, 143, 125, 0.28) !important;
+    }
+
+    .landing-post-add-actions {
+      display: none;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .landing-post-add-actions.visible {
+      display: flex;
+    }
+
+    /* Serving controls centering */
+    .serving-controls-group button {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 0 !important;
+      line-height: 1 !important;
+      text-align: center !important;
+    }
+
+    .idv-step-item.completed {
+      border-color: #2f8f7d !important;
+      background: rgba(47, 143, 125, 0.05) !important;
+    }
+    .idv-step-item.completed .step-num {
+      background: #2f8f7d !important;
+      color: #fff !important;
+    }
+    .idv-step-item.completed p {
+      color: #6b6459 !important;
+      text-decoration: line-through;
+    }
+
+    @media (min-width: 769px) {
+      .recipe-hero {
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+      }
+      .recipe-hero-right {
+        padding-bottom: 24px !important;
+      }
+      .recipe-nutrition-card {
+        bottom: 44px !important;
+        left: -16px !important;
+      }
+      .recipe-stat-card {
+        padding: 20px 14px !important;
+      }
+      .recipe-stat-card .stat-value {
+        white-space: nowrap !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-bottom: 140px !important;
+      }
+      .landing-topbar {
+        padding: 12px 16px;
+      }
+      .landing-badge-shared span.hide-sm {
+        display: none;
+      }
+      .landing-cta-wrap {
+        position: fixed !important;
+        bottom: 16px !important;
+        left: 16px !important;
+        right: 16px !important;
+        margin-top: 0 !important;
+        z-index: 999 !important;
+      }
+      .landing-cta-wrap .btn-add-to-site {
+        box-shadow: 0 12px 32px rgba(20, 17, 13, 0.25), 0 4px 16px rgba(255, 191, 0, 0.45) !important;
+      }
+      .landing-post-add-actions.visible {
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 10px;
+        border-radius: 20px;
+        box-shadow: 0 10px 28px rgba(20, 17, 13, 0.18);
+        border: 1px solid #ece5d9;
+      }
+      .recipe-ingredients-card {
+        padding: 12px 10px !important;
+        border-radius: 16px !important;
+        max-width: 275px !important;
+        margin: 0 auto !important;
+      }
+      .recipe-ingredients-card h2 {
+        font-size: 19px !important;
+      }
+      .sig-ingredient-row {
+        padding: 3.5px 0 !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+      }
+      .sig-ingredient-row span {
+        font-size: 14.2px !important;
+        line-height: 1.25 !important;
+      }
+      .sig-ingredient-row .ing-dot {
+        width: 6px !important;
+        height: 6px !important;
+      }
+      .sig-ingredient-row .ing-left {
+        gap: 6px !important;
+      }
+      #yield-display {
+        font-size: 12.5px !important;
+        margin-bottom: 8px !important;
+      }
+      .ing-card-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        margin-bottom: 8px !important;
+      }
+      .serving-controls-group {
+        margin-top: 6px !important;
+        width: 100% !important;
+        justify-content: space-between !important;
+        padding: 4px 10px !important;
+        box-sizing: border-box !important;
+      }
+      .serving-controls-group button {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 20px !important;
+      }
+      .serving-controls-group #serving-count-display {
+        font-size: 15px !important;
+        min-width: 50px !important;
+      }
+      .recipe-steps-column {
+        max-width: 275px !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+      }
+      .recipe-content h2 {
+        font-size: 22px !important;
+        margin-bottom: 16px !important;
+      }
+      .idv-step-item {
+        position: relative !important;
+        display: block !important;
+        padding: 16px 14px 12px 14px !important;
+        border-radius: 16px !important;
+      }
+      .idv-step-item p {
+        font-size: 14px !important;
+        line-height: 1.45 !important;
+        width: 100% !important;
+      }
+      .idv-step-item .step-num {
+        position: absolute !important;
+        top: -10px !important;
+        left: -8px !important;
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 13px !important;
+        border-radius: 50% !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12) !important;
+        z-index: 3 !important;
+      }
+      .idv-step-item.sub-step {
+        position: relative !important;
+        display: block !important;
+        padding: 14px 12px 10px 12px !important;
+        border-radius: 14px !important;
+      }
+      .idv-step-item.sub-step p {
+        font-size: 13px !important;
+        line-height: 1.4 !important;
+        width: 100% !important;
+      }
+      .idv-step-item.sub-step .step-num {
+        position: absolute !important;
+        top: -8px !important;
+        left: -6px !important;
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 11px !important;
+        border-radius: 50% !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.08) !important;
+        z-index: 3 !important;
+      }
+      .sub-steps-wrapper {
+        margin-left: 14px !important;
+        padding-left: 14px !important;
+        gap: 8px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== LANDING PAGE TOP BAR (FORA DO SITE NORMAL) ===== -->
+  <header class="landing-topbar">
+    <div class="landing-brand">
+      <div style="width:38px; height:38px; border-radius:12px; background:#ffbf00; display:flex; align-items:center; justify-content:center; flex-shrink:0">
+        <div style="width:13px; height:13px; border-radius:50%; background:#14110d"></div>
+      </div>
+      <div style="display:flex; flex-direction:column; line-height:1">
+        <span style="font-size:17px; font-weight:800; letter-spacing:-0.02em; color:#14110d">Receitas da Isa</span>
+        <span style="font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c; margin-top:3px">convite de receita</span>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:10px">
+      <div class="landing-badge-shared" id="sender-pill">
+        <span>✨</span>
+        <span id="sender-label">Receita compartilhada<span class="hide-sm"> com você</span></span>
+      </div>
+      <a href="index.html" style="font-size:13px; font-weight:700; color:#6b6459; text-decoration:none; padding:8px 14px; border-radius:999px; background:#f7f4ee; white-space:nowrap">
+        Ir para o site →
+      </a>
+    </div>
+  </header>
+
+  <main id="shared-recipe-main">
+    <div style="display:flex;align-items:center;justify-content:center;min-height:80vh;">
+      <div class="loading-spinner" aria-label="Carregando receita compartilhada..."></div>
+    </div>
+  </main>
+
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/recipes.js?v=32"></script>
+  <script type="module">
+    import {
+      db, auth, provider, signInWithPopup,
+      collection, doc, getDoc, getDocs, addDoc, query, where, serverTimestamp
+    } from './js/firebase-config.js';
+    import { getUser, getAllRegisteredUsers, authReady } from './js/auth.js';
+    import { saveUserRecipe } from './js/user-recipes.js';
+
+    let globalRecipe = null;
+    let currentServings = 1;
+    let senderNameFromUrl = '';
+    let lastSavedRecipeId = null;
+
+    function decodeRecipeFromUrl(str) {
+      if (!str) return null;
+      try {
+        let b64 = str.replace(/-/g, '+').replace(/_/g, '/');
+        while (b64.length % 4) b64 += '=';
+        const bin = atob(b64);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        const jsonStr = new TextDecoder().decode(bytes);
+        return JSON.parse(jsonStr);
+      } catch (e) {
+        console.warn('Falha ao decodificar receita da URL:', e);
+        return null;
+      }
+    }
+
+    async function fetchSharedRecipeFromFirestore(recipeId, senderUid, shareDocId) {
+      // 1. Tenta pelo documento direto em shared_recipes/{shareDocId}
+      if (shareDocId) {
+        try {
+          const sSnap = await getDoc(doc(db, 'shared_recipes', shareDocId));
+          if (sSnap.exists() && sSnap.data().recipeData) {
+            return sSnap.data().recipeData;
+          }
+        } catch (e) {}
+      }
+
+      // 2. Tenta na coleção my_recipes do remetente (users/{senderUid}/my_recipes/{recipeId})
+      if (senderUid && recipeId) {
+        try {
+          const directSnap = await getDoc(doc(db, 'users', senderUid, 'my_recipes', recipeId));
+          if (directSnap.exists()) {
+            return { ...directSnap.data(), id: directSnap.id };
+          }
+        } catch (e) {}
+
+        try {
+          const colSnap = await getDocs(collection(db, 'users', senderUid, 'my_recipes'));
+          const found = colSnap.docs.find(d => d.id === recipeId || d.data().id === recipeId);
+          if (found) return { ...found.data(), id: found.id };
+        } catch (e) {}
+
+        try {
+          const outSnap = await getDocs(collection(db, 'users', senderUid, 'outbox'));
+          const foundOut = outSnap.docs.find(d => d.data().recipeId === recipeId && d.data().recipeData);
+          if (foundOut) return foundOut.data().recipeData;
+        } catch (e) {}
+      }
+
+      // 3. Tenta buscar em shared_recipes por recipeId
+      if (recipeId) {
+        try {
+          const q = query(collection(db, 'shared_recipes'), where('recipeId', '==', recipeId));
+          const qSnap = await getDocs(q);
+          for (const d of qSnap.docs) {
+            if (d.data().recipeData) return d.data().recipeData;
+          }
+        } catch (e) {}
+
+        // 4. Varre usuários registrados em busca da receita
+        try {
+          const allUsers = await getAllRegisteredUsers();
+          for (const u of allUsers) {
+            if (!u.uid) continue;
+            try {
+              const dSnap = await getDoc(doc(db, 'users', u.uid, 'my_recipes', recipeId));
+              if (dSnap.exists()) return { ...dSnap.data(), id: dSnap.id };
+            } catch (e) {}
+          }
+        } catch (e) {}
+      }
+
+      return null;
+    }
+
+    async function resolveSharedRecipe() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id') || '';
+      const senderUid = params.get('u') || '';
+      const shareDocId = params.get('s') || '';
+      senderNameFromUrl = params.get('from') || '';
+
+      if (senderNameFromUrl) {
+        const senderLabel = document.getElementById('sender-label');
+        if (senderLabel) senderLabel.textContent = `Enviada por ${senderNameFromUrl}`;
+      }
+
+      // A. Extrai payload do hash (#r=...) ou query (?r=...)
+      let hashPayload = '';
+      if (window.location.hash && window.location.hash.startsWith('#r=')) {
+        hashPayload = window.location.hash.slice(3);
+      } else if (params.get('r')) {
+        hashPayload = params.get('r');
+      }
+      const urlRecipe = decodeRecipeFromUrl(hashPayload);
+
+      // B. Tenta carregar também do Firestore ou arquivos estáticos para ter a foto completa caso tenha sido omitida da URL
+      let remoteRecipe = null;
+      if (id && window.loadRecipe) {
+        try {
+          remoteRecipe = await window.loadRecipe(id);
+        } catch (e) {}
+      }
+      if (!remoteRecipe && (id || senderUid || shareDocId)) {
+        try {
+          await Promise.race([authReady, new Promise(r => setTimeout(r, 1500))]);
+          remoteRecipe = await fetchSharedRecipeFromFirestore(id, senderUid, shareDocId);
+        } catch (e) {}
+      }
+
+      if (urlRecipe && remoteRecipe) {
+        return {
+          ...urlRecipe,
+          ...remoteRecipe,
+          image: remoteRecipe.image || remoteRecipe.imageUrl || urlRecipe.image || 'images/hero_bg.png',
+          ingredients: (remoteRecipe.ingredients && remoteRecipe.ingredients.length) ? remoteRecipe.ingredients : (urlRecipe.ingredients || []),
+          steps: (remoteRecipe.steps && remoteRecipe.steps.length) ? remoteRecipe.steps : (urlRecipe.steps || [])
+        };
+      }
+
+      return remoteRecipe || urlRecipe || null;
+    }
+
+    function renderIngredientsList() {
+      if (!globalRecipe) return '';
+      const cleanPrepMethods = (str) => {
+        if (!str) return '';
+        return String(str)
+          .replace(/\b(cortad[ao]s?(\s+ao\s+meio|\s+em\s+[^\s,]+|\s+ao\s+comprido)?)\b/gi, '')
+          .replace(/\b(picad[ao]s?(\s+finamente|\s+bem|\s+em\s+[^\s,]+)?)\b/gi, '')
+          .replace(/\b(ralad[ao]s?(\s+bem|\s+no\s+ralo\s+[^\s,]+)?)\b/gi, '')
+          .replace(/\b(fatiad[ao]s?)\b/gi, '')
+          .replace(/\b(amassad[ao]s?)\b/gi, '')
+          .replace(/\b(derretid[ao]s?)\b/gi, '')
+          .replace(/\b(cozid[ao]s?)\b/gi, '')
+          .replace(/\b(desfiad[ao]s?)\b/gi, '')
+          .replace(/\b(moíd[ao]s?|moid[ao]s?)\b/gi, '')
+          .replace(/\b(grelhad[ao]s?)\b/gi, '')
+          .replace(/\b(descascad[ao]s?)\b/gi, '')
+          .replace(/\b(triturad[ao]s?)\b/gi, '')
+          .replace(/\b(refogad[ao]s?)\b/gi, '')
+          .replace(/\b(assad[ao]s?)\b/gi, '')
+          .replace(/\b(peneirad[ao]s?)\b/gi, '')
+          .replace(/\b(polvilhad[ao]s?)\b/gi, '')
+          .replace(/\b(pincelad[ao]s?)\b/gi, '')
+          .replace(/\b(em\s+cubos?|em\s+rodelas?|em\s+tiras?|em\s+lascas?|em\s+pedaços?|em\s+gomos?|em\s+quadrados?|em\s+fatias?|em\s+ramos?)\b/gi, '')
+          .replace(/^[\s,.\-–—]+|[\s,.\-–—]+$/g, '')
+          .replace(/\s+/g, ' ')
+          .trim();
+      };
+
+      return (globalRecipe.ingredients || []).map(ing => {
+        if (!ing) return '';
+        const isObj = typeof ing === 'object' && ing !== null;
+        let rawName = isObj ? (ing.item || ing.name || ing.title || '') : String(ing);
+        const upper = rawName.trim().toUpperCase();
+
+        const isHeader = (isObj && (ing.isHeader || ing.header || ing.section || ing.type === 'section'))
+          || upper.startsWith('PARA ')
+          || upper.startsWith('MOLHO')
+          || upper.startsWith('MASSA')
+          || upper.startsWith('RECHEIO')
+          || upper.startsWith('COBERTURA')
+          || rawName.trim().endsWith(':')
+          || (isObj && (!ing.amount || ing.amount.trim() === '') && (upper.includes('PARA O') || upper.includes('PARA A') || upper.includes('PARA AS') || upper.includes('PARA OS')));
+
+        if (isHeader) {
+          const headerTitle = isObj ? (ing.title || ing.section || ing.header || ing.item || '') : ing;
+          const cleanTitle = headerTitle.replace(/^[\s:]+|[\s:]+$/g, '');
+          return `
+            <div style="font-size:12px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#6b7ef0; margin:22px 0 10px 0; padding-top:14px; border-top:2px dashed #ece5d9;">
+              ${cleanTitle}
+            </div>`;
+        }
+
+        let name = isObj ? (ing.item || '') : ing;
+        let rawAmount = isObj ? (ing.amount || '') : '';
+        name = cleanPrepMethods(name);
+        rawAmount = cleanPrepMethods(rawAmount);
+
+        if (!isObj && name) {
+          const m = name.match(/^(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:[.,]\d+)?)\s*(.*)$/);
+          if (m) {
+            rawAmount = m[1];
+            name = m[2];
+          }
+        }
+
+        let scaledAmount = rawAmount;
+        if (rawAmount) {
+          const match = rawAmount.match(/^(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:[.,]\d+)?)\s*(.*)$/);
+          if (match) {
+            let numText = match[1].replace(',', '.');
+            let num = 0;
+            if (numText.includes(' ')) {
+              const parts = numText.split(' ');
+              const intPart = parseFloat(parts[0]);
+              const fracParts = parts[1].split('/');
+              num = intPart + (parseFloat(fracParts[0]) / parseFloat(fracParts[1]));
+            } else if (numText.includes('/')) {
+              const parts = numText.split('/');
+              num = parseFloat(parts[0]) / parseFloat(parts[1]);
+            } else {
+              num = parseFloat(numText);
+            }
+
+            if (!isNaN(num)) {
+              let scaledNum = Math.round(num * currentServings * 100) / 100;
+              let intPart = Math.floor(scaledNum);
+              let fracPart = scaledNum - intPart;
+              const tolerance = 0.03;
+              if (Math.abs(fracPart - 0) < tolerance) fracPart = 0;
+              else if (Math.abs(fracPart - 0.25) < tolerance) fracPart = 0.25;
+              else if (Math.abs(fracPart - 0.33) < tolerance) fracPart = 0.33;
+              else if (Math.abs(fracPart - 0.5) < tolerance) fracPart = 0.5;
+              else if (Math.abs(fracPart - 0.67) < tolerance) fracPart = 0.67;
+              else if (Math.abs(fracPart - 0.75) < tolerance) fracPart = 0.75;
+              else if (Math.abs(fracPart - 1) < tolerance) { fracPart = 0; intPart++; }
+
+              let scaledStr = '';
+              if (fracPart === 0) scaledStr = intPart.toString();
+              else if (fracPart === 0.25) scaledStr = intPart > 0 ? `${intPart}&ensp;1/4` : `1/4`;
+              else if (fracPart === 0.33) scaledStr = intPart > 0 ? `${intPart}&ensp;1/3` : `1/3`;
+              else if (fracPart === 0.5) scaledStr = intPart > 0 ? `${intPart}&ensp;1/2` : `1/2`;
+              else if (fracPart === 0.67) scaledStr = intPart > 0 ? `${intPart}&ensp;2/3` : `2/3`;
+              else if (fracPart === 0.75) scaledStr = intPart > 0 ? `${intPart}&ensp;3/4` : `3/4`;
+              else scaledStr = scaledNum.toString().replace('.', ',');
+
+              scaledAmount = `${scaledStr} ${match[2]}`.trim();
+            }
+          }
+        }
+
+        scaledAmount = cleanPrepMethods(scaledAmount);
+        return `
+          <div class="sig-ingredient-row" style="display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-top:1px solid #ece5d9">
+            <div class="ing-left" style="display:flex; align-items:center; gap:10px">
+              <span class="ing-dot" style="width:8px; height:8px; border-radius:50%; background:#ffbf00; flex-shrink:0"></span>
+              <span style="font-size:15px; font-weight:500; color:#14110d">${name}</span>
+            </div>
+            ${scaledAmount ? `<span style="font-size:15px; font-weight:800; color:#8a6a00; white-space:nowrap; text-align:right">${scaledAmount}</span>` : ''}
+          </div>`;
+      }).join('');
+    }
+
+    function updateServings(delta) {
+      if (!globalRecipe) return;
+      const newServings = currentServings + delta;
+      if (newServings < 1) return;
+      currentServings = newServings;
+
+      const baseServings = parseInt(globalRecipe.servings, 10) || 1;
+      const totalYield = currentServings * baseServings;
+
+      const scDisplay = document.getElementById('serving-count-display');
+      if (scDisplay) scDisplay.textContent = currentServings;
+
+      const rendimento = document.getElementById('meta-rendimento');
+      if (rendimento) rendimento.textContent = totalYield + ' porç.';
+
+      const yieldText = document.getElementById('yield-display');
+      if (yieldText) {
+        yieldText.textContent = currentServings === 1
+          ? `1 receita rende ${totalYield} porções`
+          : `${currentServings} receitas rendem ${totalYield} porções`;
+      }
+
+      document.getElementById('sig-ingredient-list').innerHTML = renderIngredientsList();
+    }
+
+    function renderLandingPage(recipe) {
+      globalRecipe = recipe;
+      currentServings = 1;
+
+      document.title = `${recipe.title} — Receita Compartilhada`;
+      document.getElementById('meta-desc').setAttribute('content', recipe.subtitle || '');
+
+      const desktopCategoriesHtml = (recipe.categories || []).map(c =>
+        `<span style="background:#fff0f3; color:#c72a50; border-radius:999px; padding:7px 15px; font-size:12px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase">${c}</span>`
+      ).join('');
+
+      const desktopTagsHtml = (recipe.tags || []).map(t =>
+        `<span style="background:#e6f2ef; color:#1f6b5c; border-radius:999px; padding:7px 15px; font-size:12px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase">${t}</span>`
+      ).join('');
+
+      const mobileCategoriesHtml = (recipe.categories || []).map(c =>
+        `<span class="recipe-pill-badge" style="background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); color:#14110d; border-radius:999px; padding:5px 12px; font-size:10.5px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.6)">${c}</span>`
+      ).join('');
+
+      const mobileTagsHtml = (recipe.tags || []).map(t =>
+        `<span class="recipe-pill-badge" style="background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); color:#14110d; border-radius:999px; padding:5px 12px; font-size:10.5px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.6)">${t}</span>`
+      ).join('');
+
+      let n = recipe.nutrition;
+      if (!n || !n.calories || n.calories === '0' || n.calories === 0) {
+        if (window.estimateNutritionFallback) {
+          n = window.estimateNutritionFallback(recipe.title, recipe.ingredients);
+        } else {
+          n = { calories: recipe.calories || 0, protein: '0g', carbs: '0g', fat: '0g' };
+        }
+      }
+
+      const rawCal = n.calories || recipe.calories || '0';
+      const cleanCalories = String(rawCal).replace(/kcal/gi, '').replace(/cal/gi, '').trim();
+
+      const prot = parseFloat(String(n.protein).replace(/[^\d.,]/g, '').replace(',', '.')) || 0;
+      const carb = parseFloat(String(n.carbs).replace(/[^\d.,]/g, '').replace(',', '.')) || 0;
+      const fat = parseFloat(String(n.fat).replace(/[^\d.,]/g, '').replace(',', '.')) || 0;
+      const totalNutrients = prot + carb + fat;
+
+      let p1 = 33, p2 = 66, p3 = 100;
+      if (totalNutrients > 0) {
+        const pctProt = Math.round((prot / totalNutrients) * 100);
+        const pctCarb = Math.round((carb / totalNutrients) * 100);
+        p1 = Math.min(100, pctProt);
+        p2 = Math.min(100, pctProt + pctCarb);
+      }
+      const conicGradient = `conic-gradient(#ffbf00 0 ${p1}%, #2f8f7d ${p1}% ${p2}%, #6b7ef0 ${p2}% ${p3}%)`;
+      const imgSrc = recipe.image || recipe.imageUrl || '';
+
+      document.getElementById('shared-recipe-main').innerHTML = `
+        <article class="recipe-page" aria-label="${recipe.title}">
+          <section style="max-width:1280px; margin:0 auto; padding:32px 48px 0">
+            <div class="recipe-hero" style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start">
+              <div class="recipe-hero-left">
+                <div class="recipe-desktop-tags" style="display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap">
+                  <span style="background:#fff6d9; color:#8a6a00; border-radius:999px; padding:7px 15px; font-size:12px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase">${recipe.cuisine || 'Geral'}</span>
+                  ${desktopCategoriesHtml}
+                  ${desktopTagsHtml}
+                </div>
+
+                <h1 style="margin:0; font-size:54px; font-weight:800; letter-spacing:-0.035em; line-height:1.02; text-wrap:balance">${recipe.title}</h1>
+                <p style="margin:18px 0 0; font-size:18px; line-height:1.6; color:#6b6459; text-wrap:pretty">${recipe.subtitle || ''}</p>
+
+                <div class="recipe-stats-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#f0ebe3; border:1px solid #f0ebe3; border-radius:20px; overflow:hidden; margin-top:28px">
+                  <div class="recipe-stat-card" style="background:#fff; padding:20px 18px">
+                    <div class="stat-label" style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Tempo</div>
+                    <div class="stat-value" style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em">${recipe.totalTime || recipe.prepTime || '-'} min</div>
+                  </div>
+                  <div class="recipe-stat-card" style="background:#fff; padding:20px 18px">
+                    <div class="stat-label" style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Dificul.</div>
+                    <div class="stat-value" style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em">${recipe.difficulty || '-'}</div>
+                  </div>
+                  <div class="recipe-stat-card" style="background:#fff; padding:20px 18px">
+                    <div class="stat-label" style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Rendim.</div>
+                    <div class="stat-value" style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em" id="meta-rendimento">${currentServings * (parseInt(recipe.servings, 10) || 1)} porç.</div>
+                  </div>
+                  <div class="recipe-stat-card stat-calories-card" style="background:#fff; padding:20px 18px">
+                    <div class="stat-label" style="font-size:11px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#a39a8c">Calorias</div>
+                    <div class="stat-value" style="font-size:22px; font-weight:800; margin-top:8px; letter-spacing:-0.02em">${cleanCalories ? cleanCalories + ' kcal' : '-'}</div>
+                  </div>
+                </div>
+
+                <!-- BOTÃO EXCLUSIVO DA LANDING PAGE -->
+                <div class="landing-cta-wrap">
+                  <button type="button" class="btn-add-to-site" id="main-add-to-site-btn" onclick="handleAddSharedRecipeToMySite()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Adicionar esta receita ao meu site</span>
+                  </button>
+                  <div class="landing-post-add-actions" id="post-add-actions">
+                    <a href="index.html" id="open-in-my-site-link" style="flex:1; background:#fff; color:#14110d; border:2px solid #e5ded2; border-radius:999px; padding:12px 20px; font-size:14px; font-weight:800; text-decoration:none; text-align:center; display:inline-flex; align-items:center; justify-content:center; gap:6px">
+                      🍽️ Ver receita no meu site →
+                    </a>
+                    <button type="button" id="sync-google-after-add-btn" onclick="handleLoginAndSyncRecipe()" style="display:none; flex:1; background:#2f8f7d; color:#fff; border:none; border-radius:999px; padding:12px 20px; font-family:inherit; font-size:13.5px; font-weight:800; cursor:pointer; align-items:center; justify-content:center; gap:6px">
+                      🔑 Entrar com Google para salvar na nuvem
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="recipe-hero-right" style="position:relative; padding:0 0 96px">
+                <div style="position:absolute; top:-32px; right:-24px; width:220px; height:220px; border-radius:50%; background:#6b7ef0; opacity:0.15; z-index:0"></div>
+                <div style="position:absolute; top:120px; left:-40px; width:140px; height:140px; border-radius:0 100% 0 0; background:#7b4bd1; opacity:0.16; z-index:0"></div>
+                <div style="position:absolute; bottom:20px; right:-20px; width:170px; height:170px; border-radius:50% 50% 0 50%; background:#ffbf00; opacity:0.28; z-index:0"></div>
+                <div class="recipe-hero-image-box" style="position:relative; z-index:1; margin:32px 40px 0 24px; border-radius:28px; overflow:hidden; aspect-ratio:1/1; background:repeating-linear-gradient(135deg,#f4efe6 0 12px,#efe8dc 12px 24px); display:flex; align-items:center; justify-content:center; box-shadow:0 28px 64px rgba(20,17,13,0.16)">
+                  ${imgSrc && imgSrc !== 'images/placeholder_recipe.png' ? `<img src="${imgSrc}" alt="${recipe.title}" style="width:100%; height:100%; object-fit:cover;">` : `<span style="font-family:'JetBrains Mono', monospace; font-size:12px; color:#a39a8c">sem foto</span>`}
+                  <div class="recipe-mobile-tags-overlay" style="position:absolute; bottom:12px; left:12px; z-index:10; display:none; gap:6px; flex-wrap:wrap; max-width:calc(100% - 24px)">
+                    <span class="recipe-pill-badge" style="background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); color:#14110d; border-radius:999px; padding:5px 12px; font-size:10.5px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.6)">${recipe.cuisine || 'Geral'}</span>
+                    ${mobileCategoriesHtml}
+                    ${mobileTagsHtml}
+                  </div>
+                </div>
+                <div class="recipe-nutrition-card" style="position:absolute; bottom:0; left:-24px; z-index:2; background:#fff; border-radius:24px; padding:22px 24px; width:320px; box-shadow:0 22px 54px rgba(20,17,13,0.18)">
+                  <div style="font-size:11px; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#6b7ef0">Nutrição</div>
+                  <div style="font-size:12px; color:#a39a8c; font-weight:500; margin-top:3px">Por porção</div>
+                  <div style="display:flex; align-items:center; gap:22px; margin-top:18px">
+                    <div style="width:92px; height:92px; border-radius:50%; background:${conicGradient}; display:flex; align-items:center; justify-content:center; flex-shrink:0">
+                      <div style="width:70px; height:70px; border-radius:50%; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center">
+                        <span style="font-size:22px; font-weight:800; line-height:1">${cleanCalories || '0'}</span>
+                        <span style="font-size:9px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:#a39a8c">kcal</span>
+                      </div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:10px">
+                      <div style="display:flex; align-items:center; gap:9px; font-size:14px; font-weight:600; color:#6b6459"><span style="width:9px; height:9px; border-radius:50%; background:#ffbf00"></span>Proteína <strong style="color:#14110d">${n.protein || '0g'}</strong></div>
+                      <div style="display:flex; align-items:center; gap:9px; font-size:14px; font-weight:600; color:#6b6459"><span style="width:9px; height:9px; border-radius:50%; background:#2f8f7d"></span>Carbo <strong style="color:#14110d">${n.carbs || '0g'}</strong></div>
+                      <div style="display:flex; align-items:center; gap:9px; font-size:14px; font-weight:600; color:#6b6459"><span style="width:9px; height:9px; border-radius:50%; background:#6b7ef0"></span>Gordura <strong style="color:#14110d">${n.fat || '0g'}</strong></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section style="max-width:1280px; margin:0 auto; padding:64px 48px 40px">
+            <div class="recipe-content" style="display:grid; grid-template-columns:0.65fr 1.35fr; gap:56px; align-items:start">
+              <div>
+                <div class="recipe-ingredients-card" style="background:#f7f4ee; border-radius:26px; padding:28px">
+                  <div class="ing-card-header" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px">
+                    <h2 style="margin:0; font-size:24px; font-weight:800; letter-spacing:-0.02em">Ingredientes</h2>
+                    <div class="serving-controls-group" style="display:flex; align-items:center; gap:10px; background:#fff; border-radius:999px; padding:6px 8px">
+                      <button onclick="updateServings(-1)" aria-label="Diminuir porções" style="width:28px; height:28px; border-radius:50%; border:none; background:#fff6d9; color:#8a6a00; font-family:inherit; font-size:16px; font-weight:800; cursor:pointer">−</button>
+                      <span id="serving-count-display" style="font-size:14px; font-weight:800; min-width:64px; text-align:center">${currentServings}</span>
+                      <button onclick="updateServings(1)" aria-label="Aumentar porções" style="width:28px; height:28px; border-radius:50%; border:none; background:#ffbf00; color:#14110d; font-family:inherit; font-size:16px; font-weight:800; cursor:pointer">+</button>
+                    </div>
+                  </div>
+                  <div id="yield-display" style="font-size:14px; font-style:italic; color:#a39a8c; margin-bottom:22px; padding-left:2px">
+                    1 receita rende ${recipe.servings || 1} porções
+                  </div>
+                  <div style="display:flex; flex-direction:column" id="sig-ingredient-list">
+                    ${renderIngredientsList()}
+                  </div>
+                </div>
+              </div>
+
+              <div class="recipe-steps-column">
+                <h2 style="margin:0 0 26px; font-size:32px; font-weight:800; letter-spacing:-0.025em">Modo de preparo</h2>
+                <div style="display:flex; flex-direction:column; gap:16px">
+                  ${(() => {
+                    let mainStepIndex = 0;
+                    const parsedSteps = [];
+                    let currentGroup = null;
+
+                    (recipe.steps || []).forEach(rawStep => {
+                      const stepStr = (rawStep || '').toString();
+                      const isSub = stepStr.startsWith('\t') ||
+                                    stepStr.startsWith('  ') ||
+                                    /^\d+\.\d+[\s\.]/.test(stepStr) ||
+                                    /^[a-z][\.\)]\s/i.test(stepStr);
+
+                      let cleanText = stepStr
+                        .replace(/^[\t\s]+/, '')
+                        .replace(/^\d+\.\d+[\s\.]*/, '')
+                        .replace(/^[a-z][\.\)]\s*/i, '');
+
+                      if (isSub && currentGroup) {
+                        currentGroup.subs.push(cleanText);
+                      } else {
+                        mainStepIndex++;
+                        currentGroup = { index: mainStepIndex, main: cleanText, subs: [] };
+                        parsedSteps.push(currentGroup);
+                      }
+                    });
+
+                    return parsedSteps.map(group => {
+                      const mainHtml = `
+                        <div class="idv-step-item" onclick="this.classList.toggle('completed')" style="display:flex; align-items:center; gap:16px; background:#fff; border:2px solid #ece5d9; border-radius:22px; padding:18px 24px; cursor:pointer; transition:all 0.25s; box-shadow:0 2px 8px rgba(0,0,0,0.02); z-index:2; position:relative;">
+                          <div class="step-num" style="width:40px; height:40px; border-radius:12px; background:#fff6d9; color:#8a6a00; font-size:16px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.3s">${group.index}</div>
+                          <p style="margin:0; font-size:17px; line-height:1.5; color:#14110d; font-weight:600; text-wrap:pretty; transition:all 0.3s">${group.main}</p>
+                        </div>
+                      `;
+
+                      if (group.subs.length === 0) return mainHtml;
+
+                      const subsHtml = group.subs.map((subText, i) => {
+                        const letter = String.fromCharCode(97 + (i % 26));
+                        return `
+                          <div style="position:relative; display:flex; align-items:center;">
+                            <div class="idv-step-item sub-step" onclick="this.classList.toggle('completed')" style="flex:1; display:flex; align-items:center; gap:14px; background:#f7f4ee; border:1.5px solid #ece5d9; border-radius:18px; padding:14px 20px; cursor:pointer; transition:all 0.25s; box-shadow:0 2px 6px rgba(0,0,0,0.01);">
+                              <div class="step-num" style="width:32px; height:32px; border-radius:10px; background:#fff; border:1.5px solid #ece5d9; color:#8a6a00; font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">${letter}</div>
+                              <p style="margin:0; font-size:16px; line-height:1.5; color:#2b2620; font-weight:500; text-wrap:pretty;">${subText}</p>
+                            </div>
+                          </div>
+                        `;
+                      }).join('');
+
+                      const subCount = group.subs.length;
+                      return `
+                        <div style="display:flex; flex-direction:column; gap:12px;">
+                          ${mainHtml}
+                          <div class="sub-steps-wrapper" style="position:relative; margin-left:36px; padding-left:24px; display:flex; flex-direction:column; gap:12px;">
+                            <div style="position:absolute; left:0; top:-12px; bottom:0; width:24px; pointer-events:none;">
+                              <svg width="24" height="100%" style="width:100%; height:100%; overflow:visible;">
+                                <line x1="1" y1="0" x2="1" y2="${(subCount - 1) * 74 + 32}" stroke="#6b6459" stroke-width="2" stroke-linecap="square" />
+                                ${group.subs.map((_, i) => {
+                                  const centerY = i * 74 + 42;
+                                  return `<path d="M 1 ${centerY - 10} Q 1 ${centerY} 12 ${centerY} L 22 ${centerY}" fill="none" stroke="#6b6459" stroke-width="2" stroke-linecap="round" />`;
+                                }).join('')}
+                              </svg>
+                            </div>
+                            ${subsHtml}
+                          </div>
+                        </div>
+                      `;
+                    }).join('');
+                  })()}
+                </div>
+              </div>
+            </div>
+          </section>
+        </article>
+      `;
+
+      const stickyBar = document.getElementById('mobile-sticky-bar');
+      if (stickyBar) stickyBar.style.display = '';
+    }
+
+    async function handleAddSharedRecipeToMySite() {
+      if (!globalRecipe) return;
+
+      const mainBtn = document.getElementById('main-add-to-site-btn');
+      const stickyBtn = document.getElementById('mobile-sticky-add-btn');
+      [mainBtn, stickyBtn].forEach(b => {
+        if (b) {
+          b.disabled = true;
+          b.innerHTML = '<span>⏳</span><span>Adicionando ao seu site...</span>';
+        }
+      });
+
+      try {
+        const baseId = (globalRecipe.id || 'receita').replace(/^shared_\d+_/, '');
+        const newId = `shared_${Date.now()}_${baseId}`;
+
+        const recipeCopy = {
+          ...globalRecipe,
+          id: newId,
+          title: globalRecipe.title || 'Receita Compartilhada',
+          subtitle: globalRecipe.subtitle || (senderNameFromUrl ? `Recebida de ${senderNameFromUrl}` : 'Receita compartilhada'),
+          image: globalRecipe.image || globalRecipe.imageUrl || 'images/hero_bg.png',
+          imageUrl: globalRecipe.imageUrl || globalRecipe.image || 'images/hero_bg.png',
+          cuisine: globalRecipe.cuisine || 'Brasileira',
+          difficulty: globalRecipe.difficulty || 'Médio',
+          prepTime: globalRecipe.prepTime || 15,
+          cookTime: globalRecipe.cookTime || 15,
+          totalTime: globalRecipe.totalTime || globalRecipe.prepTime || 30,
+          servings: globalRecipe.servings || 2,
+          categories: Array.isArray(globalRecipe.categories) && globalRecipe.categories.length ? globalRecipe.categories : ['Almoço'],
+          tags: Array.isArray(globalRecipe.tags) ? globalRecipe.tags : [],
+          nutrition: globalRecipe.nutrition || { calories: globalRecipe.calories || '350', protein: '15g', carbs: '35g', fat: '12g' },
+          ingredients: Array.isArray(globalRecipe.ingredients) ? globalRecipe.ingredients : [],
+          steps: Array.isArray(globalRecipe.steps) ? globalRecipe.steps : [],
+          isUserCreated: true,
+          createdAt: new Date().toISOString()
+        };
+
+        // 1. Salva no localStorage imediatamente
+        const localRecipes = JSON.parse(localStorage.getItem('receitas_isa_user_recipes')) || [];
+        localRecipes.unshift(recipeCopy);
+        localStorage.setItem('receitas_isa_user_recipes', JSON.stringify(localRecipes));
+        lastSavedRecipeId = newId;
+
+        // 2. Se estiver logado no Firebase, salva também no Firestore (my_recipes)
+        const user = getUser();
+        if (user) {
+          try {
+            const firestoreId = await saveUserRecipe(recipeCopy);
+            if (firestoreId) {
+              lastSavedRecipeId = firestoreId;
+              recipeCopy.id = firestoreId;
+              recipeCopy.firestoreId = firestoreId;
+              localRecipes[0] = recipeCopy;
+              localStorage.setItem('receitas_isa_user_recipes', JSON.stringify(localRecipes));
+            }
+          } catch (errFs) {
+            console.warn('Aviso ao salvar no Firestore:', errFs);
+          }
+        }
+
+        [mainBtn, stickyBtn].forEach(b => {
+          if (b) {
+            b.classList.add('added');
+            b.innerHTML = '<span>✅</span><span>Receita adicionada ao seu site!</span>';
+          }
+        });
+
+        const postActions = document.getElementById('post-add-actions');
+        const openLink = document.getElementById('open-in-my-site-link');
+        const syncGoogleBtn = document.getElementById('sync-google-after-add-btn');
+
+        if (openLink) openLink.href = `recipe.html?id=${encodeURIComponent(lastSavedRecipeId)}`;
+        if (postActions) postActions.classList.add('visible');
+        if (syncGoogleBtn) {
+          syncGoogleBtn.style.display = user ? 'none' : 'inline-flex';
+        }
+
+        if (typeof window.showToast === 'function') {
+          window.showToast(`✨ "${recipeCopy.title}" foi adicionada ao seu site!`);
+        }
+      } catch (err) {
+        console.error('Erro ao adicionar receita ao site:', err);
+        [mainBtn, stickyBtn].forEach(b => {
+          if (b) {
+            b.disabled = false;
+            b.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span>Adicionar esta receita ao meu site</span>';
+          }
+        });
+      }
+    }
+
+    async function handleLoginAndSyncRecipe() {
+      try {
+        await signInWithPopup(auth, provider);
+        const user = auth.currentUser || getUser();
+        if (user && globalRecipe) {
+          const syncBtn = document.getElementById('sync-google-after-add-btn');
+          if (syncBtn) {
+            syncBtn.disabled = true;
+            syncBtn.textContent = '⏳ Salvando na sua conta...';
+          }
+          const firestoreId = await saveUserRecipe({
+            ...globalRecipe,
+            isUserCreated: true
+          });
+          if (firestoreId) {
+            lastSavedRecipeId = firestoreId;
+            const openLink = document.getElementById('open-in-my-site-link');
+            if (openLink) openLink.href = `recipe.html?id=${encodeURIComponent(firestoreId)}`;
+          }
+          if (syncBtn) {
+            syncBtn.textContent = '✅ Sincronizada na sua conta Google!';
+            syncBtn.style.background = '#e6f2ef';
+            syncBtn.style.color = '#1f6b5c';
+          }
+        }
+      } catch (e) {
+        console.error('Erro ao logar e sincronizar:', e);
+      }
+    }
+
+    async function initSharedLanding() {
+      const recipe = await resolveSharedRecipe();
+      if (!recipe) {
+        document.getElementById('shared-recipe-main').innerHTML = `
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:75vh;gap:14px;text-align:center;padding:24px;">
+            <div style="font-size:3.5rem;">🍽️</div>
+            <h1 style="margin:0;font-size:28px;font-weight:800;color:#14110d;">Link de receita inválido ou incompleto</h1>
+            <p style="margin:0;color:#6b6459;max-width:420px;">Peça para quem enviou gerar novamente o link pelo botão "Compartilhar" dentro da receita.</p>
+            <a href="index.html" style="margin-top:8px;background:#ffbf00;color:#14110d;text-decoration:none;padding:12px 24px;border-radius:999px;font-weight:800;font-size:14px;">Ir para o Livro de Receitas</a>
+          </div>`;
+        return;
+      }
+      renderLandingPage(recipe);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSharedLanding);
+    } else {
+      initSharedLanding();
+    }
+
+    window.updateServings = updateServings;
+    window.handleAddSharedRecipeToMySite = handleAddSharedRecipeToMySite;
+    window.handleLoginAndSyncRecipe = handleLoginAndSyncRecipe;
+  </script>
+</body>
+</html>

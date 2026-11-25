@@ -1028,6 +1028,13 @@
           }
         }
       } catch (e) {
+        // Se a receita não existe na conta atual, redireciona para a landing page de receita compartilhada
+        const currentParams = window.location.search;
+        const currentHash = window.location.hash || '';
+        if (id) {
+          window.location.replace(`shared-recipe.html${currentParams}${currentHash}`);
+          return;
+        }
         document.getElementById('recipe-main').innerHTML = `
           <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:1rem;text-align:center;padding:2rem;">
             <div style="font-size:4rem;">😕</div>

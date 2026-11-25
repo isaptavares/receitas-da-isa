@@ -9,6 +9,55 @@ let sharedRecipesList = [];
 let currentShareRecipeId = null;
 let currentShareRecipeTitle = '';
 let currentShareRecipeImage = '';
+let currentShareFullRecipe = null;
+
+function encodeRecipeForUrl(recipe) {
+  if (!recipe) return '';
+  try {
+    const img = (recipe.image || recipe.imageUrl || '');
+    const safeImg = img.startsWith('data:') && img.length > 2000 ? '' : img;
+    const compact = {
+      id: recipe.id || '',
+      title: recipe.title || '',
+      subtitle: recipe.subtitle || '',
+      image: safeImg,
+      cuisine: recipe.cuisine || 'Brasileira',
+      difficulty: recipe.difficulty || 'Médio',
+      prepTime: recipe.prepTime || 0,
+      cookTime: recipe.cookTime || 0,
+      totalTime: recipe.totalTime || recipe.prepTime || 30,
+      servings: recipe.servings || 2,
+      categories: recipe.categories || [],
+      tags: recipe.tags || [],
+      nutrition: recipe.nutrition || null,
+      calories: recipe.calories || '',
+      ingredients: recipe.ingredients || [],
+      steps: recipe.steps || []
+    };
+    const jsonStr = JSON.stringify(compact);
+    const bytes = new TextEncoder().encode(jsonStr);
+    let bin = '';
+    bytes.forEach(b => bin += String.fromCharCode(b));
+    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  } catch (e) {
+    console.warn('Erro ao codificar receita para URL:', e);
+    return '';
+  }
+}
+
+function getShareBaseUrl() {
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.endsWith('.loca.lt');
+  if (isLocal) {
+    const pathParts = window.location.pathname.split('/');
+    pathParts.pop();
+    if (pathParts[pathParts.length - 1] === 'categories' || pathParts[pathParts.length - 1] === 'tags' || pathParts[pathParts.length - 1] === 'difficulties') {
+      pathParts.pop();
+    }
+    const basePath = pathParts.join('/') + '/';
+    return `${window.location.origin}${basePath}`;
+  }
+  return 'https://isaptavares.github.io/receitas-da-isa/';
+}
 
 function triggerShareToast(message, type = 'success') {
   if (typeof window.showToast === 'function') {
@@ -483,19 +532,35 @@ export async function openShareModal(recipeId, recipeTitle, recipeImage) {
   currentShareRecipeId = recipeId || '';
   currentShareRecipeTitle = recipeTitle || 'Receita';
   currentShareRecipeImage = recipeImage || 'images/hero_bg.png';
+  currentShareFullRecipe = null;
 
   titleEl.textContent = currentShareRecipeTitle;
   imgEl.src = currentShareRecipeImage;
-  
-  const PROD_BASE_URL = 'https://isaptavares.github.io/receitas-da-isa/';
-  const recipeUrl = currentShareRecipeId 
-    ? `${PROD_BASE_URL}recipe.html?id=${currentShareRecipeId}`
-    : `${PROD_BASE_URL}index.html`;
-  linkInput.value = recipeUrl;
+
+  const baseUrl = getShareBaseUrl();
+  const user = getUser();
+  const uidParam = user?.uid ? `&u=${encodeURIComponent(user.uid)}` : '';
+  const fromParam = user?.displayName ? `&from=${encodeURIComponent(user.displayName.split(' ')[0])}` : '';
+
+  const initialUrl = currentShareRecipeId
+    ? `${baseUrl}shared-recipe.html?id=${encodeURIComponent(currentShareRecipeId)}${uidParam}${fromParam}`
+    : `${baseUrl}index.html`;
+  linkInput.value = initialUrl;
 
   overlay.classList.add('active');
 
-  const user = getUser();
+  // Carrega os dados completos da receita para embutir no link da landing page (#r=...)
+  if (currentShareRecipeId && typeof window.loadRecipe === 'function') {
+    window.loadRecipe(currentShareRecipeId).then(fullRec => {
+      if (fullRec && currentShareRecipeId === (recipeId || '')) {
+        currentShareFullRecipe = fullRec;
+        const encoded = encodeRecipeForUrl(fullRec);
+        if (encoded) {
+          linkInput.value = `${baseUrl}shared-recipe.html?id=${encodeURIComponent(currentShareRecipeId)}${uidParam}${fromParam}#r=${encoded}`;
+        }
+      }
+    }).catch(() => {});
+  }
   if (!user) {
     friendsList.innerHTML = `
       <div style="text-align:center; padding: 0.8rem; color: var(--clr-text-muted); font-size:0.85rem;">
@@ -560,6 +625,12 @@ export async function sendRecipeTo(recipientUid, recipeId, recipeTitle, recipeIm
     btn.style.opacity = "0.7";
   }
 
+  if (!currentShareFullRecipe && recipeId && typeof window.loadRecipe === 'function') {
+    try {
+      currentShareFullRecipe = await window.loadRecipe(recipeId);
+    } catch (e) {}
+  }
+
   const shareData = {
     senderUid: user.uid,
     senderName: user.displayName || user.email || 'Amigo',
@@ -569,6 +640,7 @@ export async function sendRecipeTo(recipientUid, recipeId, recipeTitle, recipeIm
     recipeId: recipeId || '',
     recipeTitle: recipeTitle || 'Receita',
     recipeImage: recipeImage || 'images/hero_bg.png',
+    recipeData: currentShareFullRecipe || null,
     sentAt: new Date().toISOString(),
     read: false
   };
@@ -766,7 +838,7 @@ export async function openInboxModal(event) {
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:8px; justify-content:flex-end; border-top:1px solid #f5f0e8; padding-top:10px;">
-        <a href="recipe.html?id=${item.recipeId}" onclick="openSharedRecipe('${item.recipeId}', '${item.id}')" style="background:#f4efe6; color:#14110d; text-decoration:none; padding:8px 14px; border-radius:999px; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:4px;">Ver 🍽️</a>
+        <a href="shared-recipe.html?id=${encodeURIComponent(item.recipeId)}&u=${encodeURIComponent(item.senderUid || '')}&s=${encodeURIComponent(item.id || '')}&from=${encodeURIComponent(item.senderName || '')}" onclick="openSharedRecipe('${item.recipeId}', '${item.id}', '${item.senderUid || ''}', '${escapeJsStr(item.senderName || '')}', event)" style="background:#f4efe6; color:#14110d; text-decoration:none; padding:8px 14px; border-radius:999px; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:4px;">Ver 🍽️</a>
         <button type="button" id="btn-add-myrec-${item.id}" onclick="addToMyRecipes('${item.recipeId}', '${escapeJsStr(item.recipeTitle)}', '${escapeJsStr(item.recipeImage)}', '${escapeJsStr(item.senderName)}', '${item.id}', event)" style="background:#ffbf00; color:#14110d; border:none; padding:8px 16px; border-radius:999px; font-size:12px; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:4px; box-shadow:0 3px 10px rgba(255,191,0,0.3); transition:all 0.15s;">➕ Adicionar às Minhas Receitas</button>
       </div>
     </div>
@@ -789,12 +861,21 @@ export async function addToMyRecipes(recipeId, recipeTitle, recipeImage, senderN
   }
 
   try {
-    let fullRecipe = null;
-    try {
-      const resp = await fetch('data/index.json');
-      const data = await resp.json();
-      fullRecipe = (data.recipes || []).find(r => r.id === recipeId);
-    } catch(e) {}
+    const sharedItem = sharedRecipesList.find(i => i.id === shareDocId || i.recipeId === recipeId);
+    let fullRecipe = sharedItem?.recipeData || null;
+    if (!fullRecipe) {
+      try {
+        const resp = await fetch(`data/recipes/${recipeId}.json`);
+        if (resp.ok) fullRecipe = await resp.json();
+      } catch(e) {}
+    }
+    if (!fullRecipe) {
+      try {
+        const resp = await fetch('data/index.json');
+        const data = await resp.json();
+        fullRecipe = (data.recipes || []).find(r => r.id === recipeId);
+      } catch(e) {}
+    }
 
     const newId = 'received_' + Date.now() + '_' + recipeId;
 
@@ -863,13 +944,17 @@ export async function addToMyRecipes(recipeId, recipeTitle, recipeImage, senderN
   }
 }
 
-export async function openSharedRecipe(recipeId, shareDocId) {
+export async function openSharedRecipe(recipeId, shareDocId, senderUid = '', senderName = '', event = null) {
+  if (event && event.preventDefault) event.preventDefault();
   try {
     if (shareDocId) {
       await updateDoc(doc(db, 'shared_recipes', shareDocId), { read: true });
     }
   } catch (e) {}
-  window.location.href = `recipe.html?id=${recipeId}`;
+  const sharedItem = sharedRecipesList.find(i => i.id === shareDocId || i.recipeId === recipeId);
+  const encoded = sharedItem?.recipeData ? encodeRecipeForUrl(sharedItem.recipeData) : '';
+  const hashPart = encoded ? `#r=${encoded}` : '';
+  window.location.href = `shared-recipe.html?id=${encodeURIComponent(recipeId)}&u=${encodeURIComponent(senderUid || sharedItem?.senderUid || '')}&s=${encodeURIComponent(shareDocId || '')}&from=${encodeURIComponent(senderName || sharedItem?.senderName || '')}${hashPart}`;
 }
 
 export function closeInboxModal(event) {
