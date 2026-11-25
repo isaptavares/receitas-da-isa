@@ -4,6 +4,7 @@
 
 import { getUser, getCloudFavorites, cloudToggleFavorite, getCloudPlanner, cloudUpdatePlanner, cloudRemoveFromPlanner, cloudClearPlanner, authReady } from './auth.js';
 import { getUserRecipes, getUserRecipeById } from './user-recipes.js?v=9';
+import { startAiQueueWorker } from './ai-queue.js?v=1';
 
 const FAVORITES_KEY = 'receitas_isa_favorites';
 const PLANNER_KEY = 'receitas_isa_planner';
@@ -427,6 +428,7 @@ function showToast(msg, duration = 2800, actionHtml = '') {
 }
 
 function initNavbar() {
+  startAiQueueWorker();
   const nav = document.querySelector('.navbar');
   if (!nav) return;
   const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 20);

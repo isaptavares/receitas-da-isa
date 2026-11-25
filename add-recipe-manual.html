@@ -542,6 +542,7 @@
   <script type="module">
     import { saveUserRecipe, updateUserRecipe, autocompleteRecipeWithAI, uploadRecipeImage } from './js/user-recipes.js?v=10';
     import { getUser, authReady } from './js/auth.js';
+    import { enqueueGeminiJob, isGeminiBusyError } from './js/ai-queue.js?v=1';
 
     document.addEventListener('DOMContentLoaded', async () => {
       initNavbar();
@@ -1184,13 +1185,18 @@
           } catch (err) {
             console.error("Erro no autocompletar da IA:", err);
             let userMsg = err.message || 'IA indisponível';
-            if (/demand|quota|429|resource|rate limit|too many requests|overload/i.test(userMsg)) {
-              userMsg = 'O Gemini está cheio de demanda agora, tente novamente em 5 minutos.';
+            if (isGeminiBusyError(err)) {
+              window.__pendingManualAiJob = {
+                partialRecipe: { ...partialRecipe },
+                image: finalRecipe.image || '',
+                imageUrl: finalRecipe.imageUrl || ''
+              };
+              userMsg = 'O Gemini está ocupado agora. Salvamos sua receita e colocamos o preenchimento automático na Lista de Espera para completar assim que ele liberar! ⏳';
             }
             if (window.showErrorModal) {
-              window.showErrorModal('Aviso da IA', userMsg + ' Salvando com valores padrão...');
+              window.showErrorModal('Aviso da IA', userMsg);
             } else {
-              showToast("⚠️ " + userMsg + " Salvando com valores padrão...");
+              showToast("⚠️ " + userMsg);
             }
             let heuristicNutrition = null;
             if (window.estimateNutritionFallback) {
@@ -1265,6 +1271,20 @@
             finalRecipe.id = savedId;
             localRecipes.push(finalRecipe);
             localStorage.setItem('receitas_isa_user_recipes', JSON.stringify(localRecipes));
+          }
+
+          if (window.__pendingManualAiJob && (savedId || editId)) {
+            await enqueueGeminiJob({
+              type: 'manual_autocomplete',
+              label: title || 'Receita manual',
+              payload: {
+                ...window.__pendingManualAiJob,
+                image: finalImageUrl,
+                imageUrl: finalImageUrl,
+                recipeId: savedId || editId
+              }
+            });
+            window.__pendingManualAiJob = null;
           }
 
           hideLoading();

@@ -159,6 +159,7 @@
   <script type="module">
     import { extractRecipeFromYouTube, extractRecipeFromText, extractRecipeFromFile, saveUserRecipe, extractRecipeFromVercelServer } from './js/user-recipes.js?v=10';
     import { getUser, authReady } from './js/auth.js?v=8';
+    import { enqueueGeminiJob, isGeminiBusyError } from './js/ai-queue.js?v=1';
 
     document.addEventListener('DOMContentLoaded', async () => {
       initNavbar();
@@ -306,8 +307,19 @@
           disableControls(false);
 
           let userMsg = err.message || 'Falha ao processar vídeo';
-          if (/demand|quota|429|resource|rate limit|too many requests|overload/i.test(userMsg)) {
-            userMsg = 'O Gemini está cheio de demanda agora, você pode tentar de novo em 5 minutinhos? 💛';
+          if (isGeminiBusyError(err)) {
+            await enqueueGeminiJob({
+              type: isYouTube ? 'youtube' : 'vercel_video',
+              label: isYouTube ? 'Vídeo do YouTube' : (isInstagram ? 'Reels do Instagram' : (isTikTok ? 'Vídeo do TikTok' : 'Link de receita')),
+              payload: { url }
+            });
+            userMsg = 'O Gemini está muito ocupado agora, mas colocamos sua receita na Lista de Espera! Vamos continuar tentando em segundo plano e te avisamos assim que ficar pronta. 💛';
+            if (window.showErrorModal) {
+              window.showErrorModal('Adicionada à Lista de Espera ⏳', userMsg);
+            } else {
+              showToast(userMsg, 6000);
+            }
+            return;
           }
           if (window.showErrorModal) {
             window.showErrorModal('Erro na Importação', userMsg);
@@ -362,8 +374,19 @@
           disableControls(false);
 
           let userMsg = err.message || 'Falha ao importar do site';
-          if (/demand|quota|429|resource|rate limit|too many requests|overload/i.test(userMsg)) {
-            userMsg = 'O Gemini está cheio de demanda agora, você pode tentar de novo em 5 minutinhos? 💛';
+          if (isGeminiBusyError(err)) {
+            await enqueueGeminiJob({
+              type: 'website',
+              label: 'Receita de site',
+              payload: { url }
+            });
+            userMsg = 'O Gemini está muito ocupado agora, mas colocamos sua receita na Lista de Espera! Vamos continuar tentando em segundo plano e te avisamos assim que ficar pronta. 💛';
+            if (window.showErrorModal) {
+              window.showErrorModal('Adicionada à Lista de Espera ⏳', userMsg);
+            } else {
+              showToast(userMsg, 6000);
+            }
+            return;
           }
           if (window.showErrorModal) {
             window.showErrorModal('Erro na Importação', userMsg);

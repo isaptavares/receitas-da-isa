@@ -127,6 +127,7 @@
   <script type="module">
     import { extractRecipeFromFile, saveUserRecipe } from './js/user-recipes.js?v=10';
     import { getUser, authReady } from './js/auth.js';
+    import { enqueueGeminiJob, isGeminiBusyError } from './js/ai-queue.js?v=1';
 
     document.addEventListener('DOMContentLoaded', async () => {
       initNavbar();
@@ -376,9 +377,10 @@
         showLoading("Analisando com Inteligência Artificial... 🤖", `O Gemini está compilando e interpretando a receita${pagesText}...`);
         processBtn.disabled = true;
 
+        let filesData = null;
         try {
           // Converte todos os arquivos selecionados para base64 em paralelo
-          const filesData = await Promise.all(selectedFiles.map(async file => {
+          filesData = await Promise.all(selectedFiles.map(async file => {
             const base64Data = await fileToBase64(file);
             return {
               mimeType: file.type,
@@ -420,8 +422,19 @@
           processBtn.disabled = false;
 
           let userMsg = err.message || 'Falha ao importar';
-          if (/demand|quota|429|resource|rate limit|too many requests|overload/i.test(userMsg)) {
-            userMsg = 'O Gemini está cheio de demanda agora, você pode tentar de novo em 5 minutinhos? 💛';
+          if (isGeminiBusyError(err) && filesData) {
+            await enqueueGeminiJob({
+              type: 'file',
+              label: selectedFiles[0]?.name ? `Arquivo: ${selectedFiles[0].name}` : 'Receita por foto/PDF',
+              payload: { filesData }
+            });
+            userMsg = 'O Gemini está muito ocupado agora, mas colocamos sua receita na Lista de Espera! Vamos continuar tentando em segundo plano e te avisamos assim que ficar pronta. 💛';
+            if (window.showErrorModal) {
+              window.showErrorModal('Adicionada à Lista de Espera ⏳', userMsg);
+            } else {
+              showToast(userMsg, 6000);
+            }
+            return;
           }
           if (window.showErrorModal) {
             window.showErrorModal('Erro na Importação', userMsg);
