@@ -442,47 +442,74 @@ function initNavbar() {
   // Configura a funcionalidade da barra de pesquisa no navbar
   setupNavSearch();
 
-  // Injetar menu mobile se não existir
+  // Injetar menu mobile na lateral direita do navbar se não existir
   if (!document.getElementById('mobile-menu-btn')) {
-    const navLinksList = nav.querySelector('.nav-links');
-    if (navLinksList) {
-      const liBtn = document.createElement('li');
-      liBtn.className = 'mobile-menu-container';
-      liBtn.innerHTML = `<button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menu">☰</button>`;
-      navLinksList.appendChild(liBtn);
+    const mobileContainer = document.createElement('div');
+    mobileContainer.className = 'mobile-menu-container';
+    mobileContainer.innerHTML = `<button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false">☰</button>`;
 
-      const mobileMenu = document.createElement('div');
-      mobileMenu.className = 'mobile-dropdown';
-      mobileMenu.id = 'mobile-dropdown';
-      // Adjust path for links if inside a subdirectory (categories, tags)
-      const isSubdir = window.location.pathname.includes('/categories/') || window.location.pathname.includes('/tags/') || window.location.pathname.includes('/difficulties/');
-      const prefix = isSubdir ? '../' : '';
+    const mobileMenu = document.createElement('div');
+    mobileMenu.className = 'mobile-dropdown';
+    mobileMenu.id = 'mobile-dropdown';
 
-      mobileMenu.innerHTML = `
-        <a class="mobile-nav-link" href="${prefix}index.html"><span>🏠</span> Início</a>
-        <a class="mobile-nav-link" href="${prefix}favorites.html"><span>♥</span> Favoritas</a>
-        <a class="mobile-nav-link" href="${prefix}planner.html"><span>📅</span> Planejador</a>
-      `;
-      nav.appendChild(mobileMenu);
+    // Adjust path for links if inside a subdirectory (categories, tags, difficulties)
+    const isSubdir = window.location.pathname.includes('/categories/') || window.location.pathname.includes('/tags/') || window.location.pathname.includes('/difficulties/');
+    const prefix = isSubdir ? '../' : '';
 
-      mobileMenu.querySelectorAll('.mobile-nav-link').forEach(link => {
-        const href = link.getAttribute('href') || '';
-        const hrefBase = href.split('/').pop();
-        link.classList.toggle('active', hrefBase.includes(path) || (path === '' && hrefBase.includes('index')));
-      });
+    mobileMenu.innerHTML = `
+      <a class="mobile-nav-link" href="${prefix}index.html"><span>🏠</span> Início</a>
+      <a class="mobile-nav-link" href="${prefix}favorites.html"><span>♥</span> Favoritas</a>
+      <a class="mobile-nav-link" href="${prefix}planner.html"><span>📅</span> Planejador</a>
+      <button class="mobile-nav-link" id="mobile-nav-inbox" type="button"><span>📩</span> Recebidas <span class="mobile-inbox-badge" id="mobile-inbox-badge" style="display:none;">0</span></button>
+    `;
 
-      const btn = liBtn.querySelector('#mobile-menu-btn');
-      btn.onclick = (e) => {
-        e.stopPropagation();
-        mobileMenu.classList.toggle('active');
-      };
+    mobileContainer.appendChild(mobileMenu);
+    nav.appendChild(mobileContainer);
 
-      document.addEventListener('click', (e) => {
-        if (!liBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
-          mobileMenu.classList.remove('active');
+    mobileMenu.querySelectorAll('a.mobile-nav-link').forEach(link => {
+      const href = link.getAttribute('href') || '';
+      const hrefBase = href.split('/').pop();
+      link.classList.toggle('active', hrefBase === path || (path === '' && hrefBase === 'index.html'));
+    });
+
+    const syncMobileInboxBadge = () => {
+      const desktopBadge = document.getElementById('inbox-badge');
+      const mobileBadge = document.getElementById('mobile-inbox-badge');
+      if (desktopBadge && mobileBadge) {
+        const count = desktopBadge.textContent.trim();
+        const visible = desktopBadge.style.display !== 'none' && count !== '0' && count !== '';
+        mobileBadge.textContent = count;
+        mobileBadge.style.display = visible ? 'inline-block' : 'none';
+      }
+    };
+
+    const mobileInboxBtn = mobileMenu.querySelector('#mobile-nav-inbox');
+    if (mobileInboxBtn) {
+      mobileInboxBtn.addEventListener('click', (e) => {
+        mobileMenu.classList.remove('active');
+        btn.setAttribute('aria-expanded', 'false');
+        if (typeof window.openInboxModal === 'function') {
+          window.openInboxModal(e);
+        } else {
+          window.location.href = `${prefix}index.html`;
         }
       });
     }
+
+    const btn = mobileContainer.querySelector('#mobile-menu-btn');
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      syncMobileInboxBadge();
+      const isOpen = mobileMenu.classList.toggle('active');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    };
+
+    document.addEventListener('click', (e) => {
+      if (!mobileContainer.contains(e.target)) {
+        mobileMenu.classList.remove('active');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
   }
 }
 
@@ -987,6 +1014,37 @@ window.recordRecipeView = recordRecipeView;
 window.getRecipeViews = getRecipeViews;
 window.getRecipeRanking = getRecipeRanking;
 window.openPlannerModal = openPlannerModal;
+
+// Transição horizontal nas setas de categoria (somente mobile)
+document.addEventListener('DOMContentLoaded', () => {
+  const pills = document.querySelector('.category-nav-pills');
+  if (!pills) return;
+
+  const activePill = pills.querySelector('a.active');
+  const dir = sessionStorage.getItem('catNavDir');
+  if (dir && activePill && window.innerWidth <= 768) {
+    sessionStorage.removeItem('catNavDir');
+    activePill.classList.add(dir === 'prev' ? 'cat-slide-in-prev' : 'cat-slide-in-next');
+  }
+
+  const arrows = pills.querySelectorAll('a.cat-nav-arrow');
+  arrows.forEach((arrow, index) => {
+    arrow.addEventListener('click', (e) => {
+      if (window.innerWidth > 768) return;
+      e.preventDefault();
+      const targetHref = arrow.getAttribute('href');
+      const moveDir = index === 0 ? 'prev' : 'next';
+      sessionStorage.setItem('catNavDir', moveDir);
+      if (activePill) {
+        activePill.classList.remove('cat-slide-in-prev', 'cat-slide-in-next');
+        activePill.classList.add(moveDir === 'prev' ? 'cat-slide-out-prev' : 'cat-slide-out-next');
+      }
+      setTimeout(() => {
+        window.location.href = targetHref;
+      }, 45);
+    });
+  });
+});
 window.closePlannerModal = closePlannerModal;
 window.changeModalWeek = changeModalWeek;
 window.togglePlannerModalSlot = togglePlannerModalSlot;
